@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <!--
+1 place   15
+2 place   12
+
+3 place   10
+4 place   8
+
+5 place   6
+6 place   5
+
+7 place   4
+8 place   3
+ -->
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Leaderboard -Battle Royale</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="leader">
+        {%include 'nav.html'%}
+        <ol type="1" class="leadercont">
+            {% for player in players%}
+            <div class="leadercard">
+                <li class="place"></li>
+                <div class="namecard">
+                    <img id="obito" src="{{player.img}}">
+                </div>
+                <a href="player/{{player.id}}" class="win">Victories: <span class="number">{{player.wins}}</span></a>
+                <p class="loss">Defeats: <span class="number">{{player.loss}}</span></p>
+                <p class="number">{{player.points}} pts</p>
+            </div>
+            {% endfor%}
+        </ol>
+    </body>
+
+</html>

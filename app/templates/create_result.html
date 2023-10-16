@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Tournament</title>
+        <link href="../static/main_page.css" rel="stylesheet">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="newresbg">
+
+
+
+        <form method="post" action="/new_result">
+            {{ form.csrf_token }}
+            <h1>NEW RESULT</h1>
+            <div class="resultform">
+
+
+                <div class="labdiv">
+                    <div class="reshold">
+                        <div class="labletabe">CHAMPION</div>
+                        {{ form.first }}
+                    </div>
+                    <div class="reshold">
+                        <div class="labletabe">RUNNER-UP</div>
+                        {{ form.second }}
+                    </div>
+                    <div class="reshold">
+                        <div class="labletabe">BRONZE</div>
+                        {{ form.third }}
+                    </div>
+                    <div class="reshold">
+                        <div class="labletabe">FOURTH</div>
+                        {{ form.fourth }}
+                    </div>
+                    <div class="reshold">
+                        <div class="labletabe">FIFTH</div>
+                        {{ form.fifth }}
+                    </div>
+
+                </div>
+
+                <div class="labdiv">
+                    <div class="reshold">
+                        <div class="labletabe">SIXTH</div>
+                        {{ form.sixth }}
+                    </div>
+                    <div class="reshold">
+                        <div class="labletabe">SEVENTH</div>
+                        {{ form.seventh }}
+                    </div>
+                    <div class="reshold">
+                        <div class="labletabe">EIGTH</div>
+                        {{ form.eigth }}
+                    </div>
+                    <div class="reshold">
+                        <div class="labletabe">Ninth</div>
+                        {{ form.ninth }}
+                    </div>
+                    <div class="reshold">
+                        <div class="labletabe">Tenth</div>
+                        {{ form.tenth }}
+                    </div>
+                </div>
+
+
+
+
+                <div>
+                    {{ form.submit }}
+                </div>
+            </div>
+        </form>
+
+    </body>
+
+</html>

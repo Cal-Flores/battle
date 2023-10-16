@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Add Opponent</title>
+        <link href="../static/main_page.css" rel="stylesheet">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="newresbg">
+
+        <h1>NEW OPPONENT</h1>
+
+        <form method="post" action="/new_opponent/{{player.id}}">
+            {{ form.csrf_token }}
+
+            <div class="labdiv">
+                <div class="reshold">
+                    <div class="labletabe">Name</div>
+                    {{ form.name }}
+                </div>
+                <div class="reshold">
+                    <div class="labletabe">Victory</div>
+                    {{ form.victory }}
+                </div>
+                <div class="reshold">
+                    <div class="labletabe">Tournament Number</div>
+                    <span class="spanforn">{{ form.tournamnet }}</span>
+                </div>
+                <div class="reshold">
+                    <div class="labletabe">Round</div>
+                    <span class="spanforn">{{ form.round }}</span>
+                </div>
+
+            </div>
+
+            <div class="opponentbtn">
+                {{ form.submit }}
+            </div>
+            </div>
+        </form>
+
+    </body>
+
+</html>

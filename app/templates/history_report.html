@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Head to Head</title>
+        <link href="../static/main_page.css" rel="stylesheet">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="hist">
+        {% include 'nav.html' %}
+        <div class="historycont">
+            <a href="player/{{player_1.id}}" class="histcard">
+                <img class="eimg" src="{{player_1.img}}">
+                <div class="histtxt">{{player_1.name}}</div>
+                <div class="editwl">
+                    <p class="win">Victories: <span class="number">{{player_1.wins}}</span></p>
+                    <p class="loss">Defeats: <span class="number">{{player_1.loss}}</span></p>
+                    <p class="points">Points: <span class="number">{{player_1.points}}</span></p>
+                </div>
+            </a>
+            <div>
+                <h1>VS</h1>
+            </div>
+            <a href="player/{{player_2.id}}" class="histcard">
+                <img class="eimg" src="{{player_2.img}}">
+                <div class="histtxt">{{player_2.name}}</div>
+                <div class="editwl">
+                    <p class="win">Victories: <span class="number">{{player_2.wins}}</span></p>
+                    <p class="loss">Defeats: <span class="number">{{player_2.loss}}</span></p>
+                    <p class="points">Points: <span class="number">{{player_2.points}}</span></p>
+                </div>
+            </a>
+        </div>
+        {% for rec in records %}
+        {% if rec.victory == True%}
+        <div class="histlist">
+            <div class="listcont">
+                <div class="histnum"># {{rec.id}}</div>
+                <img id="oppimage" src="{{player_1.img}}">
+                <div class="histnum">{{player_1.name}}</div>
+                <div class="histnum">DEF </div>
+                <img id="oppimage" src="{{player_2.img}}">
+                <div class="histnum">{{player_2.name}}</div>
+                <div class="histnum">{{rec.round}}</div>
+                <div class="histnum">Battle Royale {{rec.tour_name}}</div>
+            </div>
+
+        </div>
+        {% endif %}
+        {% if rec.victory == False%}
+        <div class="histlist">
+            <div class="listcont">
+                <div class="histnum"># {{rec.id}}</div>
+                <img id="oppimage" src="{{player_2.img}}">
+                <div class="histnum">{{player_2.name}}</div>
+                <div class="histnum">DEF </div>
+                <img id="oppimage" src="{{player_1.img}}">
+                <div class="histnum">{{player_1.name}}</div>
+                <div class="histnum">{{rec.round}}</div>
+                <div class="histnum">Battle Royale {{rec.tour_name}}</div>
+            </div>
+
+        </div>
+        {% endif %}
+        {% endfor %}
+
+    </body>
+
+</html>

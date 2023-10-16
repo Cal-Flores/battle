@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Match-Draws</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="matchz">
+        <script>
+
+            let jokeImg = ['kunai2.webp', 'kun3.gif', 'kun4.gif', 'kun5.gif', 'kun6.gif', 'kun8.gif', 'kun9.gif', 'kun10.gif', 'kun11.gif', 'kun12.gif', 'kun13.gif', 'kun14.gif', 'kun15.gif', 'kun16.gif', 'kun17.gif',
+                'kun18.gif', 'kun19.gif', 'kun20.gif', 'kun21.gif', 'kun22.gif', 'kun23.gif', 'kun24.gif', "kun25.gif", "kun26.gif", 'kun27.gif', 'kun28.gif', 'kun29.gif', 'kun30.gif', 'kun31.gif', 'kun33.gif', 'kun34.gif',
+                'kun36.gif', 'kun37.gif', 'kun38.gif', 'kun39.gif', 'kun40.gif', 'kun41.gif'
+            ]
+            function placement() {
+                const region = Math.trunc(Math.random() * 4) + 1;
+                const match = Math.trunc(Math.random() * 8) + 1;
+                const imageNum3 = Math.trunc(Math.random() * jokeImg.length);
+                document.getElementById('region').innerHTML = `REGION ${region}`
+                document.getElementById('match').innerHTML = `MATCH ${match}`
+                document.getElementById("mrimg2").src = `../static/images/uchiha.png`;
+                document.getElementById("mrimg3").src = `../static/images/${jokeImg[imageNum3]}`;
+
+            }
+
+        </script>
+        {% include 'nav.html' %}
+        <div class="matchcont">
+            <div class="matchimgcont">
+                <img id="mrimg" src="../static/images/uzumaki.png">
+                <img id="mrimg3" src="../static/images/uchiha.png">
+                <img id="mrimg2" src="../static/images/uzumaki.png">
+            </div>
+            <div class="matchres">
+                <div id="region"></div>
+                <div id="match"></div>
+            </div>
+            <button class='matchbtn' onclick="placement()">GENERATE</button>
+        </div>
+    </body>
+
+</html>

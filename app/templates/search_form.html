@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Search</title>
+        <link href="../static/main_page.css" rel="stylesheet">
+        <link rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="bg">
+        {% include 'nav.html' %}
+        <form method="post" action="/new_search">
+            {{ form.csrf_token }}
+            <div class="searchcont">
+                <div class="h2hform">
+
+                    <div class="histformlabel">
+                        <div class="battlelable1">Name</div>
+                        {{form.name(value=".")}}
+
+                    </div>
+
+                    <div class="histformlabel">
+                        <div class="battlelable1">Round</div>
+                        {{form.round(value='.')}}
+                    </div>
+                    <div class="histformlabel">
+                        <div class="battlelable1">Sort by Points</div>
+                        {{form.leaders}}
+
+                    </div>
+
+                    <div class="histformlabel">
+                        <div class="battlelable1">Sort by win percentage</div>
+                        {{form.win_percent}}
+                    </div>
+
+
+                </div>
+                <div class="oppbtn">
+                    {{ form.submit }}
+                </div>
+            </div>
+        </form>
+    </body>
+
+</html>

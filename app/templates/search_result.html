@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Search</title>
+        <link rel="icon" href="../static/images/favicon.ico">
+        <link href="../static/main_page.css" rel="stylesheet">
+    </head>
+
+    <body id="bg">
+        {% include 'nav.html' %}
+        <div id="stat">
+            <div id="cont">
+                {% for player in players %}
+                {% if player.gold >= 1%}
+                <a href="player/{{player.id}}" class="goldcard">
+                    <div class="wlcont">
+                        <div class="namecard">
+                            <img id="obito" src="{{player.img}}">
+                            <div class="nametxt">{{player.name}}</div>
+                        </div>
+                        <div class="maincard">
+
+                            <div class="anchortag">
+                                <div class="wlcontt">
+                                    <p class="win">Victories: <span class="number">{{player.wins}}</span></p>
+                                    <p class="loss">Defeats: <span class="number">{{player.loss}}</span></p>
+                                </div>
+                                <div class="medalcont">
+                                    {% if player.gold >= 1 %}
+                                    <p class="number">{{player.gold}} <span class="medal">🥇</span></p>
+                                    {% endif %}
+                                    {% if player.silver >= 1 %}
+                                    <p class="number">{{player.silver}} <span class="medal">🥈</span></p>
+                                    {% endif %}
+                                    {% if player.bronze >= 1 %}
+                                    <p class="number">{{player.bronze}} <span class="medal">🥉</span></p>
+                                    {% endif %}
+                                    {% if player.medal >= 1 %}
+                                    <p class="number">{{player.medal}} <span class="medal">🎖</span></p>
+                                    {% endif %}
+                                    {% if player.badge >= 1 %}
+                                    <div class="badge">
+                                        <p class="number">{{player.badge}} </p>
+                                        <img src="../static/images/reward.png" class="ribbon">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </a>
+                {% else %}
+                <a href="player/{{player.id}}" class="card">
+                    <div class="wlcont">
+                        <div class="namecard">
+                            <img id="obito" src="{{player.img}}">
+                            <div class="nametxt">{{player.name}}</div>
+                        </div>
+                        <div class="maincard">
+
+                            <div class="anchortag">
+                                <div class="wlcontt">
+                                    <p class="win">Victories: <span class="number">{{player.wins}}</span></p>
+                                    <p class="loss">Defeats: <span class="number">{{player.loss}}</span></p>
+                                </div>
+                                <div class="medalcont">
+                                    {% if player.gold >= 1 %}
+                                    <p class="number">{{player.gold}} <span class="medal">🥇</span></p>
+                                    {% endif %}
+                                    {% if player.silver >= 1 %}
+                                    <p class="number">{{player.silver}} <span class="medal">🥈</span></p>
+                                    {% endif %}
+                                    {% if player.bronze >= 1 %}
+                                    <p class="number">{{player.bronze}} <span class="medal">🥉</span></p>
+                                    {% endif %}
+                                    {% if player.medal >= 1 %}
+                                    <p class="number">{{player.medal}} <span class="medal">🎖</span></p>
+                                    {% endif %}
+                                    {% if player.badge >= 1 %}
+                                    <div class="badge">
+                                        <p class="number">{{player.badge}} </p>
+                                        <img src="../static/images/reward.png" class="ribbon">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+
+        <div>
+            {% for rec in history %}
+            <div class="histlist">
+                <div class="listcont">
+                    <div class="histnum"># {{rec.match}}</div>
+                    <img id="oppimage" src="{{rec.winner.img}}">
+                    <a href="/player/{{rec.winner.id}}" class="histnum">{{rec.winner.name}}</a>
+                    <div class="histnum">DEF </div>
+                    <img id="oppimage" src="{{rec.loser.img}}">
+                    <a href="/player/{{rec.loser.id}}" class="histnum">{{rec.loser.name}}</a>
+                    <div class="histnum">Battle Royale {{rec.Tour_num}}</div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+        {%%}
+    </body>
+
+</html>

@@ -1,0 +1,16 @@
+[requires]
+python_version = "3.8"
+
+[packages]
+pytest = "*"
+pycodestyle = "*"
+pylint = "*"
+rope = "*"
+flask = "*"
+flask-sqlalchemy = "*"
+alembic = "*"
+flask-migrate = "*"
+python-dotenv = "*"
+sqlalchemy = "*"
+wtforms = "*"
+flask-wtf = "*"

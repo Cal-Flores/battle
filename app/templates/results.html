@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Results -Battle Royale</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body class="result">
+        {%include 'nav.html'%}
+        <div class="rescont">
+            {% for res in results %}
+            <div class="resultdiv">
+                <img id="obito" class="resimgb" src="../static/images/{{res.first}}">
+                <img id="obito" class="resimgb" src="../static/images/{{res.second}}">
+                <img id="obito" class="resimgb" src="../static/images/{{res.third}}">
+                <img id="obito" class="resimgb" src="../static/images/{{res.fourth}}">
+                <img id="obito" class="resimgb" src="../static/images/{{res.fifth}}">
+                <img id="obito" class="resimgb" src="../static/images/{{res.sixth}}">
+                <img id="obito" class="resimgb" src="../static/images/{{res.seventh}}">
+                <img id="obito" class="resimgb" src="../static/images/{{res.eigth}}">
+                <img id="obito" class="resimgb" src="../static/images/{{res.ninth}}">
+                <img id="obito" class="resimgb" src="../static/images/{{res.tenth}}">
+
+            </div>
+            {% endfor %}
+            <div class="h2hsub">
+                <form action="/new_result">
+                    <input class="oppbtn" type="submit" value="New Result" />
+                </form>
+            </div>
+        </div>
+        </div>
+    </body>
+
+</html>

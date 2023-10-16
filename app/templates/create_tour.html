@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Tournament</title>
+        <link href="../static/main_page.css" rel="stylesheet">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="newtourbg">
+
+
+
+
+        <h1>NEW Tournament</h1>
+        <div class="resultform">
+
+
+            <form method="post" action="/new_tournament">
+                {{ form.csrf_token }}
+                <div>
+                    <div class='tourhold' class="reshold">
+                        <div class="labletabe">Name</div>
+                        {{ form.name }}
+                    </div>
+                    <div class='tourhold' class="reshold">
+                        <div class="labletabe">Link</div>
+                        {{ form.link }}
+                    </div>
+                    <div class='tourhold' class="reshold">
+                        <div class="labletabe">Date</div>
+                        {{ form.date }}
+                    </div>
+                    <div class='tourhold' class="reshold">
+                        <div class="labletabe">Champion</div>
+                        {{ form.first }}
+                    </div>
+                    <div class='tourhold' class="reshold">
+                        <div class="labletabe">Runner-up</div>
+                        {{ form.second }}
+                    </div>
+                    <div class='tourhold' class="reshold">
+                        <div class="labletabe">Bronze</div>
+                        {{ form.third }}
+                    </div>
+
+                    <div>
+                        {{ form.submit }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,49 @@
+<form method="post" action="/new_player">
+    {{ form.csrf_token }}
+
+    <div>
+        {{ form.name.label }}
+        {{ form.name }}
+    </div>
+
+    <div>
+        {{ form.wins.label }}
+        {{ form.wins }}
+    </div>
+
+
+    <div>
+        {{ form.loss.label }}
+        {{ form.loss }}
+    </div>
+
+    <div>
+        {{ form.points.label }}
+        {{ form.points }}
+    </div>
+
+    <div>
+        {{ form.img.label }}
+        {{ form.img }}
+    </div>
+    <div>
+        {{ form.gold.label }}
+        {{ form.gold }}
+    </div>
+    <div>
+        {{ form.silver.label }}
+        {{ form.silver }}
+    </div>
+    <div>
+        {{ form.bronze.label }}
+        {{ form.bronze }}
+    </div>
+    <div>
+        {{ form.medal.label }}
+        {{ form.medal }}
+    </div>
+
+    <div>
+        {{ form.submit }}
+    </div>
+</form>

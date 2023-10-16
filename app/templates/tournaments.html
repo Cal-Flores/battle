@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Tournaments -Battle Royale</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="tourn-body">
+        {% include 'nav.html' %}
+        <div class="tourcont">
+            {% for tour in tournaments %}
+            <div class="tourdiv">
+                <a target="_blank" class="tourtxt" href={{tour.link}}>{{tour.name}}</a>
+                <p class="tourtxt">{{tour.date}}</p>
+                <div class="tourimg">
+                    <p class="medal2">🥇</p>
+                    <img id="obito" src="../static/images/{{tour.first}}">
+                    <p class="medal2">🥈</p>
+                    <img id="obito" src="../static/images/{{tour.second}}">
+                    <p class="medal2">🥉</p>
+                    <img id="obito" src="../static/images/{{tour.third}}">
+                </div>
+            </div>
+            {% endfor %}
+            <div>
+                <form action="/new_tournament">
+                    <input class="oppbtn" type="submit" value="New Result" />
+                </form>
+            </div>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/main_page.css">
+</head>
+
+<body>
+    <div class="eformcont">
+
+        <h1>EDIT</h1>
+        <div class="editcard">
+            <img class="eimg" src="{{player.img}}">
+            <div class="editwl">
+                <p class="win">Victories: <span class="number">{{player.wins}}</span></p>
+                <p class="loss">Defeats: <span class="number">{{player.loss}}</span></p>
+                <p class="points">Points: <span class="number">{{player.points}}</span></p>
+            </div>
+            <div class="editmedal">
+                <div class="medalcont">
+                    {% if player.gold >= 1 %}
+                    <p class="number">{{player.gold}} <span class="medal">🥇</span></p>
+                    {% endif %}
+                    {% if player.silver >= 1 %}
+                    <p class="number">{{player.silver}} <span class="medal">🥈</span></p>
+                    {% endif %}
+                    {% if player.bronze >= 1 %}
+                    <p class="number">{{player.bronze}} <span class="medal">🥉</span></p>
+                    {% endif %}
+                    {% if player.medal >= 1 %}
+                    <p class="number">{{player.medal}} <span class="medal">🎖</span></p>
+                    {% endif %}
+                    {% if player.badge >= 1 %}
+                    <div class="badge">
+                        <p class="number">{{player.badge}} </p>
+                        <img src="../static/images/reward.png" class="ribbon">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <form class="form" method="post" action="/edit/medal/{{player.id}}">
+                {{ form.csrf_token }}
+                {{ form.hidden_tag() }}
+
+                <div class="labdiv">
+                    <div class="label">
+                        <div class="labletab">Points</div>
+                        <div class="input">{{ form.points }}</div>
+                    </div>
+                    <div class="label">
+                        <div class="labletab">Gold</div>
+                        <div class="input">{{ form.gold }}</div>
+                    </div>
+                    <div class="label">
+                        <div class="labletab">Silver</div>
+                        <div class="input">{{ form.silver }}</div>
+                    </div>
+                    <div class="label">
+                        <div class="labletab">Bronze</div>
+                        <div class="input">{{ form.bronze }}</div>
+                    </div>
+                    <div class="label">
+                        <div class="labletab">Medal</div>
+                        <div class="input">{{ form.medal }}</div>
+                    </div>
+                    <div class="label">
+                        <div class="labletab">Badge</div>
+                        <div class="input">{{ form.badge }}</div>
+                    </div>
+                </div>
+
+                <button>{{ form.submit }}</button>
+
+
+            </form>
+        </div>
+</body>
+
+</html>
