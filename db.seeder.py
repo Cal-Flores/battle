@@ -2,6 +2,9 @@ from app.models import db, Player, Tour, Result, Opponent
 from app import app
 import datetime
 
+# pipenv shell
+# flask run
+
 
 first = datetime.datetime(2023, 9, 11)
 second = datetime.datetime(2023, 9, 12)
