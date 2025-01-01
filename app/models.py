@@ -17,6 +17,8 @@ class Player(db.Model):
     bronze = db.Column(db.Integer)
     medal = db.Column(db.Integer)
     badge = db.Column(db.Integer)
+    team = db.Column(db.String(255))
+    logo = db.Column(db.String)
 
 
 # flask db_init

@@ -38,8 +38,8 @@ with app.app_context():
 
 
 
-    player1 = Player(name='Akatsuki Sasuke', wins=0, loss=0, points=0, img='../static/images/akat-sas.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player2 = Player(name='Amaterasu Sasuke', wins=0, loss=0, points=0, img='../static/images/amaterasu.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player1 = Player(team='Penn State', logo='https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg', name='Akatsuki Sasuke', wins=0, loss=0, points=0, img='../static/images/akat-sas.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player2 = Player(team = 'Ok State', logo='https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg', name='Amaterasu Sasuke', wins=0, loss=0, points=0, img='../static/images/amaterasu.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player3 = Player(name='Anbu Itachi', wins=0, loss=0, points=0, img='../static/images/anbu-itachi.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player4 = Player(name='Anbu Kakashi',wins=0, loss=0, points=0, img='../static/images/anbu_kakashi.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player5 = Player(name='Asuma', wins=0, loss=0, points=0,img='../static/images/asuma.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -183,3 +183,7 @@ with app.app_context():
     db.session.add(player64)
     db.session.commit()
     print('All Players created!')
+    # print("Clearing existing player data...")
+    # Player.query.delete()  # Deletes all rows in the table
+    # db.session.commit()
+    # print("Database cleared.")
