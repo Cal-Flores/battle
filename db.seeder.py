@@ -17,10 +17,10 @@ seventh = datetime.datetime(2023, 9, 18)
 # ../static/images/
 with app.app_context():
 
-    opp0 = Opponent(player_id=4, opponent_id=20,victory=True,tour_name=2)
-    opp2 = Opponent(player_id=4, opponent_id=63,victory=True,tour_name=3)
-    opp3 = Opponent(player_id=4, opponent_id=34,victory=False,tour_name=6)
-    opp4 = Opponent(player_id=4, opponent_id=25,victory=True,tour_name=7)
+    # opp0 = Opponent(player_id=4, opponent_id=20,victory=True,tour_name=2)
+    # opp2 = Opponent(player_id=4, opponent_id=63,victory=True,tour_name=3)
+    # opp3 = Opponent(player_id=4, opponent_id=34,victory=False,tour_name=6)
+    # opp4 = Opponent(player_id=4, opponent_id=25,victory=True,tour_name=7)
 
     res0 = Result(first='obito.webp', second='gaara.jpeg', third='madara.gif', fourth='jiraiya.jpeg', fifth='kaguya.jpeg', sixth='minato.jpeg', seventh='chakra.jpeg', eigth='orochimaru.jpeg', ninth='warsakura.jpeg', tenth='shikamaru.jpeg')
     res2 = Result(first='anbu_kakashi.webp', second='six-paths-sage.jpeg', third='amaterasu.jpeg', fourth='pain.webp', fifth='gaara.jpeg', sixth='killer_bee.jpeg', seventh='sage.gif', eigth='kaguya.jpeg', ninth='anbu-itachi.jpeg', tenth='shuriken.jpeg')

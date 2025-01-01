@@ -470,6 +470,7 @@ def new_battle():
             'player_id': player_1.id,
             'opponent_id': player_2.id,
             'victory': form.data['victory_1'],
+            'score': form.data['score'],
             'tour_name': form.data['tournamnet'],
             'round': form.data['round']
         }
@@ -477,6 +478,7 @@ def new_battle():
             'player_id': player_2.id,
             'opponent_id': player_1.id,
             'victory': form.data['victory_2'],
+            'score': form.data['score'],
             'tour_name': form.data['tournamnet'],
             'round': form.data['round']
         }

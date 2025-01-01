@@ -219,6 +219,7 @@
                     {% for opp in opponents %}
                     <div class="oppperson2">
                         <div class="tourcontcard">
+                            <div class="tournum">{{opp.score}}</div>
                             <div class="tournum">{{opp.round}}</div>
                         </div>
                         <a href="/tournament/{{opp.tour_name}}" class="tournum">Battle Royale {{opp.tour_name}}</a>

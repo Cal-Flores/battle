@@ -22,7 +22,7 @@ class Player(db.Model):
 
 
 # flask db_init
-# flask db_migrate
+# flask db migrate
 # flask db upgrade
 
 class Tour(db.Model):
@@ -61,6 +61,7 @@ class Opponent(db.Model):
     victory = db.Column(db.Boolean)
     tour_name = db.Column(db.Integer)
     round = db.Column(db.String(255))
+    score = db.Column(db.Integer)
 
 class Battle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -70,3 +71,4 @@ class Battle(db.Model):
     victory_2 = db.Column(db.Boolean)
     tour_name = db.Column(db.Integer)
     round = db.Column(db.String(255))
+    score = db.Column(db.Integer)

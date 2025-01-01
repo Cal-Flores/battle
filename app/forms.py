@@ -173,6 +173,7 @@ class NewResult(FlaskForm):
 class NewOpponent(FlaskForm):
     name = SelectField('Oppenent Name', choices=names)
     victory = BooleanField('Victory')
+    score = IntegerField('Score')
     tournamnet = StringField('Tournament')
     round = SelectField('Round', choices=rounds)
     submit = SubmitField('Submit')
@@ -190,6 +191,7 @@ class NewBattle(FlaskForm):
     victory_1 = BooleanField('Victory')
     player_2 = StringField('Fighter 2')
     victory_2 = BooleanField('Victory')
+    score = IntegerField('Score')
     tournamnet = IntegerField('Tournament')
     round = SelectField('Round', choices=rounds)
     submit = SubmitField('Submit')
