@@ -167,8 +167,8 @@ class NewResult(FlaskForm):
     eigth = SelectField('Eigth', choices=images)
     ninth = SelectField('Ninth', choices=images)
     tenth = SelectField('Tenth', choices=images)
-    # eleventh = SelectField('Eleventh', choices=images)
-    # twelfth = SelectField('Twelfth', choices=images)
+    eleventh = SelectField('Eleventh', choices=images)
+    twelfth = SelectField('Twelfth', choices=images)
     submit = SubmitField('Submit')
 
 

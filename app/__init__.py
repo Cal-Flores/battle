@@ -15,7 +15,8 @@ Migrate(app,db)
 
 @app.route('/')
 def index():
-    players = Player.query.all()
+    #pnt_leaders = Player.query.order_by(Player.points.desc(), Player.wins.desc(), Player.loss).all()
+    players = Player.query.order_by(Player.name).all()
     return render_template('main_page.html', players = players)
 
 @app.route('/new_search',  methods=['GET', 'POST'])
@@ -313,8 +314,8 @@ def new_result():
         player_img8 = '../static/images/' + form.data['eigth']
         player_img9 = '../static/images/' + form.data['ninth']
         player_img10 = '../static/images/' + form.data['tenth']
-        # player_img11 = '../static/images/' + form.data['eleventh']
-        # player_img12 = '../static/images/' + form.data['twelfth']
+        player_img11 = '../static/images/' + form.data['eleventh']
+        player_img12 = '../static/images/' + form.data['twelfth']
 
         player1 = Player.query.filter(Player.img == player_img).one()
         player1.points += 16
@@ -371,8 +372,8 @@ def new_result():
             'eigth': form.data['eigth'],
             'ninth': form.data['ninth'],
             'tenth': form.data['tenth'],
-            # 'eleventh': form.data['eleventh'],
-            # 'twelfth': form.data['twelfth'],
+            'eleventh': form.data['eleventh'],
+            'twelfth': form.data['twelfth'],
         }
         new_result = Result(**params)
         db.session.add(new_result)
