@@ -57,7 +57,7 @@ with app.app_context():
     player17 = Player(name='Hiroku', wins=0, loss=0, points=0, img='../static/images/hiroku.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player18 = Player(name='Hidan', wins=0, loss=0, points=0, img='../static/images/hidan.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player19 = Player(name='Hinata', wins=0, loss=0, points=0, img='../static/images/hinata.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player20 = Player(name='Ino', wins=0, loss=0, points=0, img='../static/images/ino.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player20 = Player(name='Ino', wins=0, loss=0, points=0,team='Virginia Tech',logo='https://sportslogohistory.com/wp-content/uploads/2018/01/virginia_tech_hokies_1983-pres.png', img='../static/images/ino.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player21 = Player(name='Itachi', wins=0, loss=0, points=0, img='../static/images/itachi.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player22 = Player(name='Jiraiya', wins=0, loss=0, points=0, img='../static/images/jiraiya.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player23 = Player(name='Jutsu Naruto', wins=0, loss=0, points=0, img='../static/images/jutsu.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -188,8 +188,9 @@ with app.app_context():
     db.session.add(player66)
     db.session.commit()
     print('All Players created!')
-    # print("Clearing existing player data...")
+
     # Player.query.delete()  # Deletes all rows in the table
     # Result.query.delete()
+    # Opponent.query.delete()
     # db.session.commit()
     # print("Database cleared.")

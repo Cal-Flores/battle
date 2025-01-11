@@ -122,7 +122,9 @@ rounds = [
     'Blood Round',
     'Round of 12',
     'Cons-24',
-    'Cons-16'
+    'Cons-16',
+    'Dual',
+    ''
     ]
 search_rounds = [
     '.',
@@ -144,6 +146,8 @@ search_rounds = [
     'Cons-16',
     'Cons-24',
     'Consolation Round',
+    'Dual',
+    ''
     ]
 
 class NewTour(FlaskForm):
@@ -194,7 +198,7 @@ class NewBattle(FlaskForm):
     player_2 = StringField('Fighter 2')
     victory_2 = BooleanField('Victory')
     score = IntegerField('Score')
-    tournamnet = IntegerField('Tournament')
+    tournamnet = StringField('Tournament')
     round = SelectField('Round', choices=rounds)
     submit = SubmitField('Submit')
 

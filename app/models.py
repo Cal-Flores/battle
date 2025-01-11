@@ -72,5 +72,8 @@ class Battle(db.Model):
     player_2 = db.Column(db.Integer)
     victory_2 = db.Column(db.Boolean)
     tour_name = db.Column(db.Integer)
-    round = db.Column(db.String(255))
+    round = db.Column(db.Integer)
     score = db.Column(db.Integer)
+
+# flask db migrate -m "Updated Battle model"
+# flask db upgrade

@@ -476,7 +476,7 @@ def new_battle():
             'opponent_id': player_2.id,
             'victory': form.data['victory_1'],
             'score': form.data['score'],
-            'tour_name': form.data['tournamnet'],
+            'tour_name': form.data['tournamnet'] or 'Battle Royale 1',
             'round': form.data['round']
         }
         para = {
@@ -484,7 +484,7 @@ def new_battle():
             'opponent_id': player_1.id,
             'victory': form.data['victory_2'],
             'score': form.data['score'],
-            'tour_name': form.data['tournamnet'],
+            'tour_name': form.data['tournamnet'] or 'Battle Royal 1',
             'round': form.data['round']
         }
 

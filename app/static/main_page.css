@@ -814,7 +814,7 @@ a {
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    width: 40%;
+    width: 35%;
 }
 
 .oppcard2 {
@@ -822,7 +822,8 @@ a {
     flex-direction: column;
     align-items: flex-end;
     justify-content: flex-end;
-    width: 60%;
+    width: 65%;
+
 }
 
 #oppimg {
@@ -839,7 +840,7 @@ a {
     border-radius: 50%;
     margin-top: 8px;
     margin-bottom: 8px;
-    padding-right: 10%;
+    /* padding-right: 10%; */
 }
 
 #leaderlogo {
@@ -862,8 +863,11 @@ a {
     border-top: 1px solid whitesmoke;
     border-left: 1px solid whitesmoke;
     /* height: 57px; */
-    padding-left: 12%;
+    padding-left: 2%;
     height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    /* Score, Round, Tournament Name, Actions */
 }
 
 .oppperson2 {
@@ -879,10 +883,13 @@ a {
     border-top: 1px solid whitesmoke;
     border-right: 1px solid whitesmoke;
     /* height: 43.5px; */
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 1fr 1fr;
+    /* Score, Round, Tournament Name, Actions */
 }
 
 #tourround {
-    padding-left: 25%;
+    /* padding-left: 25%; */
 }
 
 
@@ -991,7 +998,7 @@ a {
 
 .tourcontcard {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     width: 35%;
 }
 
