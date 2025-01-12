@@ -53,6 +53,10 @@ class Result(db.Model):
     tenth = db.Column(db.String(255), nullable=False)
     eleventh = db.Column(db.String(255), nullable=True)
     twelfth = db.Column(db.String(255), nullable=True)
+    thirtenth = db.Column(db.String(255), nullable=True)
+    fourtenth = db.Column(db.String(255), nullable=True)
+    fifthtenth = db.Column(db.String(255), nullable=True)
+    sixtenth = db.Column(db.String(255), nullable=True)
 
 
 class Opponent(db.Model):
