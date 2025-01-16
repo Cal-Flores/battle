@@ -51,7 +51,7 @@ with app.app_context():
 
 
 
-    player1 = Player(name='Akatsuki Sasuke', img='../static/images/akat-sas.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player1 = Player(name='Akatsuki Sasuke', wins=0, loss=0, points=0, img='../static/images/akat-sas.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player2 = Player(name='Amaterasu Sasuke', team = 'Ok State', logo='https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg', wins=0, loss=0, points=0, img='../static/images/amaterasu.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player3 = Player(name='Anbu Itachi', wins=0, loss=0, points=0, img='https://fbi.cults3d.com/uploaders/18749279/illustration-file/1861899f-985b-4d5c-b20c-7963bab4409a/tumblr_40988e0d72ec3b0ef605d977222b3828_e2a7cb11_1280.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player4 = Player(name='Anbu Kakashi',wins=0, loss=0, points=0, img='../static/images/anbu_kakashi.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -63,7 +63,7 @@ with app.app_context():
     player10 = Player(name='Cursed Hidan', wins=0, loss=0, points=0, img='../static/images/cursed.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player11 = Player(name='Dadara', wins=0, loss=0, points=0, img='../static/images/dadara.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player12 = Player(name='Deidara', wins=0, loss=0, points=0, img='../static/images/deidara.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player13 = Player(name='Gaara', wins=0, loss=0, points=0, img='../static/images/gaara.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player13 = Player(name='Gaara', team='Iowa State', logo=Iowa_State ,wins=0, loss=0, points=0, img='https://preview.redd.it/where-do-you-think-gaara-would-be-if-he-stayed-evil-what-v0-1mc4ko3vkdmc1.jpeg?width=640&crop=smart&auto=webp&s=43087d0df5fe368dea0009c793c70547e2533852', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player14 = Player(name='Gamabunta', wins=0, loss=0, points=0, img='../static/images/bunta.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player15 = Player(name='Gamakichi', wins=0, loss=0, points=0, img='../static/images/kichi.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player16 = Player(name='Hashirama',team='Missouri', logo=Missouri, wins=0, loss=0, points=0, img='https://64.media.tumblr.com/d49f2f2e0ff3e5b387225b4c2156f1a7/ec7fcc889a68343d-94/s540x810/e0c67f043cd465e14e4cf4acd24f59c688c1e284.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -84,11 +84,11 @@ with app.app_context():
     player31 = Player(name='Killer Bee', wins=0, loss=0, points=0, img='../static/images/killer_bee.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player32 = Player(name='Konan', wins=0, loss=0, points=0, img='../static/images/konan.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player33 = Player(name='Kurama', wins=0, loss=0, points=0, img='../static/images/kurama.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player34 = Player(name='Madara', wins=0, loss=0, points=0, img='../static/images/madara.gif', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player34 = Player(name='Madara',team='Nebraska', logo=Nebraska, wins=0, loss=0, points=0, img='https://pbs.twimg.com/media/EW4OLH9XQAAK1ru.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player35 = Player(name='Masked Man', wins=0, loss=0, points=0, img='../static/images/tobi.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player36 = Player(name='Massacre Itachi', wins=0, loss=0, points=0, img='../static/images/massacre.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player37 = Player(name='Might Guy', wins=0, loss=0, points=0, img='../static/images/guy.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player38 = Player(name='Minato', wins=0, loss=0, points=0, img='../static/images/minato.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player38 = Player(name='Minato',team='Lehigh', logo=Lehigh, wins=0, loss=0, points=0, img='https://pbs.twimg.com/profile_images/542400676563668992/XAxPkw9p_400x400.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player39 = Player(name='Neji', wins=0, loss=0, points=0, img='../static/images/neji.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player40 = Player(name='Obito', wins=0, loss=0, points=0, img='../static/images/obito.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player41 = Player(name='Orochimaru', wins=0, loss=0, points=0, img='../static/images/orochimaru.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -110,26 +110,23 @@ with app.app_context():
     player57 = Player(name='Suigetsu', wins=0, loss=0, points=0, img='../static/images/suigetsu.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player58 = Player(name='Sword Sasuke', wins=0, loss=0, points=0, img='../static/images/sword.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player59 = Player(name='Temari', wins=0, loss=0, points=0, img='../static/images/temari.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player60 = Player(name='Tobirama', wins=0, loss=0, points=0, img='../static/images/tobirama.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player60 = Player(name='Tobirama', team='Iowa', logo=Iowa, wins=0, loss=0, points=0, img='https://i.pinimg.com/736x/62/70/03/627003d2ec8fc1b4d9bb6ce957746db7.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player61 = Player(name='Tsunade', wins=0, loss=0, points=0, img='../static/images/tsunade.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player62 = Player(name='War Sakura', wins=0, loss=0, points=0, img='../static/images/warsakura.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player63 = Player(name='Yamato', wins=0, loss=0, points=0, img='../static/images/yamato.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player64 = Player(name='Zetsu', wins=0, loss=0, points=0, img='../static/images/zetsu.png', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    #### ID STARTS AT 49 ########
+    #### ID STARTS AT 57 ########
     player65 = Player(name='Toji', team='Oklahoma State', logo=Oklahoma_State, wins=0, loss=0, points=0, img='https://i0.wp.com/ovicio.com.br/wp-content/uploads/2023/06/20230626-fzgi5egxsainwyd.jpg?resize=555%2C555&ssl=1', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player66 = Player(name='Nanami', team='Stanford', logo = Stanford, wins=0, loss=0, points=0, img='https://64.media.tumblr.com/bee5b4150e08d22f7351d037813cd8b9/13fcef64824dd1b2-da/s1280x1920/f260dbaffb68a41c3554c15561f909841cf1b9dc.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='https://static.wikia.nocookie.net/theunitedorganizationtoonsheroes/images/7/77/Satoru_Gojo.jpg/revision/latest/scale-to-width-down/450?cb=20220201130911', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player68 = Player(name='G', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='https://preview.redd.it/satoru-gojo-reference-fanart-v0-e3zaq33rfn791.jpg?width=640&crop=smart&auto=webp&s=ec370d22c5231563dcb05d37a2fc201265747428', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player68 = Player(name='Goku', team='Cornell', logo = Cornell, wins=0, loss=0, points=0, img='https://wallpapers-clan.com/wp-content/uploads/2022/09/dragon-ball-goku-pfp-13.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player69 = Player(name='Yuji', team='Ohio State', logo = Ohio_State, wins=0, loss=0, points=0, img='https://i.pinimg.com/736x/89/70/0d/89700d9de4deb5f1099c7770d879625b.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player70 = Player(name='Adult Gon', team='Virginia Tech', logo = Virginia_Tech, wins=0, loss=0, points=0, img='https://i.pinimg.com/736x/be/83/a3/be83a3dbe41797e6932cba2c2b84d7db.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player71 = Player(name='Sukuna', team='Michigan', logo = Michigan, wins=0, loss=0, points=0, img='https://pbs.twimg.com/media/ErKDr0UXAAAFux9.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player72 = Player(name='Makima', team='Minnesota', logo = Minnesota, wins=0, loss=0, points=0, img='https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/makima_finger_tent.png', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player73 = Player(name='Meruem', team='Iowa State', logo = Iowa_State, wins=0, loss=0, points=0, img='https://i1.sndcdn.com/artworks-u5gLzAXGz4iBzLj2-YyjfNg-t500x500.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player74 = Player(name='Todo', team='NC State', logo = NC_State, wins=0, loss=0, points=0, img='https://i.pinimg.com/736x/c8/a6/c0/c8a6c00955e817fd3b3ff96928849dd6.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+
 
 
 
@@ -212,15 +209,23 @@ with app.app_context():
     #db.session.add(player64)
     db.session.add(player65)
     db.session.add(player66)
+    db.session.add(player67)
+    db.session.add(player68)
+    db.session.add(player69)
+    db.session.add(player70)
+    db.session.add(player71)
+    db.session.add(player72)
+    db.session.add(player73)
+    db.session.add(player74)
     db.session.commit()
     print('All Players created!')
 
-    Player.query.delete()  # Deletes all rows in the table
-    Result.query.delete()
-    Opponent.query.delete()
-    Tour.query.delete()
-    db.session.commit()
-    print("Database cleared.")
+    # Player.query.delete()  # Deletes all rows in the table
+    # Result.query.delete()
+    # Opponent.query.delete()
+    # Tour.query.delete()
+    # db.session.commit()
+    # print("Database cleared.")
 
 
 # Team names
