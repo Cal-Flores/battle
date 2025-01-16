@@ -76,6 +76,10 @@ def s_form():
 def facts():
     return render_template('facts.html')
 
+@app.route('/duals')
+def duals():
+    return render_template('duals.html')
+
 @app.route('/tournament/<id>')
 def single_tour(id):
     tour = Tour.query.get(id)
@@ -304,84 +308,122 @@ def rform():
 def new_result():
     form = NewResult()
     if form.validate_on_submit():
-        player_img = '../static/images/' + form.data['first']
-        player_img2 = '../static/images/' + form.data['second']
-        player_img3 = '../static/images/' + form.data['third']
-        player_img4 = '../static/images/' + form.data['fourth']
-        player_img5 = '../static/images/' + form.data['fifth']
-        player_img6 = '../static/images/' + form.data['sixth']
-        player_img7 = '../static/images/' + form.data['seventh']
-        player_img8 = '../static/images/' + form.data['eigth']
-        player_img9 = '../static/images/' + form.data['ninth']
-        player_img10 = '../static/images/' + form.data['tenth']
-        player_img11 = '../static/images/' + form.data['eleventh']
-        player_img12 = '../static/images/' + form.data['twelfth']
-        player_img13 = '../static/images/' + form.data['thirtenth']
-        player_img14 = '../static/images/' + form.data['fourtenth']
-        player_img15 = '../static/images/' + form.data['fifthtenth']
-        player_img16 = '../static/images/' + form.data['sixtenth']
-
-        player1 = Player.query.filter(Player.img == player_img).one()
-        player1.points += 16
+        # player_img = '../static/images/' + form.data['first']
+        # player_img2 = '../static/images/' + form.data['second']
+        # player_img3 = '../static/images/' + form.data['third']
+        # player_img4 = '../static/images/' + form.data['fourth']
+        # player_img5 = '../static/images/' + form.data['fifth']
+        # player_img6 = '../static/images/' + form.data['sixth']
+        # player_img7 = '../static/images/' + form.data['seventh']
+        # player_img8 = '../static/images/' + form.data['eigth']
+        # player_img9 = '../static/images/' + form.data['ninth']
+        # player_img10 = '../static/images/' + form.data['tenth']
+        # player_img11 = '../static/images/' + form.data['eleventh']
+        # player_img12 = '../static/images/' + form.data['twelfth']
+        # player_img13 = '../static/images/' + form.data['thirtenth']
+        # player_img14 = '../static/images/' + form.data['fourtenth']
+        # player_img15 = '../static/images/' + form.data['fifthtenth']
+        # player_img16 = '../static/images/' + form.data['sixtenth']
+        player1 = Player.query.filter(form.data['first'] == Player.name).one()
+        player_img = player1.img
+        player1.points += 20
         player1.gold += 1
 
-        player2 = Player.query.filter(Player.img == player_img2).one()
-        player2.points += 13
+        player2 = Player.query.filter(form.data['second'] == Player.name).one()
+        player_img2 = player2.img
+        player2.points += 17
         player2.silver += 1
 
-        player3 = Player.query.filter(Player.img == player_img3).one()
-        player3.points += 11
+        player3 = Player.query.filter(form.data['third'] == Player.name).one()
+        player_img3 = player2.img
+        player3.points += 15
         player3.bronze += 1
 
-        player4 = Player.query.filter(Player.img == player_img4).one()
-        player4.points += 9
-        player4.medal += 1
+        player4 = Player.query.filter(form.data['fourth'] == Player.name).one()
+        player_img4 = player4.img
+        player2.points += 13
+        player2.badge += 1
 
-        player5 = Player.query.filter(Player.img == player_img5).one()
-        player5.points += 8
-        player5.medal += 1
+        player5 = Player.query.filter(form.data['fifth'] == Player.name).one()
+        player_img5 = player5.img
+        player5.points += 12
+        player5.badge += 1
 
-        player6 = Player.query.filter(Player.img == player_img6).one()
-        player6.points += 7
-        player6.medal += 1
+        player6 = Player.query.filter(form.data['sixth'] == Player.name).one()
+        player_img6 = player6.img
+        player6.points += 11
+        player6.badge += 1
 
-        player7 = Player.query.filter(Player.img == player_img7).one()
-        player7.points += 6
+        player7 = Player.query.filter(form.data['seventh'] == Player.name).one()
+        player_img7 = player7.img
+        player7.points += 10
         player7.badge += 1
 
-        player8 = Player.query.filter(Player.img == player_img8).one()
-        player8.points += 5
+        player8 = Player.query.filter(form.data['eigth'] == Player.name).one()
+        player_img8 = player8.img
+        player8.points += 9
         player8.badge += 1
 
-        player9 = Player.query.filter(Player.img == player_img9).one()
-        player9.points += 4
+        player9 = Player.query.filter(form.data['ninth'] == Player.name).one()
+        player_img9 = player9.img
+        player9.points += 8
         player9.badge += 1
 
-        player10 = Player.query.filter(Player.img == player_img10).one()
-        player10.points += 3
+        player10 = Player.query.filter(form.data['tenth'] == Player.name).one()
+        player_img10 = player10.img
+        player10.points += 7
         player10.badge += 1
 
+        player11 = Player.query.filter(form.data['eleventh'] == Player.name).one()
+        player_img11 = player11.img
+        player11.points += 6
+        player11.badge += 1
+
+        player12 = Player.query.filter(form.data['twelfth'] == Player.name).one()
+        player_img12 = player12.img
+        player12.points += 5
+        player12.badge += 1
+
+        player13 = Player.query.filter(form.data['thirtenth'] == Player.name).one()
+        player_img13 = player13.img
+        player13.points += 4
+        player13.badge += 1
+
+        player14 = Player.query.filter(form.data['fourtenth'] == Player.name).one()
+        player_img14 = player14.img
+        player14.points += 3
+        player14.badge += 1
+
+        player15 = Player.query.filter(form.data['fifthtenth'] == Player.name).one()
+        player_img15 = player15.img
+        player15.points += 2
+        player15.badge += 1
+
+        player16 = Player.query.filter(form.data['sixtenth'] == Player.name).one()
+        player_img16 = player16.img
+        player16.points += 1
+        player16.badge += 1
 
 
         db.session.commit()
 
         params = {
-            'first': form.data['first'],
-            'second': form.data['second'],
-            'third': form.data['third'],
-            'fourth': form.data['fourth'],
-            'fifth': form.data['fifth'],
-            'sixth': form.data['sixth'],
-            'seventh': form.data['seventh'],
-            'eigth': form.data['eigth'],
-            'ninth': form.data['ninth'],
-            'tenth': form.data['tenth'],
-            'eleventh': form.data['eleventh'],
-            'twelfth': form.data['twelfth'],
-            'thirtenth': form.data['thirtenth'],
-            'fourtenth': form.data['fourtenth'],
-            'fifthtenth': form.data['fifthtenth'],
-            'sixtenth': form.data['sixtenth'],
+            'first': player_img,
+            'second': player_img2,
+            'third': player_img3,
+            'fourth': player_img4,
+            'fifth': player_img5,
+            'sixth': player_img6,
+            'seventh': player_img7,
+            'eigth': player_img8,
+            'ninth': player_img9,
+            'tenth': player_img10,
+            'eleventh': player_img11,
+            'twelfth': player_img12,
+            'thirtenth': player_img13,
+            'fourtenth': player_img14,
+            'fifthtenth': player_img15,
+            'sixtenth': player_img16,
         }
         new_result = Result(**params)
         db.session.add(new_result)

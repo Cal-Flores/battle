@@ -4,7 +4,20 @@ import datetime
 
 # pipenv shell
 # flask run
-
+Cornell = "https://sportslogohistory.com/wp-content/uploads/2019/06/cornell_big_red_2002-pres.png"
+Iowa = "https://storage.googleapis.com/hawkeyesports-com/2021/02/cf540990-logo-e1722875756178.png"
+Iowa_State = "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/isuni.sidearmsports.com/images/responsive_2021/logo_nav.svg"
+Lehigh =  "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/lehighsports.com/responsive_2020/images/svgs/logo_main2-new.svg"
+Michigan ="https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/mgoblue.com/images/sng_2023/main_nav_logo.svg"
+Minnesota = "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/gophersports.com/images/nextgen_2022/main_logo.svg"
+Missouri= "https://loodibee.com/wp-content/uploads/Missouri_Tigers_logo.png"
+Nebraska= "data:image/svg+xml,%3c?xml%20version=%271.0%27%20encoding=%27utf-8%27?%3e%3c!--%20Generator:%20Adobe%20Illustrator%2026.4.1,%20SVG%20Export%20Plug-In%20.%20SVG%20Version:%206.00%20Build%200)%20--%3e%3csvg%20version=%271.1%27%20id=%27Nebraska_N%27%20xmlns=%27http://www.w3.org/2000/svg%27%20xmlns:xlink=%27http://www.w3.org/1999/xlink%27%20x=%270px%27%20y=%270px%27%20viewBox=%270%200%20163%20152%27%20style=%27enable-background:new%200%200%20163%20152;%27%20xml:space=%27preserve%27%3e%3cstyle%20type=%27text/css%27%3e%20.st0{fill:%23FFFFFF;}%20%3c/style%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M159.1,144c-2.3,0-4.1,1.8-4.1,4s1.8,4,4,4s4-1.8,4-4S161.2,144,159.1,144z%20M159,151.2c-1.8,0-3.2-1.4-3.2-3.2%20s1.4-3.2,3.2-3.2c1.7,0,3.2,1.5,3.2,3.2C162.2,149.8,160.8,151.2,159,151.2z%27/%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M157.4,145.6h1.4c0.6,0,0.8,0,1.1,0.2c0.4,0.2,0.6,0.6,0.6,1.1c0,0.4-0.1,0.7-0.3,1c-0.1,0.2-0.3,0.2-0.6,0.4%20h-0.1l1.1,2.1h-0.8l-1-2h-0.6v2h-0.8L157.4,145.6L157.4,145.6z%20M158.6,147.7c0,0,0.3,0,0.4,0c0.4-0.1,0.6-0.3,0.6-0.8%20c0-0.3-0.1-0.5-0.4-0.6c-0.1,0-0.1,0-0.6,0h-0.4v1.4L158.6,147.7L158.6,147.7z%27/%3e%3c/g%3e%3c/g%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M147,0H93h-5v5v35v5h5h5v24.8L55.2,2.3L53.7,0H51H5H0v5v35v5h5h5v62H5H0v5v35v5h5h54h5v-5v-35v-5h-5h-5V82.2%20l42.8,67.5l1.5,2.3h2.7h46h5v-5v-35v-5h-5h-5V45h5h5v-5V5V0H147z%20M150,5v35v3h-3h-7v66h7h3v3v35v3h-3h-46h-1.6l-0.9-1.4L52,75.3%20V109h7h3v3v35v3h-3H5H2v-3v-35v-3h3h7V43H5H2v-3V5V2h3h46h1.7l0.9,1.4L100,76.7V43h-7h-3v-3V5V2h3h54h3V5z%27/%3e%3c/g%3e%3cpath%20class=%27st0%27%20d=%27M103,87L103,87L51,5H5v35c0,0,7.8,0,10,0c0,3.3,0,68.7,0,72l0,0c-2.2,0-10,0-10,0v35h54v-35c0,0-7.8,0-10,0l0,0%20c0-2.6,0-47,0-47l52,82h46v-35c0,0-7.8,0-10,0l0,0c0-3.3,0-68.7,0-72c2.2,0,10,0,10,0V5H93v35c0,0,7.8,0,10,0%20C103,42.6,103,87,103,87z%27/%3e%3c/svg%3e"
+NC_State= "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/unc.sidearmsports.com/images/sng_2023/main_nav_logo.svg"
+Ohio_State= "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/ohiostatebuckeyes.com/images/nextgen_2023/logo_main.svg"
+Oklahoma_State= "https://sportslogohistory.com/wp-content/uploads/2018/07/oklahoma_state_cowboys_2015-pres.png"
+Penn_State= "https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg"
+Stanford= "https://gostanford.com/imgproxy/l6GXJbFV4z1yPuiCbXCePofeGNcKTlM78I9yNaTuiU4/rs:fit:1980:0:0/g:ce/q:90/aHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL3N0YW5mb3JkLXByb2QvMjAyNC8wMy8yMC9hVXJvSkRQeEVBQzFBRE53M3M2YjBRQWNlcmd2WW9EOXRabHVsZHRrLnBuZw.png"
+Virginia_Tech= "https://sportslogohistory.com/wp-content/uploads/2018/01/virginia_tech_hokies_1983-pres.png"
 
 first = datetime.datetime(2023, 9, 11)
 second = datetime.datetime(2023, 9, 12)
@@ -38,9 +51,9 @@ with app.app_context():
 
 
 
-    player1 = Player(name='Akatsuki Sasuke',team='Penn State', logo='https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg',  wins=0, loss=0, points=0, img='../static/images/akat-sas.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player1 = Player(name='Akatsuki Sasuke', img='../static/images/akat-sas.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player2 = Player(name='Amaterasu Sasuke', team = 'Ok State', logo='https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg', wins=0, loss=0, points=0, img='../static/images/amaterasu.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player3 = Player(name='Anbu Itachi', wins=0, loss=0, points=0, img='../static/images/anbu-itachi.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player3 = Player(name='Anbu Itachi', wins=0, loss=0, points=0, img='https://fbi.cults3d.com/uploaders/18749279/illustration-file/1861899f-985b-4d5c-b20c-7963bab4409a/tumblr_40988e0d72ec3b0ef605d977222b3828_e2a7cb11_1280.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player4 = Player(name='Anbu Kakashi',wins=0, loss=0, points=0, img='../static/images/anbu_kakashi.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player5 = Player(name='Asuma', wins=0, loss=0, points=0,img='../static/images/asuma.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player6 = Player(name='Beat Sasuke', wins=0, loss=0, points=0, img='../static/images/beat-sas.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -53,7 +66,7 @@ with app.app_context():
     player13 = Player(name='Gaara', wins=0, loss=0, points=0, img='../static/images/gaara.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player14 = Player(name='Gamabunta', wins=0, loss=0, points=0, img='../static/images/bunta.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player15 = Player(name='Gamakichi', wins=0, loss=0, points=0, img='../static/images/kichi.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player16 = Player(name='Hashirama', wins=0, loss=0, points=0, img='../static/images/hashirama.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player16 = Player(name='Hashirama',team='Missouri', logo=Missouri, wins=0, loss=0, points=0, img='https://64.media.tumblr.com/d49f2f2e0ff3e5b387225b4c2156f1a7/ec7fcc889a68343d-94/s540x810/e0c67f043cd465e14e4cf4acd24f59c688c1e284.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player17 = Player(name='Hiroku', wins=0, loss=0, points=0, img='../static/images/hiroku.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player18 = Player(name='Hidan', wins=0, loss=0, points=0, img='../static/images/hidan.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player19 = Player(name='Hinata', wins=0, loss=0, points=0, img='../static/images/hinata.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -102,8 +115,21 @@ with app.app_context():
     player62 = Player(name='War Sakura', wins=0, loss=0, points=0, img='../static/images/warsakura.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player63 = Player(name='Yamato', wins=0, loss=0, points=0, img='../static/images/yamato.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player64 = Player(name='Zetsu', wins=0, loss=0, points=0, img='../static/images/zetsu.png', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player65 = Player(name='Toji', wins=0, loss=0, points=0, img='https://i0.wp.com/ovicio.com.br/wp-content/uploads/2023/06/20230626-fzgi5egxsainwyd.jpg?resize=555%2C555&ssl=1', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player66 = Player(name='Nanami', wins=0, loss=0, points=0, img='https://64.media.tumblr.com/bee5b4150e08d22f7351d037813cd8b9/13fcef64824dd1b2-da/s1280x1920/f260dbaffb68a41c3554c15561f909841cf1b9dc.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    #### ID STARTS AT 49 ########
+    player65 = Player(name='Toji', team='Oklahoma State', logo=Oklahoma_State, wins=0, loss=0, points=0, img='https://i0.wp.com/ovicio.com.br/wp-content/uploads/2023/06/20230626-fzgi5egxsainwyd.jpg?resize=555%2C555&ssl=1', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player66 = Player(name='Nanami', team='Stanford', logo = Stanford, wins=0, loss=0, points=0, img='https://64.media.tumblr.com/bee5b4150e08d22f7351d037813cd8b9/13fcef64824dd1b2-da/s1280x1920/f260dbaffb68a41c3554c15561f909841cf1b9dc.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='https://static.wikia.nocookie.net/theunitedorganizationtoonsheroes/images/7/77/Satoru_Gojo.jpg/revision/latest/scale-to-width-down/450?cb=20220201130911', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player68 = Player(name='G', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0)
 
 
 
@@ -189,9 +215,17 @@ with app.app_context():
     db.session.commit()
     print('All Players created!')
 
-    # Player.query.delete()  # Deletes all rows in the table
-    # Result.query.delete()
-    # Opponent.query.delete()
-    # Tour.query.delete()
-    # db.session.commit()
-    # print("Database cleared.")
+    Player.query.delete()  # Deletes all rows in the table
+    Result.query.delete()
+    Opponent.query.delete()
+    Tour.query.delete()
+    db.session.commit()
+    print("Database cleared.")
+
+
+# Team names
+teams = [
+    "Penn State", "Iowa State", "Iowa", "Cornell", "Lehigh", "Oklahoma State",
+    "North Carolina State", "Stanford", "Michigan", "Ohio State", "Minnesota",
+    "Missouri", "Virginia Tech", "Nebraska"
+]

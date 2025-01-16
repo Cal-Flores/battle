@@ -331,11 +331,11 @@ h2 {
 }
 
 .card:hover {
-    transform: scale(1.1);
+    border: solid rgb(74, 73, 73);
 }
 
 .goldcard:hover {
-    transform: scale(1.1);
+    border: solid rgb(74, 73, 73);
 }
 
 #obito {
