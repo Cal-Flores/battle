@@ -80,11 +80,11 @@ class Battle(db.Model):
     score = db.Column(db.Integer)
 
 
-# class Dual(db.Model):
-#      id = db.Column(db.Integer, primary_key=True)
-#      home =  db.Column(db.String)
-#      away =  db.Column(db.String)
-#      week =  db.Column(db.String)
+class Dual(db.Model):
+     id = db.Column(db.Integer, primary_key=True)
+     home =  db.Column(db.String)
+     away =  db.Column(db.String)
+     week =  db.Column(db.String)
 
 # flask db migrate -m "Updated Battle model"
 # flask db upgrade

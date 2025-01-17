@@ -1,4 +1,4 @@
-from app.models import db, Player, Tour, Result, Opponent
+from app.models import db, Player, Tour, Result, Opponent, Dual
 from app import app
 import datetime
 
@@ -49,6 +49,13 @@ with app.app_context():
     tour6 = Tour(link = 'https://challonge.com/h0fbyqgx', name='6th Battle Royale', date=sixth, first='juubito.jpeg', second='six-paths-sage.jpeg', third='kaguya.jpeg')
     tour7 = Tour(link = 'https://challonge.com/zsnukbwc', name='7th Battle Royale', date=seventh, first='regkak.jpeg', second='regsas.jpeg', third='juubito.jpeg')
 
+    dual1 = Dual(home='Michigan', away='NC State', week=1)
+    dual2 = Dual(home='Penn State', away='Lehigh', week=1)
+    dual3 = Dual(home='Missouri', away='Iowa', week=1)
+    dual4 = Dual(home='Ohio State', away='Nebraska', week=1)
+    dual5 = Dual(home='Virginia Tech', away='Iowa State', week=1)
+    dual6 = Dual(home='Stanford', away='Minnesota', week=1)
+    dual7 = Dual(home='Cornell', away='Oklahoma State', week=1)
 
 
     player1 = Player(name='Akatsuki Sasuke', wins=0, loss=0, points=0, img='../static/images/akat-sas.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -143,6 +150,14 @@ with app.app_context():
     db.session.add(tour5)
     db.session.add(tour6)
     db.session.add(tour7)
+    # week 1 duals
+    db.session.add(dual1)
+    db.session.add(dual2)
+    db.session.add(dual3)
+    db.session.add(dual4)
+    db.session.add(dual5)
+    db.session.add(dual6)
+    db.session.add(dual7)
     db.session.add(player1)
     db.session.add(player2)
     db.session.add(player3)

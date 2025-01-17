@@ -4,7 +4,7 @@ from app.config import Configuration
 from sqlalchemy import and_, or_
 
 from flask_migrate import Migrate
-from app.models import db, Player, Tour, Result, Opponent, Battle
+from app.models import db, Player, Tour, Result, Opponent, Battle, Dual
 
 
 app = Flask(__name__)
@@ -78,11 +78,20 @@ def facts():
 
 @app.route('/duals')
 def duals():
-    return render_template('duals.html')
+    duals = Dual.query.all()
+    return render_template('duals.html', duals = duals)
 
 @app.route('/duals/<id>')
 def one_duals(id):
-    return render_template('one_dual.html')
+    dual = Dual.query.get(id)
+    dualCode = 'Penn State vs Lehigh'
+    dual_fighters = Opponent.query.filter(Opponent.tour_name == dualCode).all()
+    participants = []
+    for part in dual_fighters:
+        fighter = Player.query.filter(Player.id == part.player_id).one()
+        if fighter not in participants:
+            participants.append(fighter)
+    return render_template('one_dual.html', dual = dual, players = participants)
 
 @app.route('/tournament/<id>')
 def single_tour(id):
