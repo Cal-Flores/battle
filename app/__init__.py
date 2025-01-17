@@ -80,6 +80,10 @@ def facts():
 def duals():
     return render_template('duals.html')
 
+@app.route('/duals/<id>')
+def one_duals(id):
+    return render_template('one_dual.html')
+
 @app.route('/tournament/<id>')
 def single_tour(id):
     tour = Tour.query.get(id)

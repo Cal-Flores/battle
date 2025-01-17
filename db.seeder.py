@@ -52,7 +52,7 @@ with app.app_context():
 
 
     player1 = Player(name='Akatsuki Sasuke', wins=0, loss=0, points=0, img='../static/images/akat-sas.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player2 = Player(name='Amaterasu Sasuke', team = 'Ok State', logo='https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg', wins=0, loss=0, points=0, img='../static/images/amaterasu.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player2 = Player(name='Amaterasu Sasuke', wins=0, loss=0, points=0, img='../static/images/amaterasu.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player3 = Player(name='Anbu Itachi', wins=0, loss=0, points=0, img='https://fbi.cults3d.com/uploaders/18749279/illustration-file/1861899f-985b-4d5c-b20c-7963bab4409a/tumblr_40988e0d72ec3b0ef605d977222b3828_e2a7cb11_1280.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player4 = Player(name='Anbu Kakashi',wins=0, loss=0, points=0, img='../static/images/anbu_kakashi.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player5 = Player(name='Asuma', wins=0, loss=0, points=0,img='../static/images/asuma.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -115,7 +115,7 @@ with app.app_context():
     player62 = Player(name='War Sakura', wins=0, loss=0, points=0, img='../static/images/warsakura.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player63 = Player(name='Yamato', wins=0, loss=0, points=0, img='../static/images/yamato.webp', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player64 = Player(name='Zetsu', wins=0, loss=0, points=0, img='../static/images/zetsu.png', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    #### ID STARTS AT 57 ########
+    #### use ID  56 ########
     player65 = Player(name='Toji', team='Oklahoma State', logo=Oklahoma_State, wins=0, loss=0, points=0, img='https://i0.wp.com/ovicio.com.br/wp-content/uploads/2023/06/20230626-fzgi5egxsainwyd.jpg?resize=555%2C555&ssl=1', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player66 = Player(name='Nanami', team='Stanford', logo = Stanford, wins=0, loss=0, points=0, img='https://64.media.tumblr.com/bee5b4150e08d22f7351d037813cd8b9/13fcef64824dd1b2-da/s1280x1920/f260dbaffb68a41c3554c15561f909841cf1b9dc.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player67 = Player(name='Gojo', team='Penn State', logo = Penn_State, wins=0, loss=0, points=0, img='https://preview.redd.it/satoru-gojo-reference-fanart-v0-e3zaq33rfn791.jpg?width=640&crop=smart&auto=webp&s=ec370d22c5231563dcb05d37a2fc201265747428', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -126,7 +126,7 @@ with app.app_context():
     player72 = Player(name='Makima', team='Minnesota', logo = Minnesota, wins=0, loss=0, points=0, img='https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/makima_finger_tent.png', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player73 = Player(name='Meruem', team='Iowa State', logo = Iowa_State, wins=0, loss=0, points=0, img='https://i1.sndcdn.com/artworks-u5gLzAXGz4iBzLj2-YyjfNg-t500x500.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player74 = Player(name='Todo', team='NC State', logo = NC_State, wins=0, loss=0, points=0, img='https://i.pinimg.com/736x/c8/a6/c0/c8a6c00955e817fd3b3ff96928849dd6.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
-
+    # round 2
 
 
 

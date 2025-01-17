@@ -11,17 +11,113 @@
         <style>
             @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
         </style>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f3f3f3;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+
+            .schedule-container {
+                background: white;
+                border: 2px solid #003366;
+                border-radius: 10px;
+                padding: 20px;
+                width: 90%;
+                max-width: 70%;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .schedule-header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .schedule-header h1 {
+                font-size: 24px;
+                color: #003366;
+            }
+
+            .match {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 15px;
+                margin: 5px 0;
+                border: 1px solid #003366;
+                border-radius: 5px;
+                background: #e6e6e6;
+                color: #6f869c;
+                font-weight: bold;
+            }
+
+            .match:hover {
+                background: #cce7ff;
+            }
+
+            .team {
+                width: 45%;
+                text-align: center;
+            }
+
+            .vs {
+                font-size: 18px;
+                color: #666;
+            }
+        </style>
         <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
     </head>
 
     <body id="leader">
         {%include 'nav.html'%}
-        <ol type="1" class="leadercont">
-            <h1>DUALS</h1>
-            {% for player in players%}
+        <div class="schedule-container">
+            <div class="schedule-header">
+                <h1>NCAA Wrestling Schedule</h1>
+            </div>
+            <div class="match">
+                <div class="team">Michigan</div>
+                <div class="vs"><a href="/duals/MichvsNc">vs</a></div>
+                <div class="team">NC State</div>
+            </div>
+            <div class="match">
+                <div class="team">Penn State</div>
+                <div class="vs">vs</div>
+                <div class="team">Lehigh</div>
+            </div>
+            <div class="match">
+                <div class="team">Missouri</div>
+                <div class="vs">vs</div>
+                <div class="team">Iowa</div>
+            </div>
+            <div class="match">
+                <div class="team">Ohio State</div>
+                <div class="vs">vs</div>
+                <div class="team">Nebraska</div>
+            </div>
+            <div class="match">
+                <div class="team">Virginia Tech</div>
+                <div class="vs">vs</div>
+                <div class="team">Iowa State</div>
+            </div>
+            <div class="match">
+                <div class="team">Stanford</div>
+                <div class="vs">vs</div>
+                <div class="team">Minnesota</div>
+            </div>
+            <div class="match">
+                <div class="team">Cornell</div>
+                <div class="vs">vs</div>
+                <div class="team">Oklahoma State</div>
+            </div>
+        </div>
+        {% for player in players%}
 
-            {% endfor%}
-        </ol>
+        {% endfor%}
     </body>
 
 </html>
