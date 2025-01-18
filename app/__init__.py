@@ -84,7 +84,8 @@ def duals():
 @app.route('/duals/<id>')
 def one_duals(id):
     dual = Dual.query.get(id)
-    dualCode = 'Penn State vs Lehigh'
+    dualCode = f'{dual.away} vs {dual.home}'
+    print(dualCode)
     dual_fighters = Opponent.query.filter(Opponent.tour_name == dualCode).all()
     participants = []
     for part in dual_fighters:
