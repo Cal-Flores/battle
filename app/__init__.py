@@ -85,14 +85,41 @@ def duals():
 def one_duals(id):
     dual = Dual.query.get(id)
     dualCode = f'{dual.away} vs {dual.home}'
-    print(dualCode)
-    dual_fighters = Opponent.query.filter(Opponent.tour_name == dualCode).all()
-    participants = []
-    for part in dual_fighters:
-        fighter = Player.query.filter(Player.id == part.player_id).one()
-        if fighter not in participants:
-            participants.append(fighter)
-    return render_template('one_dual.html', dual = dual, players = participants)
+
+    home_score = 0
+    away_score = 0
+
+    players = []
+    records = Opponent.query.filter(and_(Opponent.tour_name == dualCode, Opponent.victory == True)).all()
+    for rec in records:
+        result = {}
+        winner = Player.query.filter(rec.player_id == Player.id).one()
+        loser = Player.query.filter(rec.opponent_id == Player.id).one()
+        result['winner'] = winner
+        result['loser'] = loser
+        players.append(result)
+        if winner.team == dual.home:
+            if rec.score >= 1000:
+                home_score += 7
+            elif rec.score >= 700:
+                home_score += 5
+            if rec.score >= 400:
+                home_score += 4
+            else:
+                home_score += 3
+        elif winner.team == dual.away:
+            if rec.score >= 1000:
+                away_score += 7
+            elif rec.score >= 700:
+                away_score += 5
+            elif rec.score >= 400:
+                away_score += 4
+            else:
+                away_score += 3
+    print(players)
+
+
+    return render_template('one_dual.html', dual = dual,records = records, players  = players, home_score = home_score, away_score=away_score)
 
 @app.route('/tournament/<id>')
 def single_tour(id):
@@ -100,6 +127,18 @@ def single_tour(id):
     return render_template('single_tournament.html', tour=tour)
 
 ############################## PLAYER  CARD ############!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # away_fighters = []
+    # winners = []
+
+    # # all_records = Opponent.query.filter(and_(Opponent.player_id == player_1.id, Opponent.opponent_id == player_2.id )).all()
+    # for record in records:
+    #     fighter = Player.query.filter(Player.id == record.player_id).one()
+    #     if fighter.team == dual.home:
+    #         home_fighters.append(fighter)
+    #     elif fighter.team == dual.away:
+    #         away_fighters.append(fighter)
+    #     if record.victory:
+    #         winners.append(record)
 
 @app.route('/player/<id>')
 def player_card(id):

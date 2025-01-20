@@ -49,13 +49,13 @@ with app.app_context():
     tour6 = Tour(link = 'https://challonge.com/h0fbyqgx', name='6th Battle Royale', date=sixth, first='juubito.jpeg', second='six-paths-sage.jpeg', third='kaguya.jpeg')
     tour7 = Tour(link = 'https://challonge.com/zsnukbwc', name='7th Battle Royale', date=seventh, first='regkak.jpeg', second='regsas.jpeg', third='juubito.jpeg')
 
-    dual1 = Dual(home='Michigan', away='NC State', week=1)
-    dual2 = Dual(home='Penn State', away='Lehigh', week=1)
-    dual3 = Dual(home='Missouri', away='Iowa', week=1)
-    dual4 = Dual(home='Ohio State', away='Nebraska', week=1)
-    dual5 = Dual(home='Virginia Tech', away='Iowa State', week=1)
-    dual6 = Dual(home='Stanford', away='Minnesota', week=1)
-    dual7 = Dual(home='Cornell', away='Oklahoma State', week=1)
+    dual1 = Dual(away='Michigan', home='NC State', week=1)
+    dual2 = Dual(away='Penn State', home='Lehigh', week=1)
+    dual3 = Dual(away='Missouri', home='Iowa', week=1)
+    dual4 = Dual(away='Ohio State', home='Nebraska', week=1)
+    dual5 = Dual(away='Virginia Tech', home='Iowa State', week=1)
+    dual6 = Dual(away='Stanford', home='Minnesota', week=1)
+    dual7 = Dual(away='Cornell', home='Oklahoma State', week=1)
 
 
     player1 = Player(name='Akatsuki Sasuke', wins=0, loss=0, points=0, img='../static/images/akat-sas.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -134,7 +134,7 @@ with app.app_context():
     player73 = Player(name='Meruem', team='Iowa State', logo = Iowa_State, wins=0, loss=0, points=0, img='https://i1.sndcdn.com/artworks-u5gLzAXGz4iBzLj2-YyjfNg-t500x500.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player74 = Player(name='Todo', team='NC State', logo = NC_State, wins=0, loss=0, points=0, img='https://i.pinimg.com/736x/c8/a6/c0/c8a6c00955e817fd3b3ff96928849dd6.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     # round 2 use ID  76
-    player75 = Player(name='Mahito', team='NC State', logo = NC_State, wins=0, loss=0, points=0, img='https://avatarfiles.alphacoders.com/375/thumb-1920-375868.jpeg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player75 = Player(name='Mahito', team='NC State', logo = NC_State, wins=0, loss=0, points=0, img='https://i.pinimg.com/736x/a9/a2/c6/a9a2c6f45aa9566136f91352107b7f79.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player76 = Player(name='Kenjaku', team='Oklahoma State', logo = Oklahoma_State, wins=0, loss=0, points=0, img='https://i0.wp.com/beebom.com/wp-content/uploads/2023/09/Kenjaku-in-anime.jpg?ssl=1&resize=426%2C426', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player77 = Player(name='Kite', team='Iowa', logo = Iowa, wins=0, loss=0, points=0, img='https://i.pinimg.com/736x/60/f5/8d/60f58de5d8f754a0a974ad1450d1dbc4.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player78 = Player(name='Kishibe', team='Virginia Tech', logo = Virginia_Tech, wins=0, loss=0, points=0, img='https://preview.redd.it/i-tried-to-make-kishibe-a-bit-more-lively-v0-ke8dx7n9oxoa1.jpg?width=640&crop=smart&auto=webp&s=30f8a2bebb02a1782f1418be2c76debf6493d0e9', gold=0,silver=0,bronze=0,medal=0,badge=0)
@@ -164,7 +164,7 @@ with app.app_context():
     player102 = Player(name='Mikasa', team='Lehigh', logo = Lehigh, wins=0, loss=0, points=0, img='https://i.pinimg.com/564x/a4/f4/79/a4f4793ca387e7fe2b74cec830a84499.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player103 = Player(name='Aki', team='Penn State', logo =Penn_State , wins=0, loss=0, points=0, img='https://i.pinimg.com/736x/a8/26/45/a826458e9ec3b3e63687e831a0841546.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player104 = Player(name='Jaw Titan', team='Cornell', logo =Cornell , wins=0, loss=0, points=0, img='https://static.wikia.nocookie.net/shingekinokyojin/images/0/0c/Porco_Galliard_%28Anime%29_character_image.png', gold=0,silver=0,bronze=0,medal=0,badge=0)
-    player105 = Player(name='Piccolo', team='Ohio State', logo =Ohio_State , wins=0, loss=0, points=0, img='https://i.pinimg.com/236x/2f/6a/74/2f6a74aeea4c3a64dc7703195047f21a.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
+    player105 = Player(name='Piccolo', team='Ohio State', logo =Ohio_State , wins=0, loss=0, points=0, img='https://i.pinimg.com/236x/4b/ae/fd/4baefdd6ba396b26da32e346136ab1ee.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player106 = Player(name='Mechamaru', team='Nebraska', logo = Nebraska, wins=0, loss=0, points=0, img='https://thicc-uwu.mywaifulist.moe/waifus/kokichi-muta/4yrHUd26dvaZ08bHXkZmQkcWM4fyKQ6OcrjMajpF.jpg?class=thumbnail', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player107 = Player(name='Kisame', team='Virginia Tech', logo =Virginia_Tech , wins=0, loss=0, points=0, img='https://static.wikia.nocookie.net/animated/images/2/25/Kisame.png', gold=0,silver=0,bronze=0,medal=0,badge=0)
     player108 = Player(name='Toge', team='Iowa', logo =Iowa , wins=0, loss=0, points=0, img='https://pbs.twimg.com/media/EsCKaspXYAMzSKg.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0)
