@@ -80,11 +80,42 @@
             <div class="schedule-header">
                 <h1>NCAA Wrestling Schedule</h1>
             </div>
+
+            <form method="post" action="/duals">
+                {{ form.csrf_token }}
+
+                <div>
+                    {{ form.away.label }}
+                    {{ form.away }}
+                </div>
+                <div>
+                    {{ form.home.label }}
+                    {{ form.home }}
+                </div>
+                <div>
+                    {{ form.ascore.label }}
+                    {{ form.ascore }}
+                </div>
+                <div>
+                    {{ form.hscore.label }}
+                    {{ form.hscore }}
+                </div>
+                <div>
+                    {{ form.week.label }}
+                    {{ form.week }}
+                </div>
+                <div>
+                    {{ form.submit }}
+                </div>
+            </form>
+
+
+
             {% for dual in duals%}
             <div class="match">
-                <div class="team">{{dual.home}}</div>
+                <div class="team">{{dual.ascore}} {{dual.away}}</div>
                 <div class="vs"><a href="/duals/{{dual.id}}">vs</a></div>
-                <div class="team">{{dual.away}}</div>
+                <div class="team">{{dual.home}} {{dual.hscore}} </div>
             </div>
             {% endfor%}
         </div>

@@ -427,3 +427,11 @@ class Search(FlaskForm):
     leaders = BooleanField('Leaders')
     win_percent = BooleanField('Win Percent')
     submit = SubmitField('Submit')
+
+class NewDual(FlaskForm):
+    home = StringField('Home')
+    away = StringField('Away')
+    week = StringField('Week')
+    hscore = IntegerField('Hscore')
+    ascore = IntegerField('Ascore')
+    submit = SubmitField('Submit')

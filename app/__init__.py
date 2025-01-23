@@ -1,10 +1,10 @@
 from flask import Flask, render_template, redirect
-from app.forms import NewPlayer, EditPlayer, NewTour, NewResult, NewOpponent, NewBattle, EditOpponent, NewHistory, Search
+from app.forms import NewPlayer, EditPlayer, NewTour, NewResult, NewOpponent, NewBattle, EditOpponent, NewHistory, Search, NewDual
 from app.config import Configuration
 from sqlalchemy import and_, or_
 
 from flask_migrate import Migrate
-from app.models import db, Player, Tour, Result, Opponent, Battle, Dual
+from app.models import db, Player, Tour, Result, Opponent, Battle, Dual, Team
 
 
 app = Flask(__name__)
@@ -76,10 +76,35 @@ def s_form():
 def facts():
     return render_template('facts.html')
 
-@app.route('/duals')
+@app.route('/duals', methods=['GET', 'POST'])
 def duals():
+    form = NewDual()
+    if form.validate_on_submit():
+        params = {
+            'home': form.data['home'],
+            'away': form.data['away'],
+            'hscore': form.data['hscore'],
+            'ascore': form.data['ascore'],
+            'week': form.data['week'],
+        }
+        new_dual = Dual(**params)
+        db.session.add(new_dual)
+        home_team = Team.query.filter(form.data['home'] == Team.name).one()
+        away_team = Team.query.filter(form.data['away'] == Team.name).one()
+        home_team.points += form.data['hscore']
+        away_team.points += form.data['ascore']
+        if form.data['hscore'] > form.data['ascore']:
+            home_team.wins += 1
+            away_team.loss += 1
+            db.session.commit()
+        elif form.data['ascore'] > form.data['hscore']:
+            away_team.wins += 1
+            home_team.loss += 1
+            db.session.commit()
+        db.session.commit()
+        return redirect('/duals')
     duals = Dual.query.all()
-    return render_template('duals.html', duals = duals)
+    return render_template('duals.html', duals = duals, form=form)
 
 @app.route('/duals/<id>')
 def one_duals(id):
@@ -356,6 +381,12 @@ def rform():
     form = NewResult()
     return render_template('create_result.html', form=form)
 
+@app.route('/teams')
+def teams():
+    #pnt_leaders = Player.query.order_by(Player.points.desc(), Player.wins.desc(), Player.loss).all()
+    teams = Team.query.order_by(Team.wins.desc(), Team.points.desc()).all()
+    return render_template('teams.html', teams=teams)
+
 
 @app.route('/new_result', methods=['POST'])
 def new_result():
@@ -379,82 +410,82 @@ def new_result():
         # player_img16 = '../static/images/' + form.data['sixtenth']
         player1 = Player.query.filter(form.data['first'] == Player.name).one()
         player_img = player1.img
-        player1.points += 20
+        player1.points += 25
         player1.gold += 1
 
         player2 = Player.query.filter(form.data['second'] == Player.name).one()
         player_img2 = player2.img
-        player2.points += 17
+        player2.points += 21
         player2.silver += 1
 
         player3 = Player.query.filter(form.data['third'] == Player.name).one()
         player_img3 = player2.img
-        player3.points += 15
+        player3.points += 18
         player3.bronze += 1
 
         player4 = Player.query.filter(form.data['fourth'] == Player.name).one()
         player_img4 = player4.img
-        player2.points += 13
-        player2.badge += 1
+        player2.points += 15
+        player2.medal += 1
 
         player5 = Player.query.filter(form.data['fifth'] == Player.name).one()
         player_img5 = player5.img
-        player5.points += 12
-        player5.badge += 1
+        player5.points += 14
+        player5.medal += 1
 
         player6 = Player.query.filter(form.data['sixth'] == Player.name).one()
         player_img6 = player6.img
-        player6.points += 11
-        player6.badge += 1
+        player6.points += 12
+        player6.medal += 1
 
         player7 = Player.query.filter(form.data['seventh'] == Player.name).one()
         player_img7 = player7.img
-        player7.points += 10
-        player7.badge += 1
+        player7.points += 11
+        player7.medal += 1
 
         player8 = Player.query.filter(form.data['eigth'] == Player.name).one()
         player_img8 = player8.img
-        player8.points += 9
-        player8.badge += 1
+        player8.points += 10
+        player8.medal += 1
 
         player9 = Player.query.filter(form.data['ninth'] == Player.name).one()
         player_img9 = player9.img
-        player9.points += 8
+        player9.points += 9
         player9.badge += 1
 
         player10 = Player.query.filter(form.data['tenth'] == Player.name).one()
         player_img10 = player10.img
-        player10.points += 7
+        player10.points += 8
         player10.badge += 1
 
         player11 = Player.query.filter(form.data['eleventh'] == Player.name).one()
         player_img11 = player11.img
-        player11.points += 6
+        player11.points += 7
         player11.badge += 1
 
         player12 = Player.query.filter(form.data['twelfth'] == Player.name).one()
         player_img12 = player12.img
-        player12.points += 5
+        player12.points += 6
         player12.badge += 1
 
         player13 = Player.query.filter(form.data['thirtenth'] == Player.name).one()
         player_img13 = player13.img
-        player13.points += 4
+        player13.points += 5
         player13.badge += 1
 
         player14 = Player.query.filter(form.data['fourtenth'] == Player.name).one()
         player_img14 = player14.img
-        player14.points += 3
+        player14.points += 4
         player14.badge += 1
 
         player15 = Player.query.filter(form.data['fifthtenth'] == Player.name).one()
         player_img15 = player15.img
-        player15.points += 2
+        player15.points += 3
         player15.badge += 1
 
         player16 = Player.query.filter(form.data['sixtenth'] == Player.name).one()
         player_img16 = player16.img
-        player16.points += 1
+        player16.points += 2
         player16.badge += 1
 
 

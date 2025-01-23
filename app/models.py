@@ -85,6 +85,17 @@ class Dual(db.Model):
      home =  db.Column(db.String)
      away =  db.Column(db.String)
      week =  db.Column(db.String)
+     hscore = db.Column(db.Integer)
+     ascore = db.Column(db.Integer)
+
+class Team(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    wins = db.Column(db.Integer)
+    loss = db.Column(db.Integer)
+    points = db.Column(db.Integer)
+    logo = db.Column(db.String)
+
 
 # flask db migrate -m "Updated Battle model"
 # flask db upgrade

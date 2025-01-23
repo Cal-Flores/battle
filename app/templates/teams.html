@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Duals -Battle Royale</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="teamboard">
+        {%include 'nav.html'%}
+        <div id="teamcont">
+            <h2>TEAM STANDINGS</h2>
+            {% for team in teams %}
+            <div class="oneteam">
+                <img id="teamlogo" src='{{team.logo}}'>
+                <div class="teaminfo">{{team.name}}</div>
+                <div class="teaminfo"><span class="teamwin">WINS:</span> {{team.wins}}</div>
+                <div class="teaminfo"><span class="teamloss">LOSS:</span> {{team.loss}}</div>
+                <div class="teaminfo">{{team.points}} pts</div>
+            </div>
+
+            {% endfor %}
+        </div>
+
+    </body>
+
+</html>

@@ -1460,3 +1460,45 @@ input[type=text]:hover {
     margin-bottom: 10%;
     display: none;
 }
+
+
+/* team page */
+#teamboard {
+    background-image: url('https://i.pinimg.com/736x/d9/37/71/d937717fd8ebf8e8968b9dfea46fc8d5.jpg');
+}
+
+#teamcont {
+    width: 75%;
+    border: 1px solid black;
+    margin: auto;
+    color: whitesmoke;
+    margin-top: 7%;
+    margin-bottom: 4%;
+}
+
+.oneteam {
+    border: 1px solid rgb(235, 233, 233);
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    height: 70px;
+    padding: 5px;
+    margin-bottom: 1%;
+    background-color: rgba(14, 14, 14, 0.75);
+}
+
+#teamlogo {
+    width: 60px;
+}
+
+.teamwin {
+    color: rgb(2, 95, 2);
+}
+
+.teamloss {
+    color: rgb(155, 0, 0);
+}
+
+.teaminfo {
+    font-size: 22px;
+}
