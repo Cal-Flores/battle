@@ -383,9 +383,14 @@ def rform():
 
 @app.route('/teams')
 def teams():
-    #pnt_leaders = Player.query.order_by(Player.points.desc(), Player.wins.desc(), Player.loss).all()
     teams = Team.query.order_by(Team.wins.desc(), Team.points.desc()).all()
     return render_template('teams.html', teams=teams)
+
+@app.route('/teams/<id>')
+def one_team(id):
+    team = Team.query.get(id)
+    opponents = Dual.query.filter(or_(Dual.home == team.name, Dual.away == team.name)).all()
+    return render_template('single_team.html', team=team, opponents = opponents)
 
 
 @app.route('/new_result', methods=['POST'])

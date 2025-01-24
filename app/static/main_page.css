@@ -1501,4 +1501,14 @@ input[type=text]:hover {
 
 .teaminfo {
     font-size: 22px;
+    color: whitesmoke;
+}
+
+#Tname {
+    color: whitesmoke;
+}
+
+#Tname:hover {
+    color: rgb(235, 169, 0);
+    cursor: pointer;
 }
