@@ -20,7 +20,7 @@
             {% for tour in tournaments %}
             <div class="tourdiv">
                 <a target="_blank" class="tourtxt" href={{tour.link}}>{{tour.name}}</a>
-                <p class="tourtxt">{{tour.date}}</p>
+                <a target="_blank" class="tourtxt" href='/score/{{tour.id}}'>{{tour.date}}</a>
                 <div class="tourimg">
                     <p class="medal2">🥇</p>
                     <img id="obito" src="../static/images/{{tour.first}}">

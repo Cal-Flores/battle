@@ -4,7 +4,7 @@ from app.config import Configuration
 from sqlalchemy import and_, or_
 
 from flask_migrate import Migrate
-from app.models import db, Player, Tour, Result, Opponent, Battle, Dual, Team
+from app.models import db, Player, Tour, Result, Opponent, Battle, Dual, Team, TourScore,  TourTeam
 
 
 app = Flask(__name__)
@@ -349,6 +349,52 @@ def tour_form():
     form = NewTour()
     return render_template('create_tour.html', form=form)
 
+@app.route('/score/score/<int:id>/<team>')
+def get_score(id, team):
+    print(team)
+    curr_team = Team.query.filter(Team.name == team).one()
+    players = Player.query.filter(Player.team == curr_team.name).all()
+
+    data = []
+    for player in players:
+        entry = TourTeam.query.filter(and_(TourTeam.tourId == id, TourTeam.playerId == player.id)).one()
+        score = entry.score
+        score_data = {
+            'person': player,
+            'score': score
+        }
+        data.append(score_data)
+    data.sort(key=lambda x: x['score'], reverse=True)
+    return render_template('team_scorepage.html', team = curr_team, score_data=data)
+
+@app.route('/score/<id>')
+def one_tourscore(id):
+    tour = TourScore.query.get(id)
+    teams = Team.query.all()
+    scores = sorted(
+    [
+        {'team': 'Penn State', 'score': tour.psu, 'logo': "https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg"},
+        {'team': 'Cornell', 'score': tour.corn, 'logo': "https://sportslogohistory.com/wp-content/uploads/2019/06/cornell_big_red_2002-pres.png"},
+        {'team': 'Iowa', 'score': tour.iowa, 'logo': "https://storage.googleapis.com/hawkeyesports-com/2021/02/cf540990-logo-e1722875756178.png"},
+        {'team': 'Iowa', 'score': tour.isu, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/isuni.sidearmsports.com/images/responsive_2021/logo_nav.svg"},
+        {'team': 'Lehigh', 'score': tour.leh, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/lehighsports.com/responsive_2020/images/svgs/logo_main2-new.svg"},
+        {'team': 'Michigan', 'score': tour.mich, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/mgoblue.com/images/sng_2023/main_nav_logo.svg"},
+        {'team': 'Minnesota', 'score': tour.minn, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/gophersports.com/images/nextgen_2022/main_logo.svg"},
+        {'team': 'Missouri', 'score': tour.mizz, 'logo': "https://loodibee.com/wp-content/uploads/Missouri_Tigers_logo.png"},
+        {'team': 'Nebraska', 'score': tour.neb, 'logo': "data:image/svg+xml,%3c?xml%20version=%271.0%27%20encoding=%27utf-8%27?%3e%3c!--%20Generator:%20Adobe%20Illustrator%2026.4.1,%20SVG%20Export%20Plug-In%20.%20SVG%20Version:%206.00%20Build%200)%20--%3e%3csvg%20version=%271.1%27%20id=%27Nebraska_N%27%20xmlns=%27http://www.w3.org/2000/svg%27%20xmlns:xlink=%27http://www.w3.org/1999/xlink%27%20x=%270px%27%20y=%270px%27%20viewBox=%270%200%20163%20152%27%20style=%27enable-background:new%200%200%20163%20152;%27%20xml:space=%27preserve%27%3e%3cstyle%20type=%27text/css%27%3e%20.st0{fill:%23FFFFFF;}%20%3c/style%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M159.1,144c-2.3,0-4.1,1.8-4.1,4s1.8,4,4,4s4-1.8,4-4S161.2,144,159.1,144z%20M159,151.2c-1.8,0-3.2-1.4-3.2-3.2%20s1.4-3.2,3.2-3.2c1.7,0,3.2,1.5,3.2,3.2C162.2,149.8,160.8,151.2,159,151.2z%27/%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M157.4,145.6h1.4c0.6,0,0.8,0,1.1,0.2c0.4,0.2,0.6,0.6,0.6,1.1c0,0.4-0.1,0.7-0.3,1c-0.1,0.2-0.3,0.2-0.6,0.4%20h-0.1l1.1,2.1h-0.8l-1-2h-0.6v2h-0.8L157.4,145.6L157.4,145.6z%20M158.6,147.7c0,0,0.3,0,0.4,0c0.4-0.1,0.6-0.3,0.6-0.8%20c0-0.3-0.1-0.5-0.4-0.6c-0.1,0-0.1,0-0.6,0h-0.4v1.4L158.6,147.7L158.6,147.7z%27/%3e%3c/g%3e%3c/g%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M147,0H93h-5v5v35v5h5h5v24.8L55.2,2.3L53.7,0H51H5H0v5v35v5h5h5v62H5H0v5v35v5h5h54h5v-5v-35v-5h-5h-5V82.2%20l42.8,67.5l1.5,2.3h2.7h46h5v-5v-35v-5h-5h-5V45h5h5v-5V5V0H147z%20M150,5v35v3h-3h-7v66h7h3v3v35v3h-3h-46h-1.6l-0.9-1.4L52,75.3%20V109h7h3v3v35v3h-3H5H2v-3v-35v-3h3h7V43H5H2v-3V5V2h3h46h1.7l0.9,1.4L100,76.7V43h-7h-3v-3V5V2h3h54h3V5z%27/%3e%3c/g%3e%3cpath%20class=%27st0%27%20d=%27M103,87L103,87L51,5H5v35c0,0,7.8,0,10,0c0,3.3,0,68.7,0,72l0,0c-2.2,0-10,0-10,0v35h54v-35c0,0-7.8,0-10,0l0,0%20c0-2.6,0-47,0-47l52,82h46v-35c0,0-7.8,0-10,0l0,0c0-3.3,0-68.7,0-72c2.2,0,10,0,10,0V5H93v35c0,0,7.8,0,10,0%20C103,42.6,103,87,103,87z%27/%3e%3c/svg%3e"},
+        {'team': 'NC State', 'score': tour.ncst, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/unc.sidearmsports.com/images/sng_2023/main_nav_logo.svg"},
+        {'team': 'Ohio State', 'score': tour.osu, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/ohiostatebuckeyes.com/images/nextgen_2023/logo_main.svg"},
+        {'team': 'Oklahoma State', 'score': tour.okst, 'logo': "https://sportslogohistory.com/wp-content/uploads/2018/07/oklahoma_state_cowboys_2015-pres.png"},
+        {'team': 'Stanford', 'score': tour.stan, 'logo': "https://gostanford.com/imgproxy/l6GXJbFV4z1yPuiCbXCePofeGNcKTlM78I9yNaTuiU4/rs:fit:1980:0:0/g:ce/q:90/aHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL3N0YW5mb3JkLXByb2QvMjAyNC8wMy8yMC9hVXJvSkRQeEVBQzFBRE53M3M2YjBRQWNlcmd2WW9EOXRabHVsZHRrLnBuZw.png"},
+        {'team': 'Virginia Tech', 'score': tour.vt, 'logo': "https://sportslogohistory.com/wp-content/uploads/2018/01/virginia_tech_hokies_1983-pres.png"},
+    ],
+    key=lambda x: x['score'],
+    reverse=True
+)
+
+    return render_template('team_score.html', scores=scores, tour=tour, id=id)
+
+
 @app.route('/new_tournament', methods=['POST'])
 def  new_tour():
     form = NewTour()
@@ -357,13 +403,33 @@ def  new_tour():
             'link': form.data['link'],
             'name': form.data['name'],
             'date': form.data['date'],
-            'first': form.data['first'],
-            'second': form.data['second'],
-            'third': form.data['third'],
+        }
+        score = {
+             'name' : form.data['name'],
+             'psu': 0,
+             'osu': 0,
+             'okst': 0,
+             'corn': 0,
+             'leh': 0,
+             'ncst': 0,
+             'iowa': 0,
+             'isu': 0,
+             'minn': 0,
+             'vt': 0,
+             'mizz': 0,
+             'neb': 0,
+             'stan': 0,
+             'mich': 0,
         }
         new_tourn = Tour(**params)
+        new_score = TourScore(**score)
         db.session.add(new_tourn)
+        db.session.add(new_score)
         db.session.commit()
+        for i in range(128):
+            newPlayer = TourTeam(tourId = new_tourn.id, playerId = i + 1, score = 0)
+            db.session.add(newPlayer)
+            db.session.commit()
         return redirect('/tournaments')
     return 'Bad Data'
 
@@ -525,6 +591,34 @@ def new_result():
 
 @app.route('/new_battle', methods=['GET', 'POST'])
 def new_battle():
+    champ = [
+    'Round of 128',
+    'Round of 64',
+    'Round of 32',
+    'Round of 16',
+    'Quarter-Final',
+    ]
+    cons = [
+    'Consolation Round',
+    'Cons-Semi',
+    'Cons-Quarter',
+    'Blood Round',
+    'Round of 12',
+    'Cons-24',
+    'Cons-16',
+    ]
+    medal_round = [
+    'Bronze Medal Match',
+    '5th Place Match',
+    '7th Place Match',
+    'Semi-Final',
+    ]
+    badge_round = [
+    '9th Place Match',
+    '11th Place Match',
+    '13th Place Match',
+    '15th Place Match',
+    ]
     form = NewBattle()
     names = [
   "Adult Gon",
@@ -667,10 +761,80 @@ def new_battle():
     if form.validate_on_submit():
         player_1 = Player.query.filter(Player.name == form.data['player_1']).one()
         player_2 = Player.query.filter(Player.name == form.data['player_2']).one()
+        teampnts = 0
+
+        if form.data['round'] in champ:
+            teampnts += 3
+        if form.data['round'] in cons:
+            teampnts += 1
+        if form.data['round'] in badge_round:
+            team_score += 3.5
+        if form.data['round'] in medal_round:
+            team_score += 4
+        if form.data['round'] == 'Gold Medal Match':
+            team_score += 5
+
+        if form.data['score'] > 1000:
+            teampnts += 2
+        elif form.data['score'] > 750:
+            teampnts += 1.5
+        elif form.data['score'] > 500:
+            teampnts += 1
 
         if form.data['victory_1'] == True:
             player_1.wins += 1
             db.session.commit()
+            ##### NEW LOGIC FOR TEAM SCORES rudy#####
+            team = player_1.team
+            tourn =  TourScore.query.filter(TourScore.name == form.data['tournamnet']).first()
+            print(tourn)
+            if tourn:
+                if team == 'Virginia Tech':
+                    tourn.vt += teampnts
+                    db.session.commit()
+                if team == 'Penn State':
+                    tourn.psu += teampnts
+                    db.session.commit()
+                if team == 'Oklahoma State':
+                    tourn.okst += teampnts
+                    db.session.commit()
+                if team == 'Iowa':
+                    tourn.iowa += teampnts
+                    db.session.commit()
+                if team == 'Iowa State':
+                    tourn.isu += teampnts
+                    db.session.commit()
+                if team == 'Minnesota':
+                    tourn.minn += teampnts
+                    db.session.commit()
+                if team == 'Stanford':
+                    tourn.stan += teampnts
+                    db.session.commit()
+                if team == 'NC State':
+                    tourn.ncst += teampnts
+                    db.session.commit()
+                if team == 'Missouri':
+                    tourn.mizz += teampnts
+                    db.session.commit()
+                if team == 'Lehigh':
+                    tourn.leh += teampnts
+                    db.session.commit()
+                if team == 'Cornell':
+                    tourn.corn += teampnts
+                    db.session.commit()
+                if team == 'Michigan':
+                    tourn.mich += teampnts
+                    db.session.commit()
+                if team == 'Ohio State':
+                    tourn.osu += teampnts
+                    db.session.commit()
+                if team == 'Nebraska':
+                    tourn.neb += teampnts
+                    db.session.commit()
+                ####### even more logic for tourteam ##########
+                player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_1.id)).one()
+                player_score.score += teampnts
+                db.session.commit()
         else:
             player_1.loss += 1
             db.session.commit()
@@ -678,6 +842,57 @@ def new_battle():
         if form.data['victory_2'] == True:
             player_2.wins += 1
             db.session.commit()
+             ##### NEW LOGIC FOR TEAM SCORES rudy#####
+            team = player_2.team
+            tourn =  TourScore.query.filter(TourScore.name == form.data['tournamnet']).first()
+            if tourn:
+                if team == 'Virginia Tech':
+                    tourn.vt += teampnts
+                    db.session.commit()
+                if team == 'Penn State':
+                    tourn.psu += teampnts
+                    db.session.commit()
+                if team == 'Oklahoma State':
+                    tourn.okst += teampnts
+                    db.session.commit()
+                if team == 'Iowa':
+                    tourn.iowa += teampnts
+                    db.session.commit()
+                if team == 'Iowa State':
+                    tourn.isu += teampnts
+                    db.session.commit()
+                if team == 'Minnesota':
+                    tourn.minn += teampnts
+                    db.session.commit()
+                if team == 'Stanford':
+                    tourn.stan += teampnts
+                    db.session.commit()
+                if team == 'NC State':
+                    tourn.ncst += teampnts
+                    db.session.commit()
+                if team == 'Missouri':
+                    tourn.mizz += teampnts
+                    db.session.commit()
+                if team == 'Lehigh':
+                    tourn.leh += teampnts
+                    db.session.commit()
+                if team == 'Cornell':
+                    tourn.corn += teampnts
+                    db.session.commit()
+                if team == 'Michigan':
+                    tourn.mich += teampnts
+                    db.session.commit()
+                if team == 'Ohio State':
+                    tourn.osu += teampnts
+                    db.session.commit()
+                if team == 'Nebraska':
+                    tourn.neb += teampnts
+                    db.session.commit()
+                ####### even more logic for tourteam ##########
+                player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_2.id)).one()
+                player_score.score += teampnts
+                db.session.commit()
+
         else:
             player_2.loss += 1
             db.session.commit()

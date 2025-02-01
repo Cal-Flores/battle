@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Tournaments -Battle Royale</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='main_page.css') }}">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="teamboard">
+        {% include 'nav.html' %}
+        <div id="teamcont">
+            {% for data in score_data %}
+            <div class="oneteamscore">
+                <img id="teamlogo" src='{{data.person.img}}'>
+                <div class="teaminfo"><a id="Tname">{{data.person.name}}</a></div>
+                <div class="teaminfo"><a id="Tname">{{data.score}} points</a></div>
+            </div>
+            {% endfor %}
+        </div>
+    </body>
+
+</html>

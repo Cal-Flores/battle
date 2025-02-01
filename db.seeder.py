@@ -1,4 +1,4 @@
-from app.models import db, Player, Tour, Result, Opponent, Dual, Team
+from app.models import db, Player, Tour, Result, Opponent, Dual, Team, TourScore,TourTeam
 from app import app
 import datetime
 
@@ -41,13 +41,13 @@ with app.app_context():
     # res4 = Result(first='neji.jpeg', second='regkak.jpeg', third='akat-sas.jpeg', fourth='minato.jpeg', fifth='kankuro.jpeg', sixth='konan.jpeg', seventh='itachi.jpeg', eigth='anbu_kakashi.webp', ninth='kurama.jpeg', tenth='sage.gif')
     # res5 = Result(first='madara.gif', second='gaara.jpeg', third='asuma.jpeg', fourth='tobirama.webp', fifth='temari.webp', sixth='amaterasu.jpeg', seventh='anbu_kakashi.webp', eigth='minato.jpeg', ninth='kurama.jpeg', tenth='sword.jpeg')
 
-    tour0 = Tour(link = 'https://challonge.com/uzux80ch', name='1st Battle Royale', date=first, first='obito.webp', second='gaara.jpeg', third='madara.gif')
-    tour2 = Tour(link = 'https://challonge.com/ptivmhqc', name='2nd Battle Royale', date=second, first='anbu_kakashi.webp', second='six-paths-sage.jpeg', third='amaterasu.jpeg')
-    tour3 = Tour(link = 'https://challonge.com/42o6doy3', name='3rd Battle Royale', date=third, first='anbu-itachi.jpeg', second='gaara.jpeg', third='hinata.jpeg')
-    tour4 = Tour(link = 'https://challonge.com/ez389kce', name='4th Battle Royale', date=fourth, first='neji.jpeg', second='regkak.jpeg', third='akat-sas.jpeg')
-    tour5 = Tour(link = 'https://challonge.com/vvvuedo', name='5th Battle Royale', date=fifth, first='madara.gif', second='gaara.jpeg', third='asuma.jpeg')
-    tour6 = Tour(link = 'https://challonge.com/h0fbyqgx', name='6th Battle Royale', date=sixth, first='juubito.jpeg', second='six-paths-sage.jpeg', third='kaguya.jpeg')
-    tour7 = Tour(link = 'https://challonge.com/zsnukbwc', name='7th Battle Royale', date=seventh, first='regkak.jpeg', second='regsas.jpeg', third='juubito.jpeg')
+    # tour0 = Tour(link = 'https://challonge.com/uzux80ch', name='1st Battle Royale', date=first, first='obito.webp', second='gaara.jpeg', third='madara.gif')
+    # tour2 = Tour(link = 'https://challonge.com/ptivmhqc', name='2nd Battle Royale', date=second, first='anbu_kakashi.webp', second='six-paths-sage.jpeg', third='amaterasu.jpeg')
+    # tour3 = Tour(link = 'https://challonge.com/42o6doy3', name='3rd Battle Royale', date=third, first='anbu-itachi.jpeg', second='gaara.jpeg', third='hinata.jpeg')
+    # tour4 = Tour(link = 'https://challonge.com/ez389kce', name='4th Battle Royale', date=fourth, first='neji.jpeg', second='regkak.jpeg', third='akat-sas.jpeg')
+    # tour5 = Tour(link = 'https://challonge.com/vvvuedo', name='5th Battle Royale', date=fifth, first='madara.gif', second='gaara.jpeg', third='asuma.jpeg')
+    # tour6 = Tour(link = 'https://challonge.com/h0fbyqgx', name='6th Battle Royale', date=sixth, first='juubito.jpeg', second='six-paths-sage.jpeg', third='kaguya.jpeg')
+    # tour7 = Tour(link = 'https://challonge.com/zsnukbwc', name='7th Battle Royale', date=seventh, first='regkak.jpeg', second='regsas.jpeg', third='juubito.jpeg')
 
     team1 = Team(name='Cornell', wins=0, loss=0, points=0, logo=Cornell)
     team2 = Team(name='Iowa', wins=0, loss=0 ,points=0, logo=Iowa)
@@ -230,13 +230,13 @@ with app.app_context():
     # db.session.add(res3)
     # db.session.add(res4)
     # db.session.add(res5)
-    db.session.add(tour0)
-    db.session.add(tour2)
-    db.session.add(tour3)
-    db.session.add(tour4)
-    db.session.add(tour5)
-    db.session.add(tour6)
-    db.session.add(tour7)
+    # db.session.add(tour0)
+    # db.session.add(tour2)
+    # db.session.add(tour3)
+    # db.session.add(tour4)
+    # db.session.add(tour5)
+    # db.session.add(tour6)
+    # db.session.add(tour7)
     db.session.add(team1)
     db.session.add(team2)
     db.session.add(team3)
@@ -415,6 +415,8 @@ with app.app_context():
     # Tour.query.delete()
     # Dual.query.delete()
     # Team.query.delete()
+    # TourScore.query.delete()
+    # TourTeam.query.delete()
     # db.session.commit()
     # print("Database cleared.")
 

@@ -205,7 +205,7 @@ h2 {
     font-family: 'Ninja Naruto', sans-serif;
     font-size: 35px;
     word-spacing: 15px;
-    color: rgb(84, 3, 84);
+    color: orange;
 }
 
 
@@ -1483,6 +1483,18 @@ input[type=text]:hover {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     height: 70px;
     padding: 5px;
+    margin-bottom: 1%;
+    background-color: rgba(14, 14, 14, 0.75);
+}
+
+.oneteamscore {
+    border: 1px solid rgb(235, 233, 233);
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    height: 70px;
+    padding: 5px;
+    padding-left: 5%;
     margin-bottom: 1%;
     background-color: rgba(14, 14, 14, 0.75);
 }

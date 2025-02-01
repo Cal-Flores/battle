@@ -317,6 +317,7 @@ images = sorted(unsorted_images)
 
 rounds = [
     'Consolation Round',
+    'Round of 128',
     'Round of 64',
     'Round of 32',
     'Round of 16',
@@ -327,6 +328,9 @@ rounds = [
     '5th Place Match',
     '7th Place Match',
     '9th Place Match',
+    '11th Place Match',
+    '13th Place Match',
+    '15th Place Match',
     'Cons-Semi',
     'Cons-Quarter',
     'Blood Round',
@@ -334,7 +338,6 @@ rounds = [
     'Cons-24',
     'Cons-16',
     'Dual',
-    ''
     ]
 search_rounds = [
     '.',
@@ -364,9 +367,9 @@ class NewTour(FlaskForm):
     link = StringField('Link')
     name = StringField('Name')
     date = DateField('Date')
-    first = SelectField("First", choices=images)
-    second = SelectField('Second', choices=images)
-    third = SelectField('Third', choices=images)
+    # first = SelectField("First", choices=images)
+    # second = SelectField('Second', choices=images)
+    # third = SelectField('Third', choices=images)
     submit = SubmitField('Submit')
 
 

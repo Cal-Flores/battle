@@ -32,9 +32,9 @@ class Tour(db.Model):
     link = db.Column(db.String(250), nullable=False)
     name = db.Column(db.String(250), nullable=False)
     date = db.Column(db.Date)
-    first = db.Column(db.String(50), nullable=False)
-    second = db.Column(db.String(50), nullable=False)
-    third = db.Column(db.String(50), nullable=False)
+    # first = db.Column(db.String(50), nullable=False)
+    # second = db.Column(db.String(50), nullable=False)
+    # third = db.Column(db.String(50), nullable=False)
 
 
 class Result(db.Model):
@@ -95,6 +95,32 @@ class Team(db.Model):
     loss = db.Column(db.Integer)
     points = db.Column(db.Integer)
     logo = db.Column(db.String)
+
+
+class TourScore(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    psu = db.Column(db.Integer)
+    osu = db.Column(db.Integer)
+    okst = db.Column(db.Integer)
+    corn = db.Column(db.Integer)
+    leh = db.Column(db.Integer)
+    ncst = db.Column(db.Integer)
+    iowa = db.Column(db.Integer)
+    isu = db.Column(db.Integer)
+    minn = db.Column(db.Integer)
+    vt = db.Column(db.Integer)
+    mizz = db.Column(db.Integer)
+    neb = db.Column(db.Integer)
+    stan = db.Column(db.Integer)
+    mich = db.Column(db.Integer)
+
+class TourTeam(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tourId = db.Column(db.Integer)
+    playerId = db.Column(db.Integer)
+    score = db.Column(db.Integer)
+
 
 
 # flask db migrate -m "Updated Battle model"
