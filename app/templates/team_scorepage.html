@@ -17,11 +17,17 @@
     <body id="teamboard">
         {% include 'nav.html' %}
         <div id="teamcont">
+            <div id="scdiv">
+                <img id="sclogo" src="{{team.logo}}">
+            </div>
             {% for data in score_data %}
             <div class="oneteamscore">
                 <img id="teamlogo" src='{{data.person.img}}'>
-                <div class="teaminfo"><a id="Tname">{{data.person.name}}</a></div>
+                <div class="teaminfo"><a href="../../../player/{{data.person.id}}" id="Tname">{{data.person.name}}</a>
+                </div>
                 <div class="teaminfo"><a id="Tname">{{data.score}} points</a></div>
+                <div id="swin" class="teaminfo">{{data.person.wins}} Wins</div>
+                <div id="sloss" class="teaminfo">{{data.person.loss}} Defeats</div>
             </div>
             {% endfor %}
         </div>

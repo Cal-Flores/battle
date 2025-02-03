@@ -16,13 +16,15 @@
 
     <body id="teamboard">
         {% include 'nav.html' %}
-        <div id="teamcont">
-            <h2>{{tour.name}} - Team Scores</h2>
+        ]<div id="teamcont">
+            <h2>{{ tour.name }} - Team Scores</h2>
             {% for score in scores %}
-            <div class="oneteamscore">
-                <img id="teamlogo" src='{{score.logo}}'>
-                <div class="teaminfo"><a id="Tname">{{score.team}}</a></div>
-                <div class="teaminfo"><a id="Tname" href="score/{{id}}/{{score.team}}">{{score.score}} pts</a></div>
+            <div class="oneteamsc">
+                <span class="rank">{{ loop.index }}.</span>
+                <img id="teamlogo" src="{{ score.logo }}">
+                <div class="teaminfo"><a id="Tname">{{ score.team }}</a></div>
+                <div class="teaminfo"><a id="Tname" href="score/{{ id }}/{{ score.team }}">{{ score.score }} pts</a>
+                </div>
             </div>
             {% endfor %}
         </div>

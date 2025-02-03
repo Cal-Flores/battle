@@ -19,18 +19,24 @@
         <div class="tourcont">
             {% for tour in tournaments %}
             <div class="tourdiv">
-                <a target="_blank" class="tourtxt" href={{tour.link}}>{{tour.name}}</a>
-                <a target="_blank" class="tourtxt" href='/score/{{tour.id}}'>{{tour.date}}</a>
+                <a class="tourtxt" href="{{ tour.tourn.link }}">{{ tour.tourn.name }}</a>
+                <a class="tourtxt" href="/score/{{ tour.tourn.id }}">{{ tour.tourn.date }}</a>
                 <div class="tourimg">
+                    {% for team in tour.top_teams %}
+                    {% if loop.index0 == 0 %}
                     <p class="medal2">🥇</p>
-                    <img id="obito" src="../static/images/{{tour.first}}">
+                    {% elif loop.index0 == 1 %}
                     <p class="medal2">🥈</p>
-                    <img id="obito" src="../static/images/{{tour.second}}">
+                    {% elif loop.index0 == 2 %}
                     <p class="medal2">🥉</p>
-                    <img id="obito" src="../static/images/{{tour.third}}">
+                    {% endif %}
+                    <img id="obitosc" src="{{ team.logo }}" alt="{{ team.team }}">
+                    {% endfor %}
                 </div>
             </div>
             {% endfor %}
+
+
             <div>
                 <form action="/new_tournament">
                     <input class="oppbtn" type="submit" value="New Result" />

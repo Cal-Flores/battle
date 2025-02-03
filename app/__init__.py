@@ -340,9 +340,53 @@ def eform(id):
 
 @app.route('/tournaments')
 def tournaments():
-    tour = Tour.query.all()
-    tournaments = list(reversed(tour))
-    return render_template('tournaments.html', tournaments=tournaments)
+    tour_list = Tour.query.all()
+    tournaments = list(reversed(tour_list))
+    data = []
+
+    for tour in tournaments:
+        tour_score = TourScore.query.filter_by(name=tour.name).first()
+        if not tour_score:
+            continue
+        team_scores = {
+            "Penn State": tour_score.psu,
+            "Ohio Sate": tour_score.osu,
+            "Oklahoma State": tour_score.okst,
+            "Cornell": tour_score.corn,
+            "Lehigh": tour_score.leh,
+            "NC State": tour_score.ncst,
+            "Iowa": tour_score.iowa,
+            "Iowa State": tour_score.isu,
+            "Minnesota": tour_score.minn,
+            "Virginia Tech": tour_score.vt,
+            "Mizzouri": tour_score.mizz,
+            "Nebraska": tour_score.neb,
+            "Stanford": tour_score.stan,
+            "Michigan": tour_score.mich,
+        }
+
+        sorted_teams = sorted(team_scores.items(), key=lambda x: x[1], reverse=True)[:3]
+
+        top_teams = []
+        for team_name, score in sorted_teams:
+            team_instance = Team.query.filter_by(name=team_name).first()
+            if team_instance:
+                top_teams.append({
+                    "team": team_instance.name,
+                    "score": score,
+                    "wins": team_instance.wins,
+                    "loss": team_instance.loss,
+                    "logo": team_instance.logo,
+                })
+        data.append({
+            "tourn": tour,
+            "top_teams": top_teams
+        })
+
+    return render_template('tournaments.html', tournaments=data)
+
+
+
 
 @app.route('/new_tournament')
 def tour_form():
@@ -376,7 +420,7 @@ def one_tourscore(id):
         {'team': 'Penn State', 'score': tour.psu, 'logo': "https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg"},
         {'team': 'Cornell', 'score': tour.corn, 'logo': "https://sportslogohistory.com/wp-content/uploads/2019/06/cornell_big_red_2002-pres.png"},
         {'team': 'Iowa', 'score': tour.iowa, 'logo': "https://storage.googleapis.com/hawkeyesports-com/2021/02/cf540990-logo-e1722875756178.png"},
-        {'team': 'Iowa', 'score': tour.isu, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/isuni.sidearmsports.com/images/responsive_2021/logo_nav.svg"},
+        {'team': 'Iowa State', 'score': tour.isu, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/isuni.sidearmsports.com/images/responsive_2021/logo_nav.svg"},
         {'team': 'Lehigh', 'score': tour.leh, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/lehighsports.com/responsive_2020/images/svgs/logo_main2-new.svg"},
         {'team': 'Michigan', 'score': tour.mich, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/mgoblue.com/images/sng_2023/main_nav_logo.svg"},
         {'team': 'Minnesota', 'score': tour.minn, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/gophersports.com/images/nextgen_2022/main_logo.svg"},

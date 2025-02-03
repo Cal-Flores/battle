@@ -106,7 +106,8 @@
     /* height: 100%;
     background-repeat: no-repeat; */
     background-size: cover;
-    background: url("images/bg6.jpeg") no-repeat center center fixed;
+    /* background: url("images/bg6.jpeg") no-repeat center center fixed; */
+    background-image: url('https://wallpapersok.com/images/hd/black-and-white-attack-on-titan-logo-qib40rskdp9p813l.jpg');
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -234,9 +235,9 @@ h2 {
 }
 
 .menuli:hover {
-    transform: scale(1.1);
+    text-decoration: underline;
     cursor: pointer;
-    /* color: orange; */
+    color: orange;
 }
 
 #cont {
@@ -481,9 +482,7 @@ span {
     border-radius: 10px;
 }
 
-.tourdiv:hover {
-    border: solid black 2px;
-}
+
 
 .tourimg {
     display: flex;
@@ -498,6 +497,10 @@ span {
     color: whitesmoke;
     font-size: 24px;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.tourtxt:hover {
+    color: rgb(255, 128, 17);
 }
 
 .leadercont {
@@ -1468,7 +1471,7 @@ input[type=text]:hover {
 }
 
 #teamcont {
-    width: 75%;
+    width: 70%;
     border: 1px solid black;
     margin: auto;
     color: whitesmoke;
@@ -1491,12 +1494,28 @@ input[type=text]:hover {
     border: 1px solid rgb(235, 233, 233);
     align-items: center;
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: .5fr 1fr 1fr 1fr 1fr;
     height: 70px;
     padding: 5px;
     padding-left: 5%;
     margin-bottom: 1%;
     background-color: rgba(14, 14, 14, 0.75);
+}
+
+.oneteamsc {
+    border: 1px solid rgb(235, 233, 233);
+    align-items: center;
+    display: grid;
+    grid-template-columns: .5fr 1fr 1fr 1fr;
+    height: 70px;
+    padding: 5px;
+    padding-left: 5%;
+    margin-bottom: 1%;
+    background-color: rgba(14, 14, 14, 0.75);
+}
+
+.rank {
+    font-size: 28px;
 }
 
 #teamlogo {
@@ -1523,4 +1542,25 @@ input[type=text]:hover {
 #Tname:hover {
     color: rgb(235, 169, 0);
     cursor: pointer;
+}
+
+#scdiv {
+    text-align: center;
+}
+
+#sclogo {
+    margin: auto;
+    width: 150px;
+}
+
+#swin {
+    color: rgb(2, 75, 2);
+}
+
+#sloss {
+    color: rgb(144, 0, 0);
+}
+
+#obitosc {
+    width: 80px;
 }
