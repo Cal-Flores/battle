@@ -17,6 +17,10 @@ Migrate(app,db)
 def index():
     #pnt_leaders = Player.query.order_by(Player.points.desc(), Player.wins.desc(), Player.loss).all()
     players = Player.query.order_by(Player.name).all()
+    # anbukak = Player.query.get(4)
+    # anbukak.points += 15
+    # anbukak.medal += 1
+    db.session.commit()
     return render_template('main_page.html', players = players)
 
 @app.route('/new_search',  methods=['GET', 'POST'])
@@ -169,8 +173,8 @@ def single_tour(id):
 def player_card(id):
     player = Player.query.get(id)
 
-    player_img = player.img[17:]
-    result = Result.query.filter(or_(Result.first == player_img, Result.second == player_img,Result.third == player_img, Result.fourth == player_img, Result.fifth == player_img, Result.sixth == player_img, Result.seventh == player_img, Result.eigth == player_img, Result.ninth == player_img, Result.tenth == player_img)).all()
+    player_img = player.img
+    result = Result.query.filter(or_(Result.first == player_img, Result.second == player_img,Result.third == player_img, Result.fourth == player_img, Result.fifth == player_img, Result.sixth == player_img, Result.seventh == player_img, Result.eigth == player_img, Result.ninth == player_img, Result.tenth == player_img, Result.eleventh == player_img, Result.twelfth == player_img, Result.thirtenth == player_img, Result.fourtenth == player_img, Result.fifthtenth == player_img, Result.sixtenth == player_img)).all()
 
 
     opponents_1 = Opponent.query.filter(Opponent.player_id == id).all()
@@ -180,6 +184,9 @@ def player_card(id):
         ops.append(person)
     all_opponents = list(reversed(ops))
     opponents = list(reversed(opponents_1))
+    print(player_img)
+    print(result)
+    print('-------------------')
     return render_template('player_card.html', player=player, opponents=opponents, all_opponents=all_opponents, result=result, player_img=player_img)
 
 @app.route('/new_opponent/<int:id>',  methods=['GET', 'POST'])
@@ -359,7 +366,7 @@ def tournaments():
             "Iowa State": tour_score.isu,
             "Minnesota": tour_score.minn,
             "Virginia Tech": tour_score.vt,
-            "Mizzouri": tour_score.mizz,
+            "Missouri": tour_score.mizz,
             "Nebraska": tour_score.neb,
             "Stanford": tour_score.stan,
             "Michigan": tour_score.mich,
@@ -534,14 +541,14 @@ def new_result():
         player2.silver += 1
 
         player3 = Player.query.filter(form.data['third'] == Player.name).one()
-        player_img3 = player2.img
+        player_img3 = player3.img
         player3.points += 18
         player3.bronze += 1
 
         player4 = Player.query.filter(form.data['fourth'] == Player.name).one()
         player_img4 = player4.img
-        player2.points += 15
-        player2.medal += 1
+        player4.points += 15
+        player4.medal += 1
 
         player5 = Player.query.filter(form.data['fifth'] == Player.name).one()
         player_img5 = player5.img
@@ -635,29 +642,32 @@ def new_result():
 
 @app.route('/new_battle', methods=['GET', 'POST'])
 def new_battle():
-    champ = [
+    champ = [ # 3
     'Round of 128',
     'Round of 64',
     'Round of 32',
     'Round of 16',
     'Quarter-Final',
     ]
-    cons = [
+    cons = [ #1
     'Consolation Round',
     'Cons-Semi',
     'Cons-Quarter',
     'Blood Round',
     'Round of 12',
     'Cons-24',
+    'Cons-32',
     'Cons-16',
+    'Cons-12',
+    'Placement Round'
     ]
-    medal_round = [
+    medal_round = [ # 4
     'Bronze Medal Match',
     '5th Place Match',
     '7th Place Match',
     'Semi-Final',
     ]
-    badge_round = [
+    badge_round = [ #3.5
     '9th Place Match',
     '11th Place Match',
     '13th Place Match',
@@ -812,11 +822,11 @@ def new_battle():
         if form.data['round'] in cons:
             teampnts += 1
         if form.data['round'] in badge_round:
-            team_score += 3.5
+            teampnts += 3.5
         if form.data['round'] in medal_round:
-            team_score += 4
+            teampnts += 4
         if form.data['round'] == 'Gold Medal Match':
-            team_score += 5
+            teampnts += 7
 
         if form.data['score'] > 1000:
             teampnts += 2

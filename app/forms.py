@@ -333,10 +333,11 @@ rounds = [
     '15th Place Match',
     'Cons-Semi',
     'Cons-Quarter',
-    'Blood Round',
-    'Round of 12',
-    'Cons-24',
+    'Cons-12',
     'Cons-16',
+    'Blood Round',
+    'Cons-32',
+    'Placement Round',
     'Dual',
     ]
 search_rounds = [

@@ -478,7 +478,7 @@ span {
     justify-content: space-evenly;
     width: 100%;
     margin-bottom: 3%;
-    background-color: hsla(244, 18%, 16%, 0.75);
+    background-color: hsla(244, 18%, 16%, 0.92);
     border-radius: 10px;
 }
 
@@ -1562,5 +1562,5 @@ input[type=text]:hover {
 }
 
 #obitosc {
-    width: 80px;
+    width: 65px;
 }
