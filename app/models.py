@@ -19,11 +19,13 @@ class Player(db.Model):
     badge = db.Column(db.Integer)
     team = db.Column(db.String(255))
     logo = db.Column(db.String)
+    tour_points = db.Column(db.Integer, default=0)  # <-- New column
 
 
-# flask db_init
-# flask db migrate
+# add new column to the model: ex: tour_points = db.Column(db.Integer, default=0)  # <-- New column
+# flask db migrate -m "Added tour_points column"
 # flask db upgrade
+# done :)
 
 class Tour(db.Model):
     __tablename__ = 'tours'

@@ -17,9 +17,15 @@ Migrate(app,db)
 def index():
     #pnt_leaders = Player.query.order_by(Player.points.desc(), Player.wins.desc(), Player.loss).all()
     players = Player.query.order_by(Player.name).all()
+    entries = TourTeam.query.all()
     # anbukak = Player.query.get(4)
     # anbukak.points += 15
     # anbukak.medal += 1
+    # for player in players:
+    #     for entry in entries:
+    #         if player.id == entry.playerId and entry.tourId == 2:
+    #             player.tour_points += entry.score
+    #             print(f'this is {player.name} and a score of {entry.score} has been added totaling {player.tour_points}')
     db.session.commit()
     return render_template('main_page.html', players = players)
 
@@ -273,7 +279,7 @@ def success():
 
 @app.route('/leaderboards')
 def leader():
-    players = Player.query.order_by(Player.points.desc(), Player.wins.desc(), Player.loss).all()
+    players = Player.query.order_by(Player.tour_points.desc(),Player.points.desc(), Player.wins.desc(), Player.loss).all()
     return render_template('leader.html', players = players)
 
 
@@ -837,6 +843,7 @@ def new_battle():
 
         if form.data['victory_1'] == True:
             player_1.wins += 1
+            player_1.tour_points += teampnts
             db.session.commit()
             ##### NEW LOGIC FOR TEAM SCORES rudy#####
             team = player_1.team
@@ -895,6 +902,7 @@ def new_battle():
 
         if form.data['victory_2'] == True:
             player_2.wins += 1
+            player_1.tour_points += teampnts
             db.session.commit()
              ##### NEW LOGIC FOR TEAM SCORES rudy#####
             team = player_2.team
