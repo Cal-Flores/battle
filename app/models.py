@@ -122,6 +122,8 @@ class TourTeam(db.Model):
     tourId = db.Column(db.Integer)
     playerId = db.Column(db.Integer)
     score = db.Column(db.Integer)
+    wins = db.Column(db.Integer, default=0)
+    loss = db.Column(db.Integer, default=0)
 
 
 

@@ -18,14 +18,21 @@ def index():
     #pnt_leaders = Player.query.order_by(Player.points.desc(), Player.wins.desc(), Player.loss).all()
     players = Player.query.order_by(Player.name).all()
     entries = TourTeam.query.all()
+    battles = Opponent.query.all()
     # anbukak = Player.query.get(4)
     # anbukak.points += 15
     # anbukak.medal += 1
-    # for player in players:
-    #     for entry in entries:
-    #         if player.id == entry.playerId and entry.tourId == 2:
-    #             player.tour_points += entry.score
-    #             print(f'this is {player.name} and a score of {entry.score} has been added totaling {player.tour_points}')
+    # for entry in entries:
+    #     # entry.wins = 0
+    #     # entry.loss = 0
+    #     for battle in battles:
+    #         if (battle.victory == False and entry.tourId == 1 and battle.tour_name == '1st Hunter Exam' and entry.playerId == battle.player_id):
+    #             entry.loss += 1
+    #             print (f'player #{entry.playerId} has {entry.loss} lozzes! tour id is { battle.tour_name }')
+    # db.session.commit()
+
+
+
     db.session.commit()
     return render_template('main_page.html', players = players)
 
@@ -418,7 +425,9 @@ def get_score(id, team):
         score = entry.score
         score_data = {
             'person': player,
-            'score': score
+            'score': score,
+            'wins': entry.wins,
+            'loss': entry.loss
         }
         data.append(score_data)
     data.sort(key=lambda x: x['score'], reverse=True)
@@ -834,11 +843,11 @@ def new_battle():
         if form.data['round'] == 'Gold Medal Match':
             teampnts += 7
 
-        if form.data['score'] > 1000:
+        if form.data['score'] >= 1000:
             teampnts += 2
-        elif form.data['score'] > 750:
+        elif form.data['score'] >= 750:
             teampnts += 1.5
-        elif form.data['score'] > 500:
+        elif form.data['score'] >= 500:
             teampnts += 1
 
         if form.data['victory_1'] == True:
@@ -895,8 +904,12 @@ def new_battle():
                 ####### even more logic for tourteam ##########
                 player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_1.id)).one()
                 player_score.score += teampnts
+                player_score.wins += 1
                 db.session.commit()
         else:
+            tourn =  TourScore.query.filter(TourScore.name == form.data['tournamnet']).first()
+            player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_1.id)).one()
+            player_score.loss += 1
             player_1.loss += 1
             db.session.commit()
 
@@ -953,9 +966,13 @@ def new_battle():
                 ####### even more logic for tourteam ##########
                 player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_2.id)).one()
                 player_score.score += teampnts
+                player_score.wins += 1
                 db.session.commit()
 
         else:
+            tourn =  TourScore.query.filter(TourScore.name == form.data['tournamnet']).first()
+            player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_2.id)).one()
+            player_score.loss += 1
             player_2.loss += 1
             db.session.commit()
 
