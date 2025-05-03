@@ -20,6 +20,8 @@ class Player(db.Model):
     team = db.Column(db.String(255))
     logo = db.Column(db.String)
     tour_points = db.Column(db.Integer, default=0)  # <-- New column
+    rank = db.Column(db.Integer, default=0)  # <-- New column
+    bonus = db.Column(db.Integer, default=0)  # <-- New column
 
 
 # add new column to the model: ex: tour_points = db.Column(db.Integer, default=0)  # <-- New column
@@ -125,7 +127,13 @@ class TourTeam(db.Model):
     wins = db.Column(db.Integer, default=0)
     loss = db.Column(db.Integer, default=0)
 
-
+class RankHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tourId = db.Column(db.Integer)
+    playerId = db.Column(db.Integer)
+    score = db.Column(db.Integer)
+    total = db.Column(db.Integer)
+    rank = db.Column(db.Integer, default=0)
 
 # flask db migrate -m "Updated Battle model"
 # flask db upgrade

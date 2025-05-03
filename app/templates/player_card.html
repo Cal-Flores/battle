@@ -28,9 +28,15 @@
                 <div class="editgoldcard">
                     <img class="eimg" src="{{player.img}}">
                     <div class="editwl">
-                        <p class="win">Victories: <span class="number">{{player.wins}}</span></p>
-                        <p class="loss">Defeats: <span class="number">{{player.loss}}</span></p>
-                        <p class="points">Points: <span class="number">{{player.points}}</span></p>
+                        <p class="win">Record: <span class="number">{{player.wins}} - {{player.loss}}</span></p>
+
+                        <p class="points">Points: <span class="number">{{player.tour_points}}</span></p>
+                        <p class="points" style="color: gray;">Rank: <span class="number">{{ player.rank }}</span>
+                        </p>
+                        <p class="points" style="color: rgb(126, 3, 3);">Bonus: <span class="number">
+                                {{ ("%.2f" % ((player.bonus / player.wins) if player.wins > 0 else 0)).lstrip('0') }}%
+                            </span>
+                        </p>
                     </div>
                     <div class="editmedal">
                         <div class="medalcont">
@@ -151,9 +157,14 @@
                 <div class="editcard">
                     <img class="eimg" src="{{player.img}}">
                     <div class="editwl">
-                        <p class="win">Victories: <span class="number">{{player.wins}}</span></p>
-                        <p class="loss">Defeats: <span class="number">{{player.loss}}</span></p>
-                        <p class="points">Points: <span class="number">{{player.points}}</span></p>
+                        <p class="win">Record: <span class="number">{{player.wins}} - {{player.loss}}</span></p>
+                        <p class="points">Points: <span class="number">{{player.tour_points}}</span></p>
+                        <p class="points" style="color: gray;">Rank: <span class="number">{{ player.rank }}</span>
+                        </p>
+                        <p class="points" style="color: rgb(126, 3, 3);">Bonus: <span class="number">
+                                {{ ("%.2f" % ((player.bonus / player.wins) if player.wins > 0 else 0)).lstrip('0') }}%
+                            </span>
+                        </p>
                     </div>
                     <div class="editmedal">
                         <div class="medalcont">
@@ -273,6 +284,9 @@
                 <form class="oppbtn" action="/new_opponent/{{player.id}}">
                     <input type="submit" value="Add Opponent" />
                 </form>
+                <a href="/playerStat/{{player.id}}"
+                    style="display: inline-flex; justify-content: center; align-items: center;text-align: center; font-size: 16px;"
+                    class="oppbtn">Statistics</a>
                 <button onclick="showMed()" class="oppbtn">View Medals</button>
             </div>
 
@@ -282,7 +296,8 @@
                     {% for person in all_opponents %}
                     <div class="oppperson">
                         <img id="oppimg" src="{{person.img}}">
-                        <a href='{{person.id}}' class="oppnum">{{person.name}}</a>
+                        <a href='{{person.id}}' class="oppnum">{{person.name}} <span
+                                style="color: rgb(176, 176, 176); font-size: 12px;">({{person.rank}})</span></a>
                         <img id="opplogo" src="{{person.logo}}">
                     </div>
                     {% endfor %}

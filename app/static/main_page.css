@@ -575,7 +575,7 @@ span {
     flex-wrap: wrap;
     border-radius: 10px;
     /* padding-left: 1%; */
-    padding-right: 3%;
+    /* padding-right: 3%; */
     padding-top: 1%;
     padding-bottom: 1%;
     /* margin-bottom: 5%; */
@@ -1563,4 +1563,13 @@ input[type=text]:hover {
 
 #obitosc {
     width: 65px;
+}
+
+#advstatbg {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.7) 0 100%), url('images/Elena_saying_goodbye.webp');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: darken;
+    filter: brightness(50%);
 }

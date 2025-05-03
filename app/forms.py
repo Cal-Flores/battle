@@ -337,6 +337,7 @@ rounds = [
     'Cons-16',
     'Blood Round',
     'Cons-32',
+    'Cons-48',
     'Placement Round',
     'Dual',
     ]
@@ -423,6 +424,8 @@ class NewBattle(FlaskForm):
 class NewHistory(FlaskForm):
     player_1 = StringField('Fighter 1')
     player_2 = StringField('Fighter 2')
+    team_1 = StringField('Team 1')
+    team_2 = StringField('Team 2')
     submit = SubmitField('Submit')
 
 class Search(FlaskForm):

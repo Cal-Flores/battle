@@ -22,7 +22,7 @@
                 <div class="editwl">
                     <p class="win">Victories: <span class="number">{{player_1.wins}}</span></p>
                     <p class="loss">Defeats: <span class="number">{{player_1.loss}}</span></p>
-                    <p class="points">Points: <span class="number">{{player_1.points}}</span></p>
+                    <p class="points">Points: <span class="number">{{player_1.tour_points}}</span></p>
                 </div>
             </a>
             <div>
@@ -34,7 +34,7 @@
                 <div class="editwl">
                     <p class="win">Victories: <span class="number">{{player_2.wins}}</span></p>
                     <p class="loss">Defeats: <span class="number">{{player_2.loss}}</span></p>
-                    <p class="points">Points: <span class="number">{{player_2.points}}</span></p>
+                    <p class="points">Points: <span class="number">{{player_2.tour_points}}</span></p>
                 </div>
             </a>
         </div>
@@ -48,8 +48,9 @@
                 <div class="histnum">DEF </div>
                 <img id="oppimage" src="{{player_2.img}}">
                 <div class="histnum">{{player_2.name}}</div>
+                <div class="histnum">{{rec.score}}</div>
                 <div class="histnum">{{rec.round}}</div>
-                <div class="histnum">Battle Royale {{rec.tour_name}}</div>
+                <div class="histnum"> {{rec.tour_name}}</div>
             </div>
 
         </div>
@@ -63,8 +64,9 @@
                 <div class="histnum">DEF </div>
                 <img id="oppimage" src="{{player_1.img}}">
                 <div class="histnum">{{player_1.name}}</div>
+                <div class="histnum">{{rec.score}}</div>
                 <div class="histnum">{{rec.round}}</div>
-                <div class="histnum">Battle Royale {{rec.tour_name}}</div>
+                <div class="histnum">{{rec.tour_name}}</div>
             </div>
 
         </div>

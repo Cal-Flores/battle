@@ -4,7 +4,7 @@ from app.config import Configuration
 from sqlalchemy import and_, or_
 
 from flask_migrate import Migrate
-from app.models import db, Player, Tour, Result, Opponent, Battle, Dual, Team, TourScore,  TourTeam
+from app.models import db, Player, Tour, Result, Opponent, Battle, Dual, Team, TourScore,  TourTeam, RankHistory
 
 
 app = Flask(__name__)
@@ -19,9 +19,20 @@ def index():
     players = Player.query.order_by(Player.name).all()
     entries = TourTeam.query.all()
     battles = Opponent.query.all()
-    # anbukak = Player.query.get(4)
-    # anbukak.points += 15
+    # teaam = TourScore.query.get(3)
+    # teaam.corn -= 4
+    # armin = Player.query.get(128)
+    # armin.tour_points -= 1
+    # gojo = Player.query.get(60)
+    # gojo.img = 'https://wallpapers-clan.com/wp-content/uploads/2023/01/dragon-ball-vegeta-pfp-11.jpg'
+    # anbukak = Player.query.get(13)
+    # anbukak.points = 31
     # anbukak.medal += 1
+    # for battle in battles:
+    #     if battle.victory:
+    #         player = Player.query.get(battle.player_id)
+    #         if battle.score > 500:
+    #            player.bonus += 1
     # for entry in entries:
     #     # entry.wins = 0
     #     # entry.loss = 0
@@ -30,9 +41,29 @@ def index():
     #             entry.loss += 1
     #             print (f'player #{entry.playerId} has {entry.loss} lozzes! tour id is { battle.tour_name }')
     # db.session.commit()
+    ################### THIS IS WHERE I MADE RANKHISTORY ##############
 
+    # for i in range(1,129):
+    #     player = Player.query.get(i)
+    #     tour_int = TourTeam.query.filter(and_(TourTeam.tourId == 3, TourTeam.playerId == i)).one() # CHANGE THIS the instance in the table.
+    #     tour_pnt = tour_int.score # the total score for each player at tournament 1
+    #     print(f'{player.name} scored {tour_pnt} points')
+    #     # adding each score to the RankHistory table
+    #     old_tour = RankHistory.query.filter(and_(RankHistory.tourId == 2, RankHistory.playerId == i)).one() #CHANGE THIS
+    #     old_score = old_tour.total
+    #     new_total = tour_pnt + old_score
+    #     new_int = RankHistory(tourId = 3, playerId = i, score = tour_pnt, rank = 1, total = new_total) # CHANGE THIS
+    #     db.session.add(new_int)
 
+    # ##Set the proper rank for each player at tournament 1
+    # all_scores_1 = RankHistory.query.filter(RankHistory.tourId == 3).order_by(RankHistory.total.desc()).all() # CHANGE THIS
+    # for i, tscore in enumerate(all_scores_1, start=1):
+    #     if i > 128:
+    #         break
+    #     print(f"{i}: {tscore}")
+    #     tscore.rank = i
 
+    #db.session.query(RankHistory).delete()
     db.session.commit()
     return render_template('main_page.html', players = players)
 
@@ -182,6 +213,28 @@ def single_tour(id):
     #     if record.victory:
     #         winners.append(record)
 
+
+@app.route('/playerStat/<id>')
+def player_stats(id):
+    histories = RankHistory.query.filter(RankHistory.playerId == id).all()
+    history = []
+    rank = []
+    total_score = 0
+    for hist in histories:
+        total_score += hist.score
+        hist_obj = {
+            'rank': hist.rank,
+            'score': hist.score,
+            'total': total_score
+                    }
+        rank.append(hist.rank)
+        history.append(hist_obj)
+    player = Player.query.get(id)
+    rank.append(player.rank)
+
+    return render_template('advancedStats.html', rank=rank )
+
+
 @app.route('/player/<id>')
 def player_card(id):
     player = Player.query.get(id)
@@ -233,11 +286,27 @@ def add_opponent(id):
 def opp_delete(id):
     opponent = Opponent.query.get(id)
     player = Player.query.get(opponent.player_id)
+    tourname = opponent.tour_name
+
+    team = 'sup' # THIS CAN STAY
+    tid = 3# <---- Change this for the tournaments ID!!
+    fixedPnts = 1  # <---- Change this for appropriate number!!
     if opponent.victory == True:
         player.wins -= 1
+        player.tour_points -= fixedPnts
+        tourData = TourScore.query.filter((TourScore.name == tourname)).one()
+        tourData.okst -= fixedPnts # <---- Change this the .team to the winners team ex: tourData.mich!
+
+        indvTeam = TourTeam.query.filter(and_(TourTeam.playerId == player.id, TourTeam.tourId == tid)).one()
+        indvTeam.score -= fixedPnts
+        indvTeam.wins -= 1
+
         db.session.commit()
     else:
+        #loserId = 84
         player.loss -= 1
+        #indvTeam = TourTeam.query.filter(and_(TourTeam.playerId == loserId, TourTeam.tourId == tid)).one()
+        #indvTeam.loss -= 1
         db.session.commit()
 
     db.session.delete(opponent)
@@ -286,8 +355,18 @@ def success():
 
 @app.route('/leaderboards')
 def leader():
-    players = Player.query.order_by(Player.tour_points.desc(),Player.points.desc(), Player.wins.desc(), Player.loss).all()
-    return render_template('leader.html', players = players)
+    players = Player.query.order_by(
+        Player.tour_points.desc(),
+        Player.points.desc(),
+        Player.wins.desc(),
+        Player.loss.asc()
+    ).all()
+    for index, player in enumerate(players, start=1):
+        player.rank = index
+    db.session.commit()
+
+    return render_template('leader.html', players=players)
+
 
 
 @app.route('/new_player')
@@ -671,6 +750,7 @@ def new_battle():
     'Blood Round',
     'Round of 12',
     'Cons-24',
+    'Cons-48',
     'Cons-32',
     'Cons-16',
     'Cons-12',
@@ -853,6 +933,8 @@ def new_battle():
         if form.data['victory_1'] == True:
             player_1.wins += 1
             player_1.tour_points += teampnts
+            if form.data['score'] >= 500:
+                player_1.bonus += 1
             db.session.commit()
             ##### NEW LOGIC FOR TEAM SCORES rudy#####
             team = player_1.team
@@ -915,7 +997,9 @@ def new_battle():
 
         if form.data['victory_2'] == True:
             player_2.wins += 1
-            player_1.tour_points += teampnts
+            player_2.tour_points += teampnts
+            if form.data['score'] >= 500:
+                player_2.bonus += 1
             db.session.commit()
              ##### NEW LOGIC FOR TEAM SCORES rudy#####
             team = player_2.team

@@ -24,25 +24,38 @@
             <form method="post" action="/history_form">
                 {{ form.csrf_token }}
                 <div class="h2hform">
+                    <div>
 
-                    <div class="histformlabel">
-                        <div class="battlelable1">Fighter 1</div>
-                        {{form.player_1(list="programmingLanguages")}}
-                        <datalist id="programmingLanguages">
-                            {% for name in names %}
-                            <option value="{{name}}">
-                                {% endfor %}
-                        </datalist>
+                        <div class="histformlabel">
+                            <div class="battlelable1">Fighter 1</div>
+                            {{form.player_1(list="programmingLanguages")}}
+                            <datalist id="programmingLanguages">
+                                {% for name in names %}
+                                <option value="{{name}}">
+                                    {% endfor %}
+                            </datalist>
+                        </div>
+
+                        <div class="histformlabel" style="margin-top: 50px;">
+                            <div class="battlelable2">Fighter 2</div>
+                            {{form.player_2(list="programmingLanguages")}}
+                            <datalist id="programmingLanguages">
+                                {% for name in names %}
+                                <option value="{{name}}">
+                                    {% endfor %}
+                            </datalist>
+                        </div>
                     </div>
+                    <div>
 
-                    <div class="histformlabel">
-                        <div class="battlelable2">Fighter 2</div>
-                        {{form.player_2(list="programmingLanguages")}}
-                        <datalist id="programmingLanguages">
-                            {% for name in names %}
-                            <option value="{{name}}">
-                                {% endfor %}
-                        </datalist>
+                        <div class="histformlabel">
+                            <div class="battlelable2">Team 1</div>
+                            {{form.team_1}}
+                        </div>
+                        <div class="histformlabel" style="margin-top: 50px;">
+                            <div class=" battlelable2">Team 2</div>
+                            {{form.team_2}}
+                        </div>
                     </div>
 
 
