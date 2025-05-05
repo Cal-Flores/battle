@@ -98,6 +98,7 @@ class Team(db.Model):
     wins = db.Column(db.Integer)
     loss = db.Column(db.Integer)
     points = db.Column(db.Integer)
+    tour_points = db.Column(db.Integer)
     logo = db.Column(db.String)
 
 

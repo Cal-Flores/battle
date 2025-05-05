@@ -21,10 +21,10 @@
             {% for team in teams %}
             <div class="oneteam">
                 <img id="teamlogo" src='{{team.logo}}'>
-                <div class="teaminfo"><a id="Tname" href="teams/{{team.id}}">{{team.name}}</a></div>
+                <div class="teaminfo"><a id="Tname" href="teams/{{team.id}}">{{ loop.index }}. {{team.name}}</a></div>
                 <div class="teaminfo"><span class="teamwin">WINS:</span> {{team.wins}}</div>
                 <div class="teaminfo"><span class="teamloss">LOSS:</span> {{team.loss}}</div>
-                <div class="teaminfo">{{team.points}} pts</div>
+                <div class="teaminfo">{{team.tour_points}} pts</div>
             </div>
 
             {% endfor %}

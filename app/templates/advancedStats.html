@@ -12,8 +12,8 @@
 
             #chart {
                 background-color: #4a4848;
-                width: 800px;
-                height: 600px;
+                width: 70%;
+                height: 200px;
                 margin: auto;
             }
 
@@ -21,7 +21,8 @@
                 margin: 0;
                 padding: 20px;
                 background-color: #f0f0f0;
-                border-Color: rgb(255, 255, 255)
+                border-Color: rgba(255, 255, 255);
+                border-color: rgba(255, 99, 132, 0.7), ;
             }
         </style>
         <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
@@ -33,11 +34,139 @@
 
     <body id="advstatbg">
         {% include 'nav.html' %}
-        <h1 style="margin-top: 6%; margin-bottom: 3%;">Advanced Statistics</h1>
-        <canvas id="chart"></canvas>
-        <canvas id="pieChart" width="400" height="400"></canvas>
-        <div id="myDiv" data-values='{{ rank | tojson | safe }}'></div>
-        <canvas id="pieChart"></canvas>
+        <!-- <h1 style="margin-top: 6%; margin-bottom: 3%;">Advanced Statistics</h1> -->
+        <header class="adv-header" data-color="{{ color }}">
+            <h3>📊 Advanced Statistics</h3>
+            <p>In-depth player performance and rival analysis</p>
+        </header>
+        <main id="asmain">
+            <div>
+                <canvas id="chart"></canvas>
+                <div id="myDiv" data-values='{{ rank | tojson | safe }}'></div>
+                <div id="myHist" data-values='{{ history | tojson | safe }}'></div>
+                <div id="myColor" data-color="{{ color }}"></div>
+            </div>
+            <div id="aspiecont">
+                <div id="ascard">
+                    <div class="card-header">
+                        <img class="team-logo" src="{{ player.logo }}">
+                        <span class="card-rank">#{{ player.rank }}</span>
+                    </div>
+                    <img id="asimg" src="{{ player.img }}">
+                    <a href="../player/{{player.id}}">
+                        <h2 class="card-name">{{ player.name }}</h2>
+                    </a>
+                    <p class="card-team">{{ player.team }}</p>
+
+                    <div class="card-stats">
+                        <div><strong>Wins:</strong> {{ player.wins }}</div>
+                        <div><strong>Losses:</strong> {{ player.loss }}</div>
+                        <div><strong>Points:</strong> {{ player.points }}</div>
+                        <div><strong>Tour Pts:</strong> {{ player.tour_points }}</div>
+                    </div>
+
+                    <div class="card-medals">
+                        🥇 {{ player.gold }} | 🥈 {{ player.silver }} | 🥉 {{ player.bronze }}
+                    </div>
+
+                    <div class="card-badges">
+                        🎖️ Medal: {{ player.medal }} | 🏅 Badge: {{ player.badge }}
+                    </div>
+                </div>
+
+                <div style="width: 500px; height: 420px;">
+                    <canvas id="pieChart"></canvas>
+                    <div id="myPie" data-values='{{ wins | tojson | safe }}'></div>
+                </div>
+                <div id="asmini">
+                    <div class="asminicard">
+                        <img src="{{beaten_team.logo}}">
+                        <div>Most Beaten Team {{wins_vs_beaten_team}} - {{losses_vs_beaten_team}}</div>
+                    </div>
+                    <div class="asminicard">
+                        <img src="{{lost_team.logo}}">
+                        <div>Most losses against Team {{wins_vs_lost_team}} - {{losses_vs_lost_team}}</div>
+                    </div>
+                    <div class="asrival">
+                        <img src="{{biggest_rival.img}}">
+                        <a href="../player/{{biggest_rival.id}}">
+                            <p>{{biggest_rival.name}} ({{biggest_rival.team}})</p>
+                        </a>
+                        </p>
+                        <p>BIGGEST RIVAL</p>
+                        <p>{{biggest_rival_info.wins}} - {{biggest_rival_info.losses}}</p>
+                    </div>
+                </div>
+            </div>
+            <div id="asbottom">
+                <!-- Biggest Win Card -->
+                <div class="result-card win-result">
+                    <div class="result-header">
+                        <img class="result-logo" src="{{ biggest_win.logo }}" alt="Logo">
+                        <span class="result-rank">#{{biggest_win.rank}}</span>
+                    </div>
+                    <img class="result-img" src="{{ biggest_win.image }}" alt="Opponent Image">
+                    <h3 class="result-name">{{ biggest_win.name }}</h3>
+                    <div class="result-info">
+                        <p><strong>{{ biggest_win.tour_name }}</strong></p>
+                        <p>{{ biggest_win.round }}</p>
+                        <p><strong>Score:</strong> {{ biggest_win.score }}</p>
+                    </div>
+                    <div class="result-label">BIGGEST WIN</div>
+                </div>
+
+                <!-- Biggest Loss Card -->
+                <div class="result-card loss-result">
+                    <div class="result-header">
+                        <img class="result-logo" src="{{ biggest_loss.logo }}" alt="Logo">
+                        <span class="result-rank">#{{biggest_loss.rank}}</span>
+                    </div>
+                    <img class="result-img" src="{{ biggest_loss.image }}" alt="Opponent Image">
+                    <h3 class="result-name">{{ biggest_loss.name }}</h3>
+                    <div class="result-info">
+                        <p><strong>{{ biggest_loss.tour_name }}</strong></p>
+                        <p>{{ biggest_loss.round }}</p>
+                        <p><strong>Score:</strong> {{ biggest_loss.score }}</p>
+                    </div>
+                    <div class="result-label">BIGGEST LOSS</div>
+                </div>
+
+                <!-- Biggest upset Win Card -->
+                <div class="result-card win-result">
+                    <div class="result-header">
+                        <img class="result-logo" src="{{ biggest_upset_win_info.logo }}" alt="Logo">
+                        <span class="result-rank">#{{biggest_upset_win_info.rank}}</span>
+                    </div>
+                    <img class="result-img" src="{{ biggest_upset_win_info.image }}" alt="Opponent Image">
+                    <h3 class="result-name">{{ biggest_upset_win_info.name }}</h3>
+                    <div class="result-info">
+                        <p><strong>{{ biggest_upset_win_info.tour_name }}</strong></p>
+                        <p>{{ biggest_upset_win_info.round }}</p>
+                        <p><strong>Score:</strong> {{ biggest_upset_win_info.score }}</p>
+                    </div>
+                    <div class="result-label">BIGGEST UPSET WIN</div>
+                </div>
+                <!-- Biggest upset Loss Card -->
+                <div class="result-card loss-result">
+                    <div class="result-header">
+                        <img class="result-logo" src="{{ biggest_upset_loss_info.logo }}" alt="Logo">
+                        <span class="result-rank">#{{biggest_upset_loss_info.rank}}</span>
+                    </div>
+                    <img class="result-img" src="{{ biggest_upset_loss_info.image }}" alt="Opponent Image">
+                    <h3 class="result-name">{{ biggest_upset_loss_info.name }}</h3>
+                    <div class="result-info">
+                        <p><strong>{{ biggest_upset_loss_info.tour_name }}</strong></p>
+                        <p>{{ biggest_upset_loss_info.round }}</p>
+                        <p><strong>Score:</strong> {{ biggest_upset_loss_info.score }}</p>
+                    </div>
+                    <div class="result-label">BIGGEST UPSET LOSS</div>
+                </div>
+
+            </div>
+
+
+        </main>
+
 
 
 
@@ -49,26 +178,31 @@
 
         <script>
 
+            const rawPie = $('#myPie').attr('data-values'); // returns a string
+            const parsedPie = JSON.parse(rawPie); // safely parsed as array
+            console.log(parsedPie); // [1, 2, 3]
+            Chart.register(ChartDataLabels);
             const pieData = {
                 labels: ['Pins', 'Tech Falls', 'Major Decisions', 'Decisions'],
                 datasets: [{
                     label: 'Win Types',
-                    data: [5, 3, 7, 10], // ← Replace these with your actual values or Jinja variable
+                    data: parsedPie,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)'
+                        'rgba(54, 162, 235, 0.9)',
+                        'rgba(75, 192, 192, 0.9)',
+                        'rgba(255, 206, 86, 0.9)',
+                        'rgba(255, 99, 132, 0.9)',
                     ],
                     borderColor: [
-                        'rgba(255, 99, 132, 1)',
                         'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
                         'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
+                        'rgba(255, 99, 132, 1)',
                     ],
                     borderWidth: 1
                 }]
             };
+
             const pieConfig = {
                 type: 'pie',
                 data: pieData,
@@ -80,10 +214,25 @@
                             labels: {
                                 color: 'white'
                             }
+                        },
+                        datalabels: {
+                            color: 'white',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value, context) => {
+                                const data = context.chart.data.datasets[0].data;
+                                const total = data.reduce((a, b) => a + b, 0);
+                                const percentage = (value / total * 100).toFixed(1);
+                                return percentage + '%';
+                            }
                         }
                     }
-                }
+                },
+                plugins: [ChartDataLabels] // 👈 THIS is what makes only this chart use data labels
             };
+
+
 
             const pieCtx = document.getElementById('pieChart').getContext('2d');
             new Chart(pieCtx, pieConfig);
@@ -93,16 +242,20 @@
             var gameChart;
             const raw = $('#myDiv').attr('data-values'); // returns a string
             const parsed = JSON.parse(raw); // safely parsed as array
-            console.log(parsed); // [1, 2, 3]
+            const rawHist = $('#myHist').attr('data-values'); // returns a string
+            const parsedHist = JSON.parse(rawHist); // safely parsed as array
+            parsedHist.push('Current')
+            const color = document.getElementById("myColor").getAttribute("data-color");
+            $('#ascard').css({ backgroundColor: color })
 
             function renderChart() {
-                var tournaments = [1, 2, 3, 'Current'];
+                var tournaments = parsedHist;
                 var rank = parsed;
 
                 var dataset1 = {
                     label: "Rank",
                     data: rank,
-                    borderColor: 'rgba(255, 27, 27,1)',
+                    borderColor: color,
                     // borderColor: 'rgba(255, 99, 132, 1)', // Line color
                     fill: false,
                     tension: 0.1
@@ -172,6 +325,10 @@
                 }
             }
             renderChart();
+            $(document).ready(function () {
+                const baseColor = $('.adv-header').data('color') || '#f8e0e6';
+                $('.adv-header').css('background', `linear-gradient(to right, #fdf5e6, ${baseColor})`);
+            });
         </script>
 
     </body>

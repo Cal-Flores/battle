@@ -214,25 +214,234 @@ def single_tour(id):
     #         winners.append(record)
 
 
+from collections import defaultdict, Counter
+from sqlalchemy import or_
+
 @app.route('/playerStat/<id>')
 def player_stats(id):
     histories = RankHistory.query.filter(RankHistory.playerId == id).all()
     history = []
     rank = []
     total_score = 0
+
     for hist in histories:
         total_score += hist.score
-        hist_obj = {
-            'rank': hist.rank,
-            'score': hist.score,
-            'total': total_score
-                    }
         rank.append(hist.rank)
-        history.append(hist_obj)
+        history.append(hist.tourId)
+
     player = Player.query.get(id)
     rank.append(player.rank)
 
-    return render_template('advancedStats.html', rank=rank )
+    all_wins = Opponent.query.filter(Opponent.player_id == id, Opponent.victory == True).all()
+    all_losses = Opponent.query.filter(Opponent.opponent_id == id, Opponent.victory == True).all()
+
+    # ---- Team beaten most ----
+    beaten_teams = Counter()
+    for win in all_wins:
+        opponent = Player.query.get(win.opponent_id)
+        if opponent:
+          beaten_teams[opponent.team] += 1
+    most_beaten_team = beaten_teams.most_common(1)[0][0] if beaten_teams else None
+    wins_vs_beaten_team = 0
+    losses_vs_beaten_team = 0
+
+    if most_beaten_team:
+        wins_vs_beaten_team = beaten_teams[most_beaten_team]
+    for loss in all_losses:
+        opponent = Player.query.get(loss.player_id)
+        if opponent and opponent.team == most_beaten_team:
+            losses_vs_beaten_team += 1
+    beaten_team = Team.query.filter(Team.name == most_beaten_team).first()
+
+
+    # ---- Team lost to most ----
+    lost_to_teams = Counter()
+    for loss in all_losses:
+        opponent = Player.query.get(loss.player_id)  # they were the winner
+        if opponent:
+            lost_to_teams[opponent.team] += 1
+    most_lost_team = lost_to_teams.most_common(1)[0][0] if lost_to_teams else None
+    wins_vs_lost_team = 0
+    losses_vs_lost_team = 0
+
+    if most_lost_team:
+        losses_vs_lost_team = lost_to_teams[most_lost_team]
+
+        for win in all_wins:
+            opponent = Player.query.get(win.opponent_id)
+            if opponent and opponent.team == most_lost_team:
+                wins_vs_lost_team += 1
+    lost_team = Team.query.filter(Team.name == most_lost_team).first()
+
+    # Find full fight object for biggest win
+    biggest_win_fight = max(all_wins, key=lambda win: win.score, default=None)
+
+    # Find full fight object for biggest loss
+    all_losses = Opponent.query.filter(Opponent.opponent_id == id, Opponent.victory == True).all()
+    biggest_loss_fight = max(all_losses, key=lambda loss: loss.score, default=None)
+
+    # Get opponent info for biggest win
+    if biggest_win_fight:
+        win_opponent = Player.query.get(biggest_win_fight.opponent_id)
+        biggest_win_info = {
+        'score': biggest_win_fight.score,
+        'round': biggest_win_fight.round,
+        'tour_name': biggest_win_fight.tour_name,
+        'opponent_name': win_opponent.name if win_opponent else 'Unknown',
+        'opponent_team': win_opponent.team if win_opponent else 'Unknown',
+        'image': win_opponent.img,
+        'logo':win_opponent.logo,
+        'rank': win_opponent.rank
+        }
+    else:
+        biggest_win_info = None
+
+    # Get opponent info for biggest loss
+    if biggest_loss_fight:
+        loss_opponent = Player.query.get(biggest_loss_fight.player_id)
+        biggest_loss_info = {
+        'score': biggest_loss_fight.score,
+        'round': biggest_loss_fight.round,
+        'tour_name': biggest_loss_fight.tour_name,
+        'opponent_name': loss_opponent.name if loss_opponent else 'Unknown',
+        'opponent_team': loss_opponent.team if loss_opponent else 'Unknown',
+        'image': loss_opponent.img,
+        'logo':loss_opponent.logo,
+        'rank': loss_opponent.rank
+        }
+    else:
+        biggest_loss_info = None
+    # Find the biggest upset win (highest-ranked opponent defeated)
+    biggest_upset_win_fight = min(
+        all_wins,
+        key=lambda win: Player.query.get(win.opponent_id).rank if Player.query.get(win.opponent_id) else float('inf'),
+        default=None
+    )
+
+    # Find the biggest upset loss (lowest-ranked opponent who defeated this player)
+    biggest_upset_loss_fight = max(
+        all_losses,
+        key=lambda loss: Player.query.get(loss.player_id).rank if Player.query.get(loss.player_id) else float('-inf'),
+        default=None
+    )
+
+    # Get opponent info for biggest upset win
+    if biggest_upset_win_fight:
+        upset_win_opponent = Player.query.get(biggest_upset_win_fight.opponent_id)
+        biggest_upset_win_info = {
+        'score': biggest_upset_win_fight.score,
+        'round': biggest_upset_win_fight.round,
+        'tour_name': biggest_upset_win_fight.tour_name,
+        'opponent_name': upset_win_opponent.name if upset_win_opponent else 'Unknown',
+        'opponent_team': upset_win_opponent.team if upset_win_opponent else 'Unknown',
+        'image': upset_win_opponent.img,
+        'logo': upset_win_opponent.logo,
+        'rank': upset_win_opponent.rank
+        }
+    else:
+        biggest_upset_win_info = None
+
+    # Get opponent info for biggest upset loss
+    if biggest_upset_loss_fight:
+        upset_loss_opponent = Player.query.get(biggest_upset_loss_fight.player_id)
+        biggest_upset_loss_info = {
+        'score': biggest_upset_loss_fight.score,
+        'round': biggest_upset_loss_fight.round,
+        'tour_name': biggest_upset_loss_fight.tour_name,
+        'opponent_name': upset_loss_opponent.name if upset_loss_opponent else 'Unknown',
+        'opponent_team': upset_loss_opponent.team if upset_loss_opponent else 'Unknown',
+        'image': upset_loss_opponent.img,
+        'logo': upset_loss_opponent.logo,
+        'rank': upset_loss_opponent.rank
+        }
+    else:
+        biggest_upset_loss_info = None
+
+
+
+    # ---- Biggest rival ----
+    all_fights = Opponent.query.filter(
+        or_(Opponent.player_id == id, Opponent.opponent_id == id)
+    ).all()
+    rival_counter = Counter()
+    for fight in all_fights:
+        rival_id = fight.opponent_id if fight.player_id == int(id) else fight.player_id
+        rival_counter[rival_id] += 1
+
+    biggest_rival_id = rival_counter.most_common(1)[0][0] if rival_counter else None
+    biggest_rival = Player.query.get(biggest_rival_id) if biggest_rival_id else None
+        # Calculate win/loss vs biggest rival
+    rival_fights = [
+    fight for fight in all_fights
+    if (fight.opponent_id == biggest_rival_id and fight.player_id == int(id)) or
+       (fight.player_id == biggest_rival_id and fight.opponent_id == int(id))
+    ]
+
+    rival_wins = sum(1 for fight in rival_fights if fight.player_id == int(id) and fight.victory)
+    rival_losses = sum(1 for fight in rival_fights if fight.opponent_id == int(id) and fight.victory)
+
+    # Pack info to send to template
+    biggest_rival_info = {
+    'name': biggest_rival.name if biggest_rival else 'Unknown',
+    'team': biggest_rival.team if biggest_rival else 'Unknown',
+    'wins': rival_wins,
+    'losses': rival_losses,
+    'total_matches': rival_wins + rival_losses,
+    }
+
+
+    # ---- Win type breakdown ----
+    pins, tfalls, mdec, dec = 0, 0, 0, 0
+    for win in all_wins:
+        if win.score > 1000:
+            pins += 1
+        elif win.score >= 750:
+            tfalls += 1
+        elif win.score >= 500:
+            mdec += 1
+        else:
+            dec += 1
+    wins = [pins, tfalls, mdec, dec]
+
+    # ---- Team color ----
+    color = {
+        'Cornell': '#B31B1B',
+        'Iowa': '#FFCD00',
+        'Iowa State': '#F1BE48',
+        'Lehigh': '#653600',
+        'Michigan': '#00274c',
+        'Minnesota': '#7A0019',
+        'Missouri': '#F1B82D',
+        'Nebraska': '#E41C38',
+        'NC State': '#4B9CD3',
+        'Ohio State': '#BB0000',
+        'Oklahoma State': '#Fe5c00',
+        'Penn State': '#0E2B58',
+        'Stanford': '#4D4F53',
+        'Virginia Tech': '#630031'
+    }.get(player.team, 'Black')
+
+    return render_template(
+    'advancedStats.html',
+    rank=rank,
+    history=history,
+    wins=wins,
+    color=color,
+    beaten_team=beaten_team,
+    wins_vs_beaten_team=wins_vs_beaten_team,
+    losses_vs_beaten_team=losses_vs_beaten_team,
+    lost_team=lost_team,
+    wins_vs_lost_team=wins_vs_lost_team,
+    losses_vs_lost_team=losses_vs_lost_team,
+    biggest_win=biggest_win_info,
+    biggest_loss=biggest_loss_info,
+    biggest_rival=biggest_rival,
+    biggest_rival_info=biggest_rival_info,
+    biggest_upset_loss_info=biggest_upset_loss_info,
+    biggest_upset_win_info=biggest_upset_win_info,
+    player=player
+    )
+
 
 
 @app.route('/player/<id>')
@@ -594,7 +803,8 @@ def rform():
 
 @app.route('/teams')
 def teams():
-    teams = Team.query.order_by(Team.wins.desc(), Team.points.desc()).all()
+    score_final = 0
+    teams = Team.query.order_by(Team.wins.desc(), Team.tour_points.desc()).all()
     return render_template('teams.html', teams=teams)
 
 @app.route('/teams/<id>')
@@ -608,22 +818,6 @@ def one_team(id):
 def new_result():
     form = NewResult()
     if form.validate_on_submit():
-        # player_img = '../static/images/' + form.data['first']
-        # player_img2 = '../static/images/' + form.data['second']
-        # player_img3 = '../static/images/' + form.data['third']
-        # player_img4 = '../static/images/' + form.data['fourth']
-        # player_img5 = '../static/images/' + form.data['fifth']
-        # player_img6 = '../static/images/' + form.data['sixth']
-        # player_img7 = '../static/images/' + form.data['seventh']
-        # player_img8 = '../static/images/' + form.data['eigth']
-        # player_img9 = '../static/images/' + form.data['ninth']
-        # player_img10 = '../static/images/' + form.data['tenth']
-        # player_img11 = '../static/images/' + form.data['eleventh']
-        # player_img12 = '../static/images/' + form.data['twelfth']
-        # player_img13 = '../static/images/' + form.data['thirtenth']
-        # player_img14 = '../static/images/' + form.data['fourtenth']
-        # player_img15 = '../static/images/' + form.data['fifthtenth']
-        # player_img16 = '../static/images/' + form.data['sixtenth']
         player1 = Player.query.filter(form.data['first'] == Player.name).one()
         player_img = player1.img
         player1.points += 25
@@ -703,9 +897,46 @@ def new_result():
         player_img16 = player16.img
         player16.points += 2
         player16.badge += 1
+        ####### LOGIC FOR RANKHISTORY ###########
+        RankHistory.query.filter(RankHistory.tourId == 3).delete()
+        tour_id = 3 ## change this?
+        for i in range(1,129):
+            player = Player.query.get(i)
+            new_int = RankHistory(tourId = 3, playerId = i, score = player.tour_points, rank = player.rank, total = player.tour_points)
+            db.session.add(new_int)
+        ######## LOGIC FOR TEAM TOUR POINTS ########
+            teams = Team.query.all()
+            tour = TourScore.query.get(tour_id).one()
+        for team in teams:
+                if team.name == 'Virginia Tech':
+                    team.tour_points += tour.vt
+                if team == 'Penn State':
+                    team.tour_points += tour.psu
+                if team == 'Oklahoma State':
+                    team.tour_points += tour.okst
+                if team == 'Iowa':
+                   team.tour_points += tour.iowa
+                if team == 'Iowa State':
+                    team.tour_points += tour.isu
+                if team == 'Minnesota':
+                    team.tour_points += tour.minn
+                if team == 'Stanford':
+                    team.tour_points += tour.stan
+                if team == 'NC State':
+                    team.tour_points += tour.ncst
+                if team == 'Missouri':
+                    team.tour_points += tour.mizz
+                if team == 'Lehigh':
+                    team.tour_points += tour.leh
+                if team == 'Cornell':
+                    team.tour_points += tour.corn
+                if team == 'Michigan':
+                    team.tour_points += tour.mich
+                if team == 'Ohio State':
+                    team.tour_points += tour.osu
+                if team == 'Nebraska':
+                    team.tour_points += tour.neb
 
-
-        db.session.commit()
 
         params = {
             'first': player_img,

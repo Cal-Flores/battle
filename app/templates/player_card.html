@@ -10,6 +10,7 @@
     </head>
 
     <body id="cardbg">
+        {% include 'nav.html' %}
         <script>
             function showMed() {
                 var x = document.getElementById("square");
@@ -20,7 +21,7 @@
                 }
             }
         </script>
-        {% include 'nav.html' %}
+
         <div class="eformcont">
 
             {% if player.gold >= 1%}

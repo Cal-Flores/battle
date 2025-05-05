@@ -1571,5 +1571,309 @@ input[type=text]:hover {
     background-repeat: no-repeat;
     background-size: cover;
     background-blend-mode: darken;
-    filter: brightness(50%);
+    margin-bottom: 5%;
+    /* filter: brightness(50%); */
+}
+
+.adv-header {
+    text-align: center;
+    margin-top: 5%;
+    margin-bottom: 3%;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid #414141;
+    width: 90%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.adv-header h3 {
+    font-size: 1.5em;
+    color: #333;
+    margin: 0;
+}
+
+.adv-header p {
+    font-size: 1em;
+    color: #666;
+    margin-top: 6px;
+}
+
+/* ADVANCED STYLING */
+
+#asmain {
+    display: flex;
+    flex-direction: column;
+    margin-top: 4%;
+}
+
+#aspiecont {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: auto;
+    width: 85%;
+    margin-bottom: 5%;
+    margin-top: 2%;
+    font-family: 'Arial', sans-serif;
+}
+
+#ascard {
+    width: 300px;
+    height: auto;
+    background: linear-gradient(135deg, #f0f0f0, #d4d4d4);
+    border: 4px solid #2c2c2c;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.team-logo {
+    width: 40px;
+    height: 40px;
+}
+
+.card-rank {
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 8px;
+    margin-right: 5px;
+}
+
+#asimg {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 10px 0;
+    border: 2px solid #333;
+}
+
+.card-name {
+    margin: 5px 0;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #222;
+}
+
+.card-team {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.card-stats {
+    width: 90%;
+    background-color: #fff;
+    border: 2px dashed #888;
+    padding: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+.card-stats>div {
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.card-medals,
+.card-badges {
+    width: 90%;
+    text-align: center;
+    margin: 4px 0;
+    font-size: 1em;
+}
+
+
+#asmini {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+}
+
+.asminicard {
+    width: 220px;
+    padding: 10px;
+    border: 2px solid #333;
+    background: linear-gradient(135deg, #fafafa, #e2e2e2);
+    border-radius: 10px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    font-size: 0.95em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.asminicard:hover {
+    transform: scale(1.03);
+}
+
+.asminicard img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    border: 1px solid #555;
+    background-color: white;
+}
+
+.asrival {
+    width: 100%;
+    max-width: 200px * 2;
+    /* match the visual doubling */
+    padding: 5px;
+    border: 2px solid #444;
+    background: linear-gradient(135deg, #fff6f6, #ffecec);
+    border-radius: 12px;
+    box-shadow: 3px 5px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 8px;
+    transition: transform 0.25s ease;
+}
+
+
+.asrival img {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 5px;
+    border-radius: 50%;
+    border: 2px solid #d33;
+    background-color: white;
+}
+
+.asrival p {
+    margin: 3px 0;
+    font-weight: bold;
+    color: #222;
+}
+
+.asrival p:nth-child(3) {
+    color: #c00;
+    font-size: 1.1em;
+    text-transform: uppercase;
+}
+
+.result-card {
+    width: 260px;
+    border-radius: 12px;
+    overflow: hidden;
+    font-family: sans-serif;
+    color: #fff;
+    position: relative;
+    margin: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*
+.win-result {
+    background: linear-gradient(to bottom right, #89e889, #45c145);
+}
+
+.loss-result {
+    background: linear-gradient(to bottom right, #f06565, #c74242);
+} */
+.win-result {
+    background: linear-gradient(to bottom right, rgba(11, 81, 11, 0.7), rgba(69, 193, 69, 0.95));
+}
+
+.loss-result {
+    background: linear-gradient(to bottom right, rgba(205, 47, 47, 0.7), rgba(139, 21, 21, 0.95));
+}
+
+.result-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.result-logo {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    background: white;
+    border-radius: 6px;
+}
+
+.result-rank {
+    font-weight: bold;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 1);
+    padding: 2px;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.result-img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    z-index: 1;
+    margin-top: 30px;
+    /* make space for header */
+}
+
+.result-name {
+    margin: 8px 0 4px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.result-info {
+    font-size: 13px;
+    padding: 4px 10px;
+    text-align: center;
+}
+
+.result-label {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+#asbottom {
+    display: flex;
+    flex-direction: row;
+    margin-top: 3%;
+    margin: auto;
 }
