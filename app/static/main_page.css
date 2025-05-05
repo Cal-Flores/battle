@@ -547,12 +547,15 @@ span {
     background-color: hsla(244, 18%, 16%, 0.90);
     border: solid whitesmoke;
     border-radius: 10px;
-    width: 90%;
+    width: 150%;
     margin-left: 5%;
     margin-right: 5%;
     padding: 1%;
 }
 
+.resultdiv>img {
+    margin-left: 1%;
+}
 
 
 .eformcont {
@@ -1471,12 +1474,19 @@ input[type=text]:hover {
 }
 
 #teamcont {
-    width: 70%;
-    border: 1px solid black;
+    width: 80%;
     margin: auto;
     color: whitesmoke;
     margin-top: 7%;
     margin-bottom: 4%;
+}
+
+#tdivfor {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: auto;
+    justify-content: space-between;
 }
 
 .oneteam {

@@ -811,7 +811,13 @@ def teams():
 def one_team(id):
     team = Team.query.get(id)
     opponents = Dual.query.filter(or_(Dual.home == team.name, Dual.away == team.name)).all()
-    return render_template('single_team.html', team=team, opponents = opponents)
+    all_players = Player.query.all()
+    players = []
+    for player in all_players:
+        if player.team == team.name:
+            players.append(player)
+    players.sort(key=lambda p: p.tour_points, reverse=True)
+    return render_template('single_team.html', team=team, opponents = opponents, players=players)
 
 
 @app.route('/new_result', methods=['POST'])

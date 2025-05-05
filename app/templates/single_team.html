@@ -18,6 +18,51 @@
         {%include 'nav.html'%}
         <div id="teamcont">
             <h2>TEAM STANDINGS</h2>
+            <div id="tdivfor">
+                {% for player in players %}
+                <a href="../player/{{player.id}}" class="card">
+                    <div class="wlcont">
+                        <div class="namecard">
+                            <img id="obito" src="{{player.img}}">
+                            <div class="nametxt"><span style="color: rgb(180, 180, 180);">#{{player.rank}}</span>
+                                {{player.name}}
+                            </div>
+                        </div>
+                        <div class="maincard">
+
+                            <div class="anchortag">
+                                <div class="wlcontt">
+                                    <p class="win">Victories: <span class="number">{{player.wins}}</span></p>
+                                    <p class="loss">Defeats: <span class="number">{{player.loss}}</span></p>
+                                </div>
+                                <div class="medalcont">
+                                    <p class="loss" style="color: whitesmoke;">{{player.tour_points}} <span
+                                            style="color: orange;" class="number">Pts</span></p>
+                                    {% if player.gold >= 1 %}
+                                    <p class="number">{{player.gold}} <span class="medal">🥇</span></p>
+                                    {% endif %}
+                                    {% if player.silver >= 1 %}
+                                    <p class="number">{{player.silver}} <span class="medal">🥈</span></p>
+                                    {% endif %}
+                                    {% if player.bronze >= 1 %}
+                                    <p class="number">{{player.bronze}} <span class="medal">🥉</span></p>
+                                    {% endif %}
+                                    {% if player.medal >= 1 %}
+                                    <p class="number">{{player.medal}} <span class="medal">🎖</span></p>
+                                    {% endif %}
+                                    {% if player.badge >= 1 %}
+                                    <div class="badge">
+                                        <p class="number">{{player.badge}} </p>
+                                        <img src="../static/images/reward.png" class="ribbon">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
             <div class="oneteam">
                 <img id="teamlogo" src='{{team.logo}}'>
                 <div class="teaminfo">{{team.name}}</div>

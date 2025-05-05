@@ -127,6 +127,7 @@ class TourTeam(db.Model):
     score = db.Column(db.Integer)
     wins = db.Column(db.Integer, default=0)
     loss = db.Column(db.Integer, default=0)
+    status = db.Column(db.String, default='Champ')
 
 class RankHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
