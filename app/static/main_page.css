@@ -1504,7 +1504,7 @@ input[type=text]:hover {
     border: 1px solid rgb(235, 233, 233);
     align-items: center;
     display: grid;
-    grid-template-columns: .5fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: .5fr 1fr 1fr 1fr 1fr .5fr;
     height: 70px;
     padding: 5px;
     padding-left: 5%;
@@ -1886,4 +1886,17 @@ input[type=text]:hover {
     flex-direction: row;
     margin-top: 3%;
     margin: auto;
+}
+
+#asbottom>div>a {
+    color: whitesmoke;
+    text-align: center;
+}
+
+#asdatas {
+    width: 95%;
+    margin-top: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 }

@@ -64,6 +64,9 @@ def index():
     #     tscore.rank = i
 
     #db.session.query(RankHistory).delete()
+    # alphonse = TourTeam.query.filter(TourTeam.tourId == 3).all()
+    # for al in alphonse:
+    #     al.status = 'Cons'
     db.session.commit()
     return render_template('main_page.html', players = players)
 
@@ -216,17 +219,50 @@ def single_tour(id):
 
 from collections import defaultdict, Counter
 from sqlalchemy import or_
+champ2 = [ # 3
+    'Round of 128',
+    'Round of 64',
+    'Round of 32',
+    'Round of 16',
+    'Quarter-Final',
+    'Semi-Final',
+    ]
+cons2 = [ #1
+    'Consolation Round',
+    'Blood Round',
+    'Cons-24',
+    'Cons-48',
+    'Cons-32',
+    ]
+medal_round2 = [ # 4
+    'Bronze Medal Match',
+    '5th Place Match',
+    '7th Place Match',
+    '9th Place Match',
+    '11th Place Match',
+    '13th Place Match',
+    '15th Place Match',
+    'Placement Round'
+    'Cons-12',
+    'Cons-16',
+    'Cons-Semi',
+    'Cons-Quarter',
+    'Round of 12',
+    ]
+final2 = [ 'Gold Medal Match']
 
 @app.route('/playerStat/<id>')
 def player_stats(id):
     histories = RankHistory.query.filter(RankHistory.playerId == id).all()
     history = []
     rank = []
+    rank_points = []
     total_score = 0
 
     for hist in histories:
         total_score += hist.score
         rank.append(hist.rank)
+        rank_points.append(hist.score)
         history.append(hist.tourId)
 
     player = Player.query.get(id)
@@ -288,6 +324,7 @@ def player_stats(id):
         'round': biggest_win_fight.round,
         'tour_name': biggest_win_fight.tour_name,
         'opponent_name': win_opponent.name if win_opponent else 'Unknown',
+        'opponent_id': win_opponent.id if win_opponent else 'Unknown',
         'opponent_team': win_opponent.team if win_opponent else 'Unknown',
         'image': win_opponent.img,
         'logo':win_opponent.logo,
@@ -304,6 +341,7 @@ def player_stats(id):
         'round': biggest_loss_fight.round,
         'tour_name': biggest_loss_fight.tour_name,
         'opponent_name': loss_opponent.name if loss_opponent else 'Unknown',
+        'opponent_id': loss_opponent.id if loss_opponent else 'Unknown',
         'opponent_team': loss_opponent.team if loss_opponent else 'Unknown',
         'image': loss_opponent.img,
         'logo':loss_opponent.logo,
@@ -333,6 +371,7 @@ def player_stats(id):
         'round': biggest_upset_win_fight.round,
         'tour_name': biggest_upset_win_fight.tour_name,
         'opponent_name': upset_win_opponent.name if upset_win_opponent else 'Unknown',
+        'opponent_id': upset_win_opponent.id if upset_win_opponent else 'Unknown',
         'opponent_team': upset_win_opponent.team if upset_win_opponent else 'Unknown',
         'image': upset_win_opponent.img,
         'logo': upset_win_opponent.logo,
@@ -349,6 +388,7 @@ def player_stats(id):
         'round': biggest_upset_loss_fight.round,
         'tour_name': biggest_upset_loss_fight.tour_name,
         'opponent_name': upset_loss_opponent.name if upset_loss_opponent else 'Unknown',
+        'opponent_id': upset_loss_opponent.id if upset_loss_opponent else 'Unknown',
         'opponent_team': upset_loss_opponent.team if upset_loss_opponent else 'Unknown',
         'image': upset_loss_opponent.img,
         'logo': upset_loss_opponent.logo,
@@ -383,17 +423,18 @@ def player_stats(id):
     # Pack info to send to template
     biggest_rival_info = {
     'name': biggest_rival.name if biggest_rival else 'Unknown',
+    'id':  biggest_rival.id if biggest_rival else 'Unknown',
     'team': biggest_rival.team if biggest_rival else 'Unknown',
     'wins': rival_wins,
     'losses': rival_losses,
     'total_matches': rival_wins + rival_losses,
     }
 
-
+    front, back, medalist, master = 0, 0,0,0
     # ---- Win type breakdown ----
     pins, tfalls, mdec, dec = 0, 0, 0, 0
     for win in all_wins:
-        if win.score > 1000:
+        if win.score >= 1000:
             pins += 1
         elif win.score >= 750:
             tfalls += 1
@@ -401,8 +442,38 @@ def player_stats(id):
             mdec += 1
         else:
             dec += 1
+        if win.round in champ2:
+            front +=1
+        elif win.round in cons2:
+            back += 1
+        elif win.round in medal_round2:
+            medalist += 1
+        elif win.round in final2:
+            master += 1
+
     wins = [pins, tfalls, mdec, dec]
 
+    lpins, ltfalls, lmdec, ldec = 0, 0, 0, 0
+    for loss in all_losses:
+        if loss.score > 1000:
+            lpins += 1
+        elif loss.score >= 750:
+            ltfalls += 1
+        elif loss.score >= 500:
+            lmdec += 1
+        else:
+            ldec += 1
+        if loss.round in champ2:
+            front +=1
+        elif loss.round in cons2:
+            back += 1
+        elif loss.round in medal_round2:
+            medalist += 1
+        elif loss.round in final2:
+            master += 1
+    losss = [lpins, ltfalls, lmdec, ldec]
+
+    battle_type = [master, medalist, front, back]
     # ---- Team color ----
     color = {
         'Cornell': '#B31B1B',
@@ -425,7 +496,10 @@ def player_stats(id):
     'advancedStats.html',
     rank=rank,
     history=history,
+    rank_points=rank_points,
     wins=wins,
+    losses=losss,
+    battle=battle_type,
     color=color,
     beaten_team=beaten_team,
     wins_vs_beaten_team=wins_vs_beaten_team,
@@ -497,8 +571,7 @@ def opp_delete(id):
     player = Player.query.get(opponent.player_id)
     tourname = opponent.tour_name
 
-    team = 'sup' # THIS CAN STAY
-    tid = 3# <---- Change this for the tournaments ID!!
+    tid = 0  # <---- Change this for Current Tour!!
     fixedPnts = 1  # <---- Change this for appropriate number!!
     if opponent.victory == True:
         player.wins -= 1
@@ -715,7 +788,8 @@ def get_score(id, team):
             'person': player,
             'score': score,
             'wins': entry.wins,
-            'loss': entry.loss
+            'loss': entry.loss,
+            'status': entry.status
         }
         data.append(score_data)
     data.sort(key=lambda x: x['score'], reverse=True)
@@ -781,7 +855,7 @@ def  new_tour():
         db.session.add(new_score)
         db.session.commit()
         for i in range(128):
-            newPlayer = TourTeam(tourId = new_tourn.id, playerId = i + 1, score = 0)
+            newPlayer = TourTeam(tourId = new_tourn.id, playerId = i + 1, score = 0, status='Champ')
             db.session.add(newPlayer)
             db.session.commit()
         return redirect('/tournaments')
@@ -904,15 +978,17 @@ def new_result():
         player16.points += 2
         player16.badge += 1
         ####### LOGIC FOR RANKHISTORY ###########
-        RankHistory.query.filter(RankHistory.tourId == 3).delete()
         tour_id = 3 ## change this?
+        RankHistory.query.filter(RankHistory.tourId == tour_id).delete()
         for i in range(1,129):
             player = Player.query.get(i)
-            new_int = RankHistory(tourId = 3, playerId = i, score = player.tour_points, rank = player.rank, total = player.tour_points)
+            today_score = TourTeam.query.filter(and_(TourTeam.tourId == tour_id, TourTeam.playerId == i)).first()
+            score = today_score.score
+            new_int = RankHistory(tourId = 3, playerId = i, score = score, rank = player.rank, total = player.tour_points)
             db.session.add(new_int)
         ######## LOGIC FOR TEAM TOUR POINTS ########
             teams = Team.query.all()
-            tour = TourScore.query.get(tour_id).one()
+            tour = TourScore.query.get(tour_id)
         for team in teams:
                 if team.name == 'Virginia Tech':
                     team.tour_points += tour.vt
@@ -1224,12 +1300,20 @@ def new_battle():
                 player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_1.id)).one()
                 player_score.score += teampnts
                 player_score.wins += 1
+                if form.data['round'] == 'Round of 16' or form.data['round'] == 'Blood Round':
+                    player_score.status = 'All-American'
                 db.session.commit()
         else:
             tourn =  TourScore.query.filter(TourScore.name == form.data['tournamnet']).first()
             player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_1.id)).one()
             player_score.loss += 1
             player_1.loss += 1
+            if player_score.status == 'All-American':
+                pass
+            elif player_score.status == 'Champ':
+                player_score.status = 'Cons'
+            elif player_score.status == 'Cons':
+                player_score.status = 'Eliminated'
             db.session.commit()
 
         if form.data['victory_2'] == True:
@@ -1288,6 +1372,8 @@ def new_battle():
                 player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_2.id)).one()
                 player_score.score += teampnts
                 player_score.wins += 1
+                if form.data['round'] == 'Round of 16' or form.data['round'] == 'Blood Round':
+                    player_score.status = 'All-American'
                 db.session.commit()
 
         else:
@@ -1295,6 +1381,12 @@ def new_battle():
             player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_2.id)).one()
             player_score.loss += 1
             player_2.loss += 1
+            if player_score.status == 'All-American':
+                pass
+            elif player_score.status == 'Champ':
+                player_score.status = 'Cons'
+            elif player_score.status == 'Cons':
+                player_score.status = 'Eliminated'
             db.session.commit()
 
         params = {

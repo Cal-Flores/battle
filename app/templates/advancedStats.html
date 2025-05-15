@@ -101,65 +101,90 @@
             <div id="asbottom">
                 <!-- Biggest Win Card -->
                 <div class="result-card win-result">
-                    <div class="result-header">
-                        <img class="result-logo" src="{{ biggest_win.logo }}" alt="Logo">
-                        <span class="result-rank">#{{biggest_win.rank}}</span>
-                    </div>
-                    <img class="result-img" src="{{ biggest_win.image }}" alt="Opponent Image">
-                    <h3 class="result-name">{{ biggest_win.name }}</h3>
-                    <div class="result-info">
-                        <p><strong>{{ biggest_win.tour_name }}</strong></p>
-                        <p>{{ biggest_win.round }}</p>
-                        <p><strong>Score:</strong> {{ biggest_win.score }}</p>
-                    </div>
-                    <div class="result-label">BIGGEST WIN</div>
+                    <a href="{{biggest_win.opponent_id}}">
+                        <div class="result-header">
+                            <img class="result-logo" src="{{ biggest_win.logo }}" alt="Logo">
+                            <span class="result-rank">#{{biggest_win.rank}}</span>
+                        </div>
+                        <img class="result-img" src="{{ biggest_win.image }}" alt="Opponent Image">
+                        <h3 class="result-name">{{ biggest_win.name }}</h3>
+                        <div class="result-info">
+                            <p><strong>{{ biggest_win.tour_name }}</strong></p>
+                            <p>{{ biggest_win.round }}</p>
+                            <p><strong>Score:</strong> {{ biggest_win.score }}</p>
+                        </div>
+                        <div class="result-label">BIGGEST WIN</div>
+                    </a>
                 </div>
 
                 <!-- Biggest Loss Card -->
                 <div class="result-card loss-result">
-                    <div class="result-header">
-                        <img class="result-logo" src="{{ biggest_loss.logo }}" alt="Logo">
-                        <span class="result-rank">#{{biggest_loss.rank}}</span>
-                    </div>
-                    <img class="result-img" src="{{ biggest_loss.image }}" alt="Opponent Image">
-                    <h3 class="result-name">{{ biggest_loss.name }}</h3>
-                    <div class="result-info">
-                        <p><strong>{{ biggest_loss.tour_name }}</strong></p>
-                        <p>{{ biggest_loss.round }}</p>
-                        <p><strong>Score:</strong> {{ biggest_loss.score }}</p>
-                    </div>
-                    <div class="result-label">BIGGEST LOSS</div>
+                    <a href="{{biggest_loss.opponent_id}}">
+                        <div class="result-header">
+                            <img class="result-logo" src="{{ biggest_loss.logo }}" alt="Logo">
+                            <span class="result-rank">#{{biggest_loss.rank}}</span>
+                        </div>
+                        <img class="result-img" src="{{ biggest_loss.image }}" alt="Opponent Image">
+                        <h3 class="result-name">{{ biggest_loss.name }}</h3>
+                        <div class="result-info">
+                            <p><strong>{{ biggest_loss.tour_name }}</strong></p>
+                            <p>{{ biggest_loss.round }}</p>
+                            <p><strong>Score:</strong> {{ biggest_loss.score }}</p>
+                        </div>
+                        <div class="result-label">BIGGEST LOSS</div>
+                    </a>
                 </div>
 
                 <!-- Biggest upset Win Card -->
                 <div class="result-card win-result">
-                    <div class="result-header">
-                        <img class="result-logo" src="{{ biggest_upset_win_info.logo }}" alt="Logo">
-                        <span class="result-rank">#{{biggest_upset_win_info.rank}}</span>
-                    </div>
-                    <img class="result-img" src="{{ biggest_upset_win_info.image }}" alt="Opponent Image">
-                    <h3 class="result-name">{{ biggest_upset_win_info.name }}</h3>
-                    <div class="result-info">
-                        <p><strong>{{ biggest_upset_win_info.tour_name }}</strong></p>
-                        <p>{{ biggest_upset_win_info.round }}</p>
-                        <p><strong>Score:</strong> {{ biggest_upset_win_info.score }}</p>
-                    </div>
-                    <div class="result-label">BIGGEST UPSET WIN</div>
+                    <a href="{{biggest_upset_win_info.opponent_id}}">
+                        <div class="result-header">
+                            <img class="result-logo" src="{{ biggest_upset_win_info.logo }}" alt="Logo">
+                            <span class="result-rank">#{{biggest_upset_win_info.rank}}</span>
+                        </div>
+                        <img class="result-img" src="{{ biggest_upset_win_info.image }}" alt="Opponent Image">
+                        <h3 class="result-name">{{ biggest_upset_win_info.name }}</h3>
+                        <div class="result-info">
+                            <p><strong>{{ biggest_upset_win_info.tour_name }}</strong></p>
+                            <p>{{ biggest_upset_win_info.round }}</p>
+                            <p><strong>Score:</strong> {{ biggest_upset_win_info.score }}</p>
+                        </div>
+                        <div class="result-label">BIGGEST UPSET WIN</div>
+                    </a>
                 </div>
                 <!-- Biggest upset Loss Card -->
                 <div class="result-card loss-result">
-                    <div class="result-header">
-                        <img class="result-logo" src="{{ biggest_upset_loss_info.logo }}" alt="Logo">
-                        <span class="result-rank">#{{biggest_upset_loss_info.rank}}</span>
+                    <a href="{{biggest_upset_loss_info.opponent_id}}">
+                        <div class="result-header">
+                            <img class="result-logo" src="{{ biggest_upset_loss_info.logo }}" alt="Logo">
+                            <span class="result-rank">#{{biggest_upset_loss_info.rank}}</span>
+                        </div>
+                        <img class="result-img" src="{{ biggest_upset_loss_info.image }}" alt="Opponent Image">
+                        <h3 class="result-name">{{ biggest_upset_loss_info.name }}</h3>
+                        <div class="result-info">
+                            <p><strong>{{ biggest_upset_loss_info.tour_name }}</strong></p>
+                            <p>{{ biggest_upset_loss_info.round }}</p>
+                            <p><strong>Score:</strong> {{ biggest_upset_loss_info.score }}</p>
+                        </div>
+                        <div class="result-label">BIGGEST UPSET LOSS</div>
+                    </a>
+                </div>
+
+            </div>
+            <div id="asdatas">
+                <div style="width: 275px; height: 300px;">
+                    <canvas id="pielossChart"></canvas>
+                    <div id="mylossPie" data-values='{{ losses | tojson | safe }}'></div>
+                </div>
+                <div style="width: 500px; height: 350px;">
+                    <canvas id="barChart"></canvas>
+                    <div id="barChartData" data-points='{{ rank_points | tojson | safe }}'
+                        data-labels='{{ history | tojson | safe }}'>
                     </div>
-                    <img class="result-img" src="{{ biggest_upset_loss_info.image }}" alt="Opponent Image">
-                    <h3 class="result-name">{{ biggest_upset_loss_info.name }}</h3>
-                    <div class="result-info">
-                        <p><strong>{{ biggest_upset_loss_info.tour_name }}</strong></p>
-                        <p>{{ biggest_upset_loss_info.round }}</p>
-                        <p><strong>Score:</strong> {{ biggest_upset_loss_info.score }}</p>
-                    </div>
-                    <div class="result-label">BIGGEST UPSET LOSS</div>
+                </div>
+                <div style="width: 275px; height: 300px;">
+                    <canvas id="piebattleChart"></canvas>
+                    <div id="mybattlePie" data-values='{{ battle | tojson | safe }}'></div>
                 </div>
 
             </div>
@@ -236,6 +261,187 @@
 
             const pieCtx = document.getElementById('pieChart').getContext('2d');
             new Chart(pieCtx, pieConfig);
+
+
+
+            // PIE CHART FOR LOSSES ////////////////
+            const rawlossPie = $('#mylossPie').attr('data-values'); // returns a string
+            const parsedlossPie = JSON.parse(rawlossPie); // safely parsed as array
+            console.log(parsedlossPie); // [1, 2, 3]
+            Chart.register(ChartDataLabels);
+            const pielossData = {
+                labels: ['Pins', 'Tech Falls', 'Major Decisions', 'Decisions'],
+                datasets: [{
+                    label: 'Loss Types',
+                    data: parsedlossPie,
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.9)',
+                        'rgba(75, 192, 192, 0.9)',
+                        'rgba(255, 206, 86, 0.9)',
+                        'rgba(255, 99, 132, 0.9)',
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(255, 99, 132, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const pielossConfig = {
+                type: 'pie',
+                data: pielossData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white'
+                            }
+                        },
+                        datalabels: {
+                            color: 'white',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value, context) => {
+                                const data = context.chart.data.datasets[0].data;
+                                const total = data.reduce((a, b) => a + b, 0);
+                                const percentage = (value / total * 100).toFixed(1);
+                                return percentage + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels] // 👈 THIS is what makes only this chart use data labels
+            };
+
+
+
+            const pielossCtx = document.getElementById('pielossChart').getContext('2d');
+            new Chart(pielossCtx, pielossConfig);
+
+
+
+            //////////////////////////// PIE CHART FOR BATTLE TYPES ////////////////
+            const rawbattlePie = $('#mybattlePie').attr('data-values'); // returns a string
+            const parsedbattlePie = JSON.parse(rawbattlePie); // safely parsed as array
+            console.log(parsedbattlePie); // [1, 2, 3]
+            Chart.register(ChartDataLabels);
+            const piebattleData = {
+                labels: ['Finals', 'Medal Rounds', 'Champion', 'Consolation'],
+                datasets: [{
+                    label: 'Battle Types',
+                    data: parsedbattlePie,
+                    backgroundColor: [
+                        'rgba(165, 9, 196, 0.9)',
+                        'rgba(197, 0, 0, 0.9)',
+                        'rgba(206, 158, 0, 0.9)',
+                        'rgba(132, 91, 1, 0.9)',
+                    ],
+                    borderColor: [
+                        'rgba(165, 9, 196, 0.9)',
+                        'rgba(197, 0, 0, 0.9)',
+                        'rgba(206, 158, 0, 0.9)',
+                        'rgba(132, 91, 1, 0.9)',
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const piebattleConfig = {
+                type: 'pie',
+                data: piebattleData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white'
+                            }
+                        },
+                        datalabels: {
+                            color: 'white',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value, context) => {
+                                const data = context.chart.data.datasets[0].data;
+                                const total = data.reduce((a, b) => a + b, 0);
+                                const percentage = (value / total * 100).toFixed(1);
+                                return percentage + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels] // 👈 THIS is what makes only this chart use data labels
+            };
+
+
+
+            const piebattleCtx = document.getElementById('piebattleChart').getContext('2d');
+            new Chart(piebattleCtx, piebattleConfig);
+            ////////////////////////////////////// BAR GRAPAH //////////////////////
+            const rawPoints = $('#barChartData').attr('data-points');
+            const rawLabels = $('#barChartData').attr('data-labels');
+            const dynamicColor = $('#myColor').attr('data-color');
+
+            const parsedPoints = JSON.parse(rawPoints);
+            const parsedLabels = JSON.parse(rawLabels);
+            const barColor = dynamicColor || 'rgba(255, 255, 255, 0.8)';
+
+            const barData = {
+                labels: parsedLabels,
+                datasets: [{
+                    label: 'Points Over Time',
+                    data: parsedPoints,
+                    backgroundColor: barColor,
+                    borderColor: 'rgba(255, 255, 255, 0.9)',
+                    borderWidth: 1
+                }]
+            };
+
+            const barConfig = {
+                type: 'bar',
+                data: barData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: 'white' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: 'white' }
+                        },
+                        tooltip: {
+                            backgroundColor: '#333',
+                            titleColor: '#fff',
+                            bodyColor: '#ddd'
+                        }
+                    },
+                    layout: {
+                        padding: 10
+                    }
+                }
+            };
+
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            barCtx.canvas.parentNode.style.backgroundColor = '#1e1e1e'; // dark background
+            new Chart(barCtx, barConfig);
+
 
 
             /////////////////   LINE CHART /////////////////////////////////////////////

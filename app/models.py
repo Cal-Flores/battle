@@ -91,6 +91,7 @@ class Dual(db.Model):
      week =  db.Column(db.String)
      hscore = db.Column(db.Integer)
      ascore = db.Column(db.Integer)
+     winnerId =  db.Column(db.Integer)
 
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -127,7 +128,7 @@ class TourTeam(db.Model):
     score = db.Column(db.Integer)
     wins = db.Column(db.Integer, default=0)
     loss = db.Column(db.Integer, default=0)
-    status = db.Column(db.String, default='Champ')
+    status = db.Column(db.String)
 
 class RankHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
