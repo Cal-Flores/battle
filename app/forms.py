@@ -441,4 +441,5 @@ class NewDual(FlaskForm):
     week = StringField('Week')
     hscore = IntegerField('Hscore')
     ascore = IntegerField('Ascore')
+    winner = StringField('Winner')
     submit = SubmitField('Submit')

@@ -64,9 +64,14 @@ def index():
     #     tscore.rank = i
 
     #db.session.query(RankHistory).delete()
+    # db.session.query(Dual).delete()
     # alphonse = TourTeam.query.filter(TourTeam.tourId == 3).all()
     # for al in alphonse:
     #     al.status = 'Cons'
+    # player1 = Player(name='Kaiju No. 8',team='Iowa State',logo="https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/isuni.sidearmsports.com/images/responsive_2021/logo_nav.svg", wins=0, loss=0, points=0, img='https://64.media.tumblr.com/98a50ac36cb3912f75bfbc5c2ec8d718/e0d0ac6695c059d6-d2/s640x960/84c0c25b2b8c6dbffd2bbd1d1d559ee97ed6a77d.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0,tour_points=0,bonus=0,rank=0)
+    # db.session.add(player1)
+
+
     db.session.commit()
     return render_template('main_page.html', players = players)
 
@@ -137,6 +142,7 @@ def duals():
             'hscore': form.data['hscore'],
             'ascore': form.data['ascore'],
             'week': form.data['week'],
+            'winnerId': form.data['winner'],
         }
         new_dual = Dual(**params)
         db.session.add(new_dual)
@@ -144,14 +150,15 @@ def duals():
         away_team = Team.query.filter(form.data['away'] == Team.name).one()
         home_team.points += form.data['hscore']
         away_team.points += form.data['ascore']
-        if form.data['hscore'] > form.data['ascore']:
+        if form.data['hscore'] > form.data['ascore'] or home_team == form.data['winner']:
             home_team.wins += 1
             away_team.loss += 1
             db.session.commit()
-        elif form.data['ascore'] > form.data['hscore']:
+        elif form.data['ascore'] > form.data['hscore'] or  away_team == form.data['winner']:
             away_team.wins += 1
             home_team.loss += 1
             db.session.commit()
+
         db.session.commit()
         return redirect('/duals')
     duals = Dual.query.all()
@@ -161,41 +168,56 @@ def duals():
 def one_duals(id):
     dual = Dual.query.get(id)
     dualCode = f'{dual.away} vs {dual.home}'
+    away_Team = Team.query.filter(Team.name == dual.away).one()
+    home_Team = Team.query.filter(Team.name == dual.home).one()
 
-    home_score = 0
-    away_score = 0
+    home_score = dual.hscore
+    away_score = dual.ascore
+    hcurr = 0
+    acurr = 0
+    pts = 0
+    method = 'Dec'
 
     players = []
     records = Opponent.query.filter(and_(Opponent.tour_name == dualCode, Opponent.victory == True)).all()
     for rec in records:
+        if rec.score >= 1000:
+            pts = 7
+            method = 'Pin'
+        elif rec.score >= 700:
+            pts = 5
+            method = 'Tech Fall'
+        elif rec.score >= 400:
+            pts = 4
+            method = 'Major Dec'
+        else:
+            pts = 3
+            method = 'Dec'
+
         result = {}
         winner = Player.query.filter(rec.player_id == Player.id).one()
         loser = Player.query.filter(rec.opponent_id == Player.id).one()
+
+        if winner.team == dual.away:
+            print('gay')
+            result['apts'] =  acurr
+            result['apts'] += pts
+            acurr += pts
+        if winner.team == dual.home:
+            print('ur gay')
+            result['hpts'] =  hcurr
+            result['hpts'] += pts
+            hcurr += pts
+
         result['winner'] = winner
         result['loser'] = loser
+        result['score'] = rec.score
+        result['method'] = method
         players.append(result)
-        if winner.team == dual.home:
-            if rec.score >= 1000:
-                home_score += 7
-            elif rec.score >= 700:
-                home_score += 5
-            if rec.score >= 400:
-                home_score += 4
-            else:
-                home_score += 3
-        elif winner.team == dual.away:
-            if rec.score >= 1000:
-                away_score += 7
-            elif rec.score >= 700:
-                away_score += 5
-            elif rec.score >= 400:
-                away_score += 4
-            else:
-                away_score += 3
     print(players)
 
 
-    return render_template('one_dual.html', dual = dual,records = records, players  = players, home_score = home_score, away_score=away_score)
+    return render_template('one_dual.html', dual = dual,records = records, players  = players, home_score = home_score, away_score=away_score, away=away_Team, home=home_Team)
 
 @app.route('/tournament/<id>')
 def single_tour(id):
@@ -1106,6 +1128,7 @@ def new_battle():
   "Feitan",
   "Female Titan",
   "Franklin",
+  "Frieren",
   "Gaara",
   "Geto",
   "Ging",
@@ -1130,6 +1153,7 @@ def new_battle():
   "Juubito",
   "Kabuto",
   "Kaguya",
+  "Kaiju No. 8",
   "Kakashi",
   "Kakuzu",
   "Kalluto",
@@ -1223,6 +1247,53 @@ def new_battle():
     if form.validate_on_submit():
         player_1 = Player.query.filter(Player.name == form.data['player_1']).one()
         player_2 = Player.query.filter(Player.name == form.data['player_2']).one()
+        if form.data['round'] == 'Dual':
+            print('Das a dual')
+            ### CALCULATING DUAL POINT LOGIC
+            dual_pts = 0
+            if form.data['score'] >= 1000:
+                dual_pts = 7
+            elif form.data['score'] >= 700:
+                dual_pts = 5
+            elif form.data['score'] >= 400:
+                dual_pts = 4
+            else:
+                dual_pts = 3
+
+            # DETERMINING THE WINNER HERE
+            if form.data['victory_1'] == True:
+                player_1.wins += 1
+                player_1.dual_points += dual_pts
+                player_2.loss += 1
+            elif form.data['victory_2'] == True:
+                player_2.wins += 1
+                player_2.dual_points += dual_pts
+                player_1.loss += 1
+            # ADDING IT TO OPPS
+            params = {
+            'player_id': player_1.id,
+            'opponent_id': player_2.id,
+            'victory': form.data['victory_1'],
+            'score': form.data['score'],
+            'tour_name': form.data['tournamnet'] or 'Battle Royale 1',
+            'round': form.data['round']
+            }
+            para = {
+            'player_id': player_2.id,
+            'opponent_id': player_1.id,
+            'victory': form.data['victory_2'],
+            'score': form.data['score'],
+            'tour_name': form.data['tournamnet'] or 'Battle Royal 1',
+            'round': form.data['round']
+             }
+
+            player_1_record = Opponent(**params)
+            db.session.add(player_1_record)
+            player_2_record = Opponent(**para)
+            db.session.add(player_2_record)
+            db.session.commit()
+            return redirect('/')
+
         teampnts = 0
 
         if form.data['round'] in champ:

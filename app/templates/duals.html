@@ -11,115 +11,75 @@
         <style>
             @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
         </style>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f3f3f3;
-                margin: 0;
-                padding: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-            }
 
-            .schedule-container {
-                background: white;
-                border: 2px solid #003366;
-                border-radius: 10px;
-                padding: 20px;
-                width: 90%;
-                max-width: 70%;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                margin-top: 20%;
-            }
-
-            .schedule-header {
-                text-align: center;
-                margin-bottom: 20px;
-            }
-
-            .schedule-header h1 {
-                font-size: 24px;
-                color: #003366;
-            }
-
-            .match {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 10px 15px;
-                margin: 5px 0;
-                border: 1px solid #003366;
-                border-radius: 5px;
-                background: #e6e6e6;
-                color: #6f869c;
-                font-weight: bold;
-            }
-
-            .match:hover {
-                background: #cce7ff;
-            }
-
-            .team {
-                width: 45%;
-                text-align: center;
-            }
-
-            .vs {
-                font-size: 18px;
-                color: #666;
-            }
-        </style>
         <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
     </head>
 
-    <body id="leader">
-        {%include 'nav.html'%}
+
+    <body id="dual">
+        {% include 'nav.html' %}
         <div class="schedule-container">
             <div class="schedule-header">
-                <h1>NCAA Wrestling Schedule</h1>
+                <h1>ACCL Combat Duals</h1>
+                <button id="toggleFormBtn">Add Dual</button>
             </div>
 
-            <form method="post" action="/duals">
+            <form method="post" action="/duals" id="dualForm" class="hidden-form alchemist-form">
                 {{ form.csrf_token }}
 
-                <div>
-                    {{ form.away.label }}
-                    {{ form.away }}
+                <div class="team-section">
+                    <div class="team-col">
+                        <div class="form-row">
+                            {{ form.away.label }} {{ form.away }}
+                        </div>
+                        <div id='form-row1' class="form-row">
+                            {{ form.ascore.label }} {{ form.ascore }}
+                        </div>
+                    </div>
+                    <div class="team-col">
+                        <div class="form-row">
+                            {{ form.home.label }} {{ form.home }}
+                        </div>
+                        <div id='form-row2' class="form-row">
+                            {{ form.hscore.label }} {{ form.hscore }}
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    {{ form.home.label }}
-                    {{ form.home }}
-                </div>
-                <div>
-                    {{ form.ascore.label }}
-                    {{ form.ascore }}
-                </div>
-                <div>
-                    {{ form.hscore.label }}
-                    {{ form.hscore }}
-                </div>
-                <div>
-                    {{ form.week.label }}
-                    {{ form.week }}
-                </div>
-                <div>
-                    {{ form.submit }}
+
+                <div class="inline-fields">
+                    <div class="form-row">
+                        {{ form.week.label }} {{ form.week }}
+                    </div>
+                    <div class="form-row">
+                        {{ form.winner.label }} {{ form.winner }}
+                    </div>
+                    <div class="form-row">
+                        {{ form.submit }}
+                    </div>
                 </div>
             </form>
 
-
-
-            {% for dual in duals%}
+            {% for dual in duals %}
             <div class="match">
-                <div class="team">{{dual.ascore}} {{dual.away}}</div>
-                <div class="vs"><a href="/duals/{{dual.id}}">vs</a></div>
-                <div class="team">{{dual.home}} {{dual.hscore}} </div>
+                <div></div>
+                <div class="match-cell team-away">{{ dual.away }}</div>
+                <div class="match-cell team-away">{{ dual.ascore }}</div>
+                <div class="match-cell vs"><a href="/duals/{{ dual.id }}">vs</a></div>
+                <div class="match-cell team-home">{{ dual.hscore }} </div>
+                <div class="match-cell team-home">{{ dual.home }}</div>
+                <div class="match-cell week">| {{ dual.week }}</div>
             </div>
-            {% endfor%}
+            {% endfor %}
         </div>
 
+        <script>
+            document.getElementById('toggleFormBtn').addEventListener('click', function () {
+                const form = document.getElementById('dualForm');
+                form.classList.toggle('hidden-form');
+            });
+        </script>
     </body>
+
+
 
 </html>

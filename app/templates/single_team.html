@@ -37,25 +37,10 @@
                                 </div>
                                 <div class="medalcont">
                                     <p class="loss" style="color: whitesmoke;">{{player.tour_points}} <span
-                                            style="color: orange;" class="number">Pts</span></p>
-                                    {% if player.gold >= 1 %}
-                                    <p class="number">{{player.gold}} <span class="medal">🥇</span></p>
-                                    {% endif %}
-                                    {% if player.silver >= 1 %}
-                                    <p class="number">{{player.silver}} <span class="medal">🥈</span></p>
-                                    {% endif %}
-                                    {% if player.bronze >= 1 %}
-                                    <p class="number">{{player.bronze}} <span class="medal">🥉</span></p>
-                                    {% endif %}
-                                    {% if player.medal >= 1 %}
-                                    <p class="number">{{player.medal}} <span class="medal">🎖</span></p>
-                                    {% endif %}
-                                    {% if player.badge >= 1 %}
-                                    <div class="badge">
-                                        <p class="number">{{player.badge}} </p>
-                                        <img src="../static/images/reward.png" class="ribbon">
-                                    </div>
-                                    {% endif %}
+                                            style="color: orange;" class="number">Tour</span></p>
+                                    <p class="loss" style="color: whitesmoke;">{{player.dual_points}} <span
+                                            style="color: rgb(2, 160, 18);" class="number">Dual</span></p>
+
                                 </div>
                             </div>
                         </div>

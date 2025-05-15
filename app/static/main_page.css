@@ -1493,7 +1493,7 @@ input[type=text]:hover {
     border: 1px solid rgb(235, 233, 233);
     align-items: center;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1.5fr 1fr 1fr 1fr;
     height: 70px;
     padding: 5px;
     margin-bottom: 1%;
@@ -1899,4 +1899,356 @@ input[type=text]:hover {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+}
+
+
+/* DUAL STYLES FOR THE FORM :) */
+/* Hide the form initially */
+#dual {
+    background-image: url('https://4kwallpapers.com/images/wallpapers/fullmetal-alchemist-3840x2160-10399.png');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.hidden-form {
+    display: none;
+}
+
+body#dual {
+    background-color: #1c1c1c;
+    color: #f2f2f2;
+    font-family: 'Georgia', serif;
+    width: 75%;
+    margin: auto;
+    align-items: center;
+    margin-top: 10%;
+}
+
+.schedule-header h1 {
+    color: #c0392b;
+    text-shadow: 1px 1px 2px #000;
+    font-weight: bold;
+    margin-bottom: 3%;
+}
+
+#toggleFormBtn {
+    background-color: #b03a2e;
+    color: #fff;
+    border: 2px solid #922b21;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+    margin-left: 45%;
+}
+
+#toggleFormBtn:hover {
+    background-color: #922b21;
+}
+
+.alchemist-form {
+    background: #2e2e2e;
+    padding: 20px;
+    border: 1px solid #922b21;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px #8e44ad33;
+}
+
+.team-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.team-col {
+    flex: 1;
+}
+
+.inline-fields {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 15px;
+    gap: 20px;
+}
+
+.form-row {
+    margin-bottom: 10px;
+}
+
+.form-row label {
+    display: block;
+    font-weight: bold;
+    color: #fb0000;
+    margin-bottom: 4px;
+}
+
+.form-row input,
+.form-row select {
+    width: 85%;
+    padding: 8px 12px;
+    background-color: #1f1f1f;
+    border: 1px solid #999;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.form-row input:hover {
+    background-color: #1c1c1c;
+    color: whitesmoke;
+}
+
+#form-row2 {
+    width: 30%;
+}
+
+#form-row1 {
+    width: 30%;
+}
+
+.form-row input[type="submit"] {
+    background-color: #b46f00;
+    color: #1c1c1c;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s ease;
+    width: 100px;
+}
+
+.form-row input[type="submit"]:hover {
+    background-color: #e99000;
+}
+
+/* MATCH DISPLAY */
+.match {
+    display: grid;
+    grid-template-columns: .5fr 2fr .5fr .5fr .5fr 2fr .5fr;
+    gap: 10px;
+    align-items: center;
+    background-color: #333;
+    border: 1px solid #7f8c8d;
+    font-size: 20px;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 6px;
+    color: #ecf0f1;
+}
+
+.match-cell {
+    padding: 4px 8px;
+}
+
+.team-away,
+.team-home {
+    font-weight: bold;
+    color: #ecf0f1;
+}
+
+.vs a {
+    color: #e74c3c;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 4px 6px;
+    background-color: #1c1c1c;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.vs a:hover {
+    background-color: #641e16;
+}
+
+.week {
+    text-align: right;
+    font-size: 16px;
+    color: #bdc3c7;
+}
+
+
+
+#oneDual {
+    width: 90%;
+    margin: auto;
+    background-image: url('https://gamegator.net/_next/image?url=https%3A%2F%2Fi.ytimg.com%2Fvi%2FOSgGsTnKZ-Y%2Fmaxresdefault.jpg&w=1920&q=75');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* one dual page */
+body#oneDual {
+    background-color: #0b0b0b;
+    font-family: 'Arial', sans-serif;
+    color: #f4f4f4;
+    padding: 20px;
+}
+
+h2 {
+    color: #f39c12;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dual-results {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.match-row {
+    display: grid;
+    grid-template-columns: 1.5fr 60px 1.5fr 80px 100px 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: #1c1c1c;
+    border: 2px solid #f39c12;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(243, 156, 18, 0.5);
+}
+
+.fighter-side {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    border: 2px solid #3498db;
+    background-color: white;
+}
+
+.logo.small {
+    height: 30px;
+    width: 30px;
+    border-color: #e74c3c;
+}
+
+.fighter-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid #e67e22;
+}
+
+.fighter-name {
+    font-weight: bold;
+    color: #ecf0f1;
+}
+
+.versus-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e74c3c;
+    text-align: center;
+}
+
+.score {
+    font-size: 18px;
+    color: #2ecc71;
+    text-align: center;
+}
+
+.method {
+    font-size: 14px;
+    color: #bdc3c7;
+    text-align: center;
+}
+
+.team-points {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+}
+
+.team-score {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #ecf0f1;
+}
+
+/* END */
+
+.dual-title {
+    text-align: center;
+    font-size: 28px;
+    color: #f1c40f;
+    text-shadow: 2px 2px 3px #000;
+    margin-bottom: 25px;
+}
+
+.dual-header-v2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #111;
+    border: 2px solid #f39c12;
+    border-radius: 12px;
+    padding: 20px 40px;
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+    box-shadow: 0 0 15px rgba(243, 156, 18, 0.6);
+    position: relative;
+}
+
+.team-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #ecf0f1;
+    width: 150px;
+}
+
+.team-logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid #3498db;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+.team-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.team-score2 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #2ecc71;
+}
+
+.vs-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.vs-text {
+    font-size: 32px;
+    font-weight: bold;
+    color: #e74c3c;
+    text-shadow: 1px 1px 2px black;
+    padding: 5px 10px;
+    border: 2px solid #e74c3c;
+    border-radius: 8px;
+    background-color: #222;
 }

@@ -20,6 +20,7 @@ class Player(db.Model):
     team = db.Column(db.String(255))
     logo = db.Column(db.String)
     tour_points = db.Column(db.Integer, default=0)  # <-- New column
+    dual_points = db.Column(db.Integer, default=0)  # <-- New column
     rank = db.Column(db.Integer, default=0)  # <-- New column
     bonus = db.Column(db.Integer, default=0)  # <-- New column
 
