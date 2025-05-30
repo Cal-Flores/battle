@@ -14,24 +14,9 @@
     </head>
 
     <body id="matchz">
-        <script>
-
-            let jokeImg = ['kunai2.webp', 'kun3.gif', 'kun4.gif', 'kun5.gif', 'kun6.gif', 'kun8.gif', 'kun9.gif', 'kun10.gif', 'kun11.gif', 'kun12.gif', 'kun13.gif', 'kun14.gif', 'kun15.gif', 'kun16.gif', 'kun17.gif',
-                'kun18.gif', 'kun19.gif', 'kun20.gif', 'kun21.gif', 'kun22.gif', 'kun23.gif', 'kun24.gif', "kun25.gif", "kun26.gif", 'kun27.gif', 'kun28.gif', 'kun29.gif', 'kun30.gif', 'kun31.gif', 'kun33.gif', 'kun34.gif',
-                'kun36.gif', 'kun37.gif', 'kun38.gif', 'kun39.gif', 'kun40.gif', 'kun41.gif'
-            ]
-            function placement() {
-                const region = Math.trunc(Math.random() * 8) + 1;
-                const match = Math.trunc(Math.random() * 16) + 1;
-                const imageNum3 = Math.trunc(Math.random() * jokeImg.length);
-                document.getElementById('region').innerHTML = `REGION ${region}`
-                document.getElementById('match').innerHTML = `MATCH ${match}`
-                document.getElementById("mrimg2").src = `../static/images/uchiha.png`;
-                document.getElementById("mrimg3").src = `../static/images/${jokeImg[imageNum3]}`;
-
-            }
-
-        </script>
+        <div id="players-json" style="display: none;">
+            {{ players | tojson }}
+        </div>
         {% include 'nav.html' %}
         <div class="matchcont">
             <div class="matchimgcont">
@@ -45,6 +30,35 @@
             </div>
             <button class='matchbtn' onclick="placement()">GENERATE</button>
         </div>
+        <script>
+            const players = JSON.parse(document.getElementById("players-json").textContent);
+            let jokeImg = ['kunai2.webp', 'kun3.gif', 'kun4.gif', 'kun5.gif', 'kun6.gif', 'kun8.gif', 'kun9.gif', 'kun10.gif', 'kun11.gif', 'kun12.gif', 'kun13.gif', 'kun14.gif', 'kun15.gif', 'kun16.gif', 'kun17.gif',
+                'kun18.gif', 'kun19.gif', 'kun20.gif', 'kun21.gif', 'kun22.gif', 'kun23.gif', 'kun24.gif', "kun25.gif", "kun26.gif", 'kun27.gif', 'kun28.gif', 'kun29.gif', 'kun30.gif', 'kun31.gif', 'kun33.gif', 'kun34.gif',
+                'kun36.gif', 'kun37.gif', 'kun38.gif', 'kun39.gif', 'kun40.gif', 'kun41.gif'
+            ]
+            function placement() {
+                const region = Math.trunc(Math.random() * 8) + 1;
+                const match = Math.trunc(Math.random() * 160) + 1;
+
+
+                document.getElementById('match').innerHTML = `MATCH ${match}`;
+                document.getElementById("mrimg2").src = `../static/images/uchiha.png`;
+
+                if (players.length > 0) {
+                    const index = Math.floor(Math.random() * players.length);
+                    const selectedPlayer = players[index];
+
+                    document.getElementById("mrimg3").src = selectedPlayer.img;
+                    document.getElementById('region').innerHTML = `${selectedPlayer.name}`;
+
+                    players.splice(index, 1);
+                } else {
+                    console.warn("No more players left.");
+                    document.getElementById("mrimg3").src = `../static/images/uchiha.png`;
+                }
+            }
+
+        </script>
     </body>
 
 </html>

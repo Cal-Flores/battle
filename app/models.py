@@ -101,6 +101,7 @@ class Team(db.Model):
     loss = db.Column(db.Integer)
     points = db.Column(db.Integer)
     tour_points = db.Column(db.Integer)
+    rank = db.Column(db.Integer)
     logo = db.Column(db.String)
 
 

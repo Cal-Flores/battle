@@ -48,22 +48,6 @@
                 </a>
                 {% endfor %}
             </div>
-            <div class="oneteam">
-                <img id="teamlogo" src='{{team.logo}}'>
-                <div class="teaminfo">{{team.name}}</div>
-                <div class="teaminfo"><span class="teamwin">WINS:</span> {{team.wins}}</div>
-                <div class="teaminfo"><span class="teamloss">LOSS:</span> {{team.loss}}</div>
-                <div class="teaminfo">{{team.points}} pts</div>
-            </div>
-
-            {% for opp in opponents %}
-            <div class="oneteam">
-                <img id="teamlogo" src='{{opp.logo}}'>
-                <div class="teaminfo">{{opp.home}}</div>
-                <div class="teaminfo">{{opp.away}}</div>
-            </div>
-
-            {% endfor %}
         </div>
 
     </body>

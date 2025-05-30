@@ -24,21 +24,25 @@
         <h2 class="dual-title">{{ away.name }} @ {{ home.name }} DUAL</h2>
 
         <div class="dual-header-v2">
-            <div class="team-block">
-                <img class="team-logo" src="{{ away.logo }}">
-                <div class="team-name">{{ dual.away }}</div>
-                <div class="team-score2">{{ away_score }}</div>
-            </div>
+            <a href="../teams/{{away.id}}">
+                <div class="team-block">
+                    <img class="team-logo" src="{{ away.logo }}">
+                    <div class="team-name">{{ dual.away }} ({{away.wins}} - {{away.loss}})</div>
+                    <div class="team-score2">{{ away_score }}</div>
+                </div>
+            </a>
 
             <div class="vs-center">
                 <div class="vs-text">VS</div>
             </div>
 
-            <div class="team-block">
-                <img class="team-logo" src="{{ home.logo }}">
-                <div class="team-name">{{ dual.home }}</div>
-                <div class="team-score2">{{ home_score }}</div>
-            </div>
+            <a href="../teams/{{home.id}}">
+                <div class="team-block">
+                    <img class="team-logo" src="{{ home.logo }}">
+                    <div class="team-name">{{ dual.home }} ({{home.wins}} - {{home.loss}})</div>
+                    <div class="team-score2">{{ home_score }}</div>
+                </div>
+            </a>
         </div>
 
 
@@ -49,15 +53,15 @@
                     <div class="fighter-side">
                         <img class="logo" src="{{ rec.winner.logo }}">
                         <img class="fighter-img" src="{{ rec.winner.img }}">
-                        <div class="fighter-name">{{ rec.winner.name }}</div>
+                        <div class="fighter-name"><a href="../player/{{rec.winner.id}}">{{ rec.winner.name }}</a></div>
                     </div>
 
                     <div class="versus-text">DEF</div>
 
                     <div class="fighter-side">
-                        <img class="logo" src="{{ rec.loser.logo }}">
+                        <div></div>
                         <img class="fighter-img" src="{{ rec.loser.img }}">
-                        <div class="fighter-name">{{ rec.loser.name }}</div>
+                        <div class="fighter-name"><a href="../player/{{rec.loser.id}}">{{ rec.loser.name }}</a></div>
                     </div>
 
                     <div class="score">{{ rec.score }}</div>

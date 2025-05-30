@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect
 from app.forms import NewPlayer, EditPlayer, NewTour, NewResult, NewOpponent, NewBattle, EditOpponent, NewHistory, Search, NewDual
 from app.config import Configuration
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_,func
 
 from flask_migrate import Migrate
 from app.models import db, Player, Tour, Result, Opponent, Battle, Dual, Team, TourScore,  TourTeam, RankHistory
@@ -11,67 +11,26 @@ app = Flask(__name__)
 app.config.from_object(Configuration)
 db.init_app(app)
 Migrate(app,db)
-
+Cornell = "https://sportslogohistory.com/wp-content/uploads/2019/06/cornell_big_red_2002-pres.png"
+Iowa = "https://storage.googleapis.com/hawkeyesports-com/2021/02/cf540990-logo-e1722875756178.png"
+Iowa_State = "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/isuni.sidearmsports.com/images/responsive_2021/logo_nav.svg"
+Lehigh =  "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/lehighsports.com/responsive_2020/images/svgs/logo_main2-new.svg"
+Michigan ="https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/mgoblue.com/images/sng_2023/main_nav_logo.svg"
+Minnesota = "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/gophersports.com/images/nextgen_2022/main_logo.svg"
+Missouri= "https://loodibee.com/wp-content/uploads/Missouri_Tigers_logo.png"
+Nebraska= "data:image/svg+xml,%3c?xml%20version=%271.0%27%20encoding=%27utf-8%27?%3e%3c!--%20Generator:%20Adobe%20Illustrator%2026.4.1,%20SVG%20Export%20Plug-In%20.%20SVG%20Version:%206.00%20Build%200)%20--%3e%3csvg%20version=%271.1%27%20id=%27Nebraska_N%27%20xmlns=%27http://www.w3.org/2000/svg%27%20xmlns:xlink=%27http://www.w3.org/1999/xlink%27%20x=%270px%27%20y=%270px%27%20viewBox=%270%200%20163%20152%27%20style=%27enable-background:new%200%200%20163%20152;%27%20xml:space=%27preserve%27%3e%3cstyle%20type=%27text/css%27%3e%20.st0{fill:%23FFFFFF;}%20%3c/style%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M159.1,144c-2.3,0-4.1,1.8-4.1,4s1.8,4,4,4s4-1.8,4-4S161.2,144,159.1,144z%20M159,151.2c-1.8,0-3.2-1.4-3.2-3.2%20s1.4-3.2,3.2-3.2c1.7,0,3.2,1.5,3.2,3.2C162.2,149.8,160.8,151.2,159,151.2z%27/%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M157.4,145.6h1.4c0.6,0,0.8,0,1.1,0.2c0.4,0.2,0.6,0.6,0.6,1.1c0,0.4-0.1,0.7-0.3,1c-0.1,0.2-0.3,0.2-0.6,0.4%20h-0.1l1.1,2.1h-0.8l-1-2h-0.6v2h-0.8L157.4,145.6L157.4,145.6z%20M158.6,147.7c0,0,0.3,0,0.4,0c0.4-0.1,0.6-0.3,0.6-0.8%20c0-0.3-0.1-0.5-0.4-0.6c-0.1,0-0.1,0-0.6,0h-0.4v1.4L158.6,147.7L158.6,147.7z%27/%3e%3c/g%3e%3c/g%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M147,0H93h-5v5v35v5h5h5v24.8L55.2,2.3L53.7,0H51H5H0v5v35v5h5h5v62H5H0v5v35v5h5h54h5v-5v-35v-5h-5h-5V82.2%20l42.8,67.5l1.5,2.3h2.7h46h5v-5v-35v-5h-5h-5V45h5h5v-5V5V0H147z%20M150,5v35v3h-3h-7v66h7h3v3v35v3h-3h-46h-1.6l-0.9-1.4L52,75.3%20V109h7h3v3v35v3h-3H5H2v-3v-35v-3h3h7V43H5H2v-3V5V2h3h46h1.7l0.9,1.4L100,76.7V43h-7h-3v-3V5V2h3h54h3V5z%27/%3e%3c/g%3e%3cpath%20class=%27st0%27%20d=%27M103,87L103,87L51,5H5v35c0,0,7.8,0,10,0c0,3.3,0,68.7,0,72l0,0c-2.2,0-10,0-10,0v35h54v-35c0,0-7.8,0-10,0l0,0%20c0-2.6,0-47,0-47l52,82h46v-35c0,0-7.8,0-10,0l0,0c0-3.3,0-68.7,0-72c2.2,0,10,0,10,0V5H93v35c0,0,7.8,0,10,0%20C103,42.6,103,87,103,87z%27/%3e%3c/svg%3e"
+NC_State= "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/unc.sidearmsports.com/images/sng_2023/main_nav_logo.svg"
+Ohio_State= "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/ohiostatebuckeyes.com/images/nextgen_2023/logo_main.svg"
+Oklahoma_State= "https://sportslogohistory.com/wp-content/uploads/2018/07/oklahoma_state_cowboys_2015-pres.png"
+Penn_State= "https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg"
+Stanford= "https://gostanford.com/imgproxy/l6GXJbFV4z1yPuiCbXCePofeGNcKTlM78I9yNaTuiU4/rs:fit:1980:0:0/g:ce/q:90/aHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL3N0YW5mb3JkLXByb2QvMjAyNC8wMy8yMC9hVXJvSkRQeEVBQzFBRE53M3M2YjBRQWNlcmd2WW9EOXRabHVsZHRrLnBuZw.png"
+Virginia_Tech= "https://sportslogohistory.com/wp-content/uploads/2018/01/virginia_tech_hokies_1983-pres.png"
+RTC ='https://banner2.cleanpng.com/20180418/uoq/avfkfh80z.webp'
 
 @app.route('/')
 def index():
     #pnt_leaders = Player.query.order_by(Player.points.desc(), Player.wins.desc(), Player.loss).all()
     players = Player.query.order_by(Player.name).all()
-    entries = TourTeam.query.all()
-    battles = Opponent.query.all()
-    # teaam = TourScore.query.get(3)
-    # teaam.corn -= 4
-    # armin = Player.query.get(128)
-    # armin.tour_points -= 1
-    # gojo = Player.query.get(60)
-    # gojo.img = 'https://wallpapers-clan.com/wp-content/uploads/2023/01/dragon-ball-vegeta-pfp-11.jpg'
-    # anbukak = Player.query.get(13)
-    # anbukak.points = 31
-    # anbukak.medal += 1
-    # for battle in battles:
-    #     if battle.victory:
-    #         player = Player.query.get(battle.player_id)
-    #         if battle.score > 500:
-    #            player.bonus += 1
-    # for entry in entries:
-    #     # entry.wins = 0
-    #     # entry.loss = 0
-    #     for battle in battles:
-    #         if (battle.victory == False and entry.tourId == 1 and battle.tour_name == '1st Hunter Exam' and entry.playerId == battle.player_id):
-    #             entry.loss += 1
-    #             print (f'player #{entry.playerId} has {entry.loss} lozzes! tour id is { battle.tour_name }')
-    # db.session.commit()
-    ################### THIS IS WHERE I MADE RANKHISTORY ##############
-
-    # for i in range(1,129):
-    #     player = Player.query.get(i)
-    #     tour_int = TourTeam.query.filter(and_(TourTeam.tourId == 3, TourTeam.playerId == i)).one() # CHANGE THIS the instance in the table.
-    #     tour_pnt = tour_int.score # the total score for each player at tournament 1
-    #     print(f'{player.name} scored {tour_pnt} points')
-    #     # adding each score to the RankHistory table
-    #     old_tour = RankHistory.query.filter(and_(RankHistory.tourId == 2, RankHistory.playerId == i)).one() #CHANGE THIS
-    #     old_score = old_tour.total
-    #     new_total = tour_pnt + old_score
-    #     new_int = RankHistory(tourId = 3, playerId = i, score = tour_pnt, rank = 1, total = new_total) # CHANGE THIS
-    #     db.session.add(new_int)
-
-    # ##Set the proper rank for each player at tournament 1
-    # all_scores_1 = RankHistory.query.filter(RankHistory.tourId == 3).order_by(RankHistory.total.desc()).all() # CHANGE THIS
-    # for i, tscore in enumerate(all_scores_1, start=1):
-    #     if i > 128:
-    #         break
-    #     print(f"{i}: {tscore}")
-    #     tscore.rank = i
-
-    #db.session.query(RankHistory).delete()
-    # db.session.query(Dual).delete()
-    # alphonse = TourTeam.query.filter(TourTeam.tourId == 3).all()
-    # for al in alphonse:
-    #     al.status = 'Cons'
-    # player1 = Player(name='Kaiju No. 8',team='Iowa State',logo="https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/isuni.sidearmsports.com/images/responsive_2021/logo_nav.svg", wins=0, loss=0, points=0, img='https://64.media.tumblr.com/98a50ac36cb3912f75bfbc5c2ec8d718/e0d0ac6695c059d6-d2/s640x960/84c0c25b2b8c6dbffd2bbd1d1d559ee97ed6a77d.jpg', gold=0,silver=0,bronze=0,medal=0,badge=0,tour_points=0,bonus=0,rank=0)
-    # db.session.add(player1)
-
-
     db.session.commit()
     return render_template('main_page.html', players = players)
 
@@ -137,8 +96,8 @@ def duals():
     form = NewDual()
     if form.validate_on_submit():
         params = {
-            'home': form.data['home'],
-            'away': form.data['away'],
+            'home': form.data['home'].strip(),
+            'away': form.data['away'].strip(),
             'hscore': form.data['hscore'],
             'ascore': form.data['ascore'],
             'week': form.data['week'],
@@ -146,41 +105,47 @@ def duals():
         }
         new_dual = Dual(**params)
         db.session.add(new_dual)
-        home_team = Team.query.filter(form.data['home'] == Team.name).one()
-        away_team = Team.query.filter(form.data['away'] == Team.name).one()
+        home_team = Team.query.filter(form.data['home'].strip() == Team.name).one()
+        away_team = Team.query.filter(form.data['away'].strip() == Team.name).one()
         home_team.points += form.data['hscore']
         away_team.points += form.data['ascore']
-        if form.data['hscore'] > form.data['ascore'] or home_team == form.data['winner']:
+        awin = False
+        hwin = False
+        if form.data['hscore'] > form.data['ascore'] or home_team.name == form.data['winner'].strip():
             home_team.wins += 1
             away_team.loss += 1
+            awin = True
             db.session.commit()
-        elif form.data['ascore'] > form.data['hscore'] or  away_team == form.data['winner']:
+        elif form.data['ascore'] > form.data['hscore'] or  away_team.name == form.data['winner'].strip():
             away_team.wins += 1
             home_team.loss += 1
             db.session.commit()
 
         db.session.commit()
         return redirect('/duals')
-    duals = Dual.query.all()
+    duals = Dual.query.order_by(Dual.id.desc()).all()
     return render_template('duals.html', duals = duals, form=form)
 
 @app.route('/duals/<id>')
 def one_duals(id):
     dual = Dual.query.get(id)
-    dualCode = f'{dual.away} vs {dual.home}'
-    away_Team = Team.query.filter(Team.name == dual.away).one()
+    dualCode = f'{dual.away.strip()} vs {dual.home.strip()}'
+    away_Team = Team.query.filter(
+    func.lower(func.trim(Team.name)) == dual.away.strip().lower()
+).one()
     home_Team = Team.query.filter(Team.name == dual.home).one()
 
     home_score = dual.hscore
     away_score = dual.ascore
     hcurr = 0
     acurr = 0
-    pts = 0
+
     method = 'Dec'
 
     players = []
     records = Opponent.query.filter(and_(Opponent.tour_name == dualCode, Opponent.victory == True)).all()
     for rec in records:
+        pts = 0
         if rec.score >= 1000:
             pts = 7
             method = 'Pin'
@@ -199,15 +164,18 @@ def one_duals(id):
         loser = Player.query.filter(rec.opponent_id == Player.id).one()
 
         if winner.team == dual.away:
-            print('gay')
             result['apts'] =  acurr
             result['apts'] += pts
             acurr += pts
+        elif loser.team == dual.away:
+            result['apts'] =  acurr
+
         if winner.team == dual.home:
-            print('ur gay')
             result['hpts'] =  hcurr
             result['hpts'] += pts
             hcurr += pts
+        elif loser.team == dual.home:
+            result['hpts'] =  hcurr
 
         result['winner'] = winner
         result['loser'] = loser
@@ -667,6 +635,8 @@ def leader():
     ).all()
     for index, player in enumerate(players, start=1):
         player.rank = index
+        if (player.rank < 33):
+            print(player.name)
     db.session.commit()
 
     return render_template('leader.html', players=players)
@@ -804,17 +774,24 @@ def get_score(id, team):
 
     data = []
     for player in players:
-        entry = TourTeam.query.filter(and_(TourTeam.tourId == id, TourTeam.playerId == player.id)).one()
-        score = entry.score
-        score_data = {
+        entry = TourTeam.query.filter(and_(TourTeam.tourId == id, TourTeam.playerId == player.id)).first()
+        if entry:
+            score = entry.score
+            score_data = {
             'person': player,
             'score': score,
             'wins': entry.wins,
             'loss': entry.loss,
             'status': entry.status
-        }
-        data.append(score_data)
-    data.sort(key=lambda x: x['score'], reverse=True)
+            }
+            data.append(score_data)
+    status_priority = {'all-american': 0, 'champion': 1, 'cons': 2}
+    data.sort(key=lambda x: (
+    status_priority.get(x['status'], 3),   # Status priority
+    -x['score'],                           # Higher score is better
+    -x['wins'],                            # More wins is better
+    x['loss']                              # Fewer losses is better
+    ))
     return render_template('team_scorepage.html', team = curr_team, score_data=data)
 
 @app.route('/score/<id>')
@@ -823,7 +800,7 @@ def one_tourscore(id):
     teams = Team.query.all()
     scores = sorted(
     [
-        {'team': 'Penn State', 'score': tour.psu, 'logo': "https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg"},
+        {'team': 'Penn State', 'score': tour.psu, 'logo': "https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg", 'img':'../static/images/niah.jpeg'},
         {'team': 'Cornell', 'score': tour.corn, 'logo': "https://sportslogohistory.com/wp-content/uploads/2019/06/cornell_big_red_2002-pres.png"},
         {'team': 'Iowa', 'score': tour.iowa, 'logo': "https://storage.googleapis.com/hawkeyesports-com/2021/02/cf540990-logo-e1722875756178.png"},
         {'team': 'Iowa State', 'score': tour.isu, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/isuni.sidearmsports.com/images/responsive_2021/logo_nav.svg"},
@@ -876,7 +853,7 @@ def  new_tour():
         db.session.add(new_tourn)
         db.session.add(new_score)
         db.session.commit()
-        for i in range(128):
+        for i in range(164):
             newPlayer = TourTeam(tourId = new_tourn.id, playerId = i + 1, score = 0, status='Champ')
             db.session.add(newPlayer)
             db.session.commit()
@@ -899,12 +876,57 @@ def rform():
 
 @app.route('/teams')
 def teams():
-    score_final = 0
-    teams = Team.query.order_by(Team.wins.desc(), Team.tour_points.desc()).all()
+    # Map your TourScore fields to Team names
+    team_map = {
+        'psu': 'Penn State',
+        'osu': 'Ohio State',
+        'okst': 'Oklahoma State',
+        'corn': 'Cornell',
+        'leh': 'Lehigh',
+        'ncst': 'NC State',
+        'iowa': 'Iowa',
+        'isu': 'Iowa State',
+        'minn': 'Minnesota',
+        'vt': 'Virginia Tech',
+        'mizz': 'Missouri',
+        'neb': 'Nebraska',
+        'stan': 'Stanford',
+        'mich': 'Michigan'
+    }
+
+    # Initialize a dictionary to hold summed scores
+    score_totals = {name: 0 for name in team_map.values()}
+
+    # Loop through all TourScore entries and sum scores
+    all_scores = TourScore.query.all()
+    for score in all_scores:
+        for abbrev, name in team_map.items():
+            team_score = getattr(score, abbrev)
+            if team_score is not None:
+                score_totals[name] += team_score
+
+    # Update each Team's tour_points field
+    teams = Team.query.all()
+    for team in teams:
+        if team.name in score_totals:
+            team.tour_points = score_totals[team.name]
+
+    db.session.commit()
+
+    # Fetch updated teams for display
+    teams = Team.query.order_by(Team.tour_points.desc(), Team.wins.desc(), Team.points.desc()).all()
     return render_template('teams.html', teams=teams)
+
 
 @app.route('/teams/<id>')
 def one_team(id):
+    team = Team.query.get(id)
+    opponents = Dual.query.filter(or_(Dual.home == team.name, Dual.away == team.name)).all()
+    return render_template('team_rec.html', team=team, opponents = opponents)
+
+
+@app.route('/team_rec/<id>')
+def one_team_rec(id):
     team = Team.query.get(id)
     opponents = Dual.query.filter(or_(Dual.home == team.name, Dual.away == team.name)).all()
     all_players = Player.query.all()
@@ -1105,143 +1127,168 @@ def new_battle():
     ]
     form = NewBattle()
     names = [
-  "Adult Gon",
-  "Akatsuki Sasuke",
-  "Aki",
-  "Amaterasu Sasuke",
-  "Android 18",
-  "Anbu Itachi",
-  "Anbu Kakashi",
-  "Armor Titan",
-  "Asuma",
-  "Attack Titan",
-  "Beast Titan",
-  "Bisky",
-  "Bonolenov",
-  "Cart Titan",
-  "Chainsaw Man",
-  "Choji",
-  "Chrollo",
-  "Colossal Titan",
-  "Deidara",
-  "Erza",
-  "Feitan",
-  "Female Titan",
-  "Franklin",
-  "Frieren",
-  "Gaara",
-  "Geto",
-  "Ging",
-  "Gohan",
-  "Goku",
-  "Godspeed Killua",
-  "Gojo",
-  "Gon",
-  "Hashirama",
-  "Hanzo",
-  "Himeno",
-  "Hidan",
-  "Hinata",
-  "Hisoka",
-  "Hunter Killua",
-  "Ikalgo",
-  "Illumi",
-  "Ino",
-  "Itachi",
-  "Jaw Titan",
-  "Jiraiya",
-  "Juubito",
-  "Kabuto",
-  "Kaguya",
-  "Kaiju No. 8",
-  "Kakashi",
-  "Kakuzu",
-  "Kalluto",
-  "Kankuro",
-  "Karin",
-  "Kasumi",
-  "Katana Man",
-  "Kenjaku",
-  "Killer Bee",
-  "Killua",
-  "Kishibe",
-  "Kisame",
-  "Kite",
-  "Knuckle",
-  "Kobeni",
-  "Koga",
-  "Konan",
-  "Kurama",
-  "Kurapika",
-  "Leorio",
-  "Levi",
-  "Madara",
-  "Machi",
-  "Maki",
-  "Mai",
-  "Mahito",
-  "Makima",
-  "Menthuthuyoupi",
-  "Mechamaru",
-  "Megumi",
-  "Mei Mei",
-  "Melody",
-  "Meruem",
-  "Might Guy",
-  "Mikasa",
-  "Minato",
-  "Momo",
-  "Nanami",
-  "Naruto",
-  "Natsu",
-  "Neferpitou",
-  "Neji",
-  "Netero",
-  "Nobara",
-  "Nobunaga",
-  "Noritoshi",
-  "Obito",
-  "Orochimaru",
-  "Pain",
-  "Pakunoda",
-  "Panda",
-  "Phinks",
-  "Piccolo",
-  "Pokkle",
-  "Ponzu",
-  "Power",
-  "Rage Tobi",
-  "Rock Lee",
-  "Sai",
-  "Sage Naruto",
-  "Sakura",
-  "Sasori",
-  "Sasuke",
-  "Shaiapouf",
-  "Shalnark",
-  "Shikamaru",
-  "Shino",
-  "Shizuku",
-  "Shoko",
-  "Shukaku",
-  "Six Paths Naruto",
-  "Suigetsu",
-  "Sukuna",
-  "Temari",
-  "Todo",
-  "Toji",
-  "Tobe",
-  "Tobirama",
-  "Toge",
-  "Trunks",
-  "Tsunade",
-  "Utahime",
-  "Uvogin",
-  "Vegeta",
-  "Yamato",
-  "Yuki",
-  "Yuji",
-  "Zetsu"
+  "Abyss",
+"Adult Gon",
+"Akatsuki Sasuke",
+"Aki",
+"Alex Louis",
+"Alphonse",
+"Amaterasu Sasuke",
+"Anbu Itachi",
+"Anbu Kakashi",
+"Android 18",
+"Armor Titan",
+"Asuma",
+"Attack Titan",
+"Beast Titan",
+"Bisky",
+"Bonolenov",
+"Cart Titan",
+"Cell",
+"Chainsaw Man",
+"Chakra Naruto",
+"Choji",
+"Choso",
+"Chrollo",
+"Colossal Titan",
+"Deidara",
+"Dot",
+"Edward",
+"Envy",
+"Erwin",
+"Erza",
+"Feitan",
+"Female Titan",
+"Fern",
+"Franklin",
+"Frieren",
+"Frieza",
+"Gaara",
+"Geto",
+"Ging",
+"Godspeed Killua",
+"Gohan",
+"Gojo",
+"Goku",
+"Gon",
+"Gotoh",
+"Gray",
+"Greed",
+"Hanzo",
+"Hashirama",
+"Hidan",
+"Himeno",
+"Hinata",
+"Hisoka",
+"Ikalgo",
+"Illumi",
+"Ino",
+"Itachi",
+"Jaw Titan",
+"Jiraiya",
+"Juubito",
+"Kaguya",
+"Kaiju No. 8",
+"Kakashi",
+"Kakuzu",
+"Kalluto",
+"Kankuro",
+"Kasumi",
+"Katana Man",
+"Kenjaku",
+"Kiba",
+"Kikoru",
+"Killer Bee",
+"Killua",
+"Kisame",
+"Kishibe",
+"Kite",
+"Knuckle",
+"Kobeni",
+"Konan",
+"Kurama",
+"Kurapika",
+"Lance",
+"Leorio",
+"Levi",
+"Ling",
+"Lust",
+"Machi",
+"Madara",
+"Mahito",
+"Mai",
+"Maki",
+"Makima",
+"Mash",
+"May",
+"Mechamaru",
+"Megumi",
+"Mei Mei",
+"Menthuthuyoupi",
+"Meruem",
+"Might Guy",
+"Mikasa",
+"Mina",
+"Minato",
+"Momo",
+"Nanami",
+"Natsu",
+"Neferpitou",
+"Neji",
+"Netero",
+"Nobara",
+"Nobunaga",
+"Noritoshi",
+"Obito",
+"Olivier",
+"Orochimaru",
+"Pain",
+"Pakunoda",
+"Panda",
+"Phinks",
+"Piccolo",
+"Pokkle",
+"Ponzu",
+"Power",
+"Rage Tobi",
+"Rayne",
+"Reno",
+"Riza",
+"Rock Lee",
+"Roy",
+"Sage Naruto",
+"Sai",
+"Sakura",
+"Sasori",
+"Sasuke",
+"Scar",
+"Shaiapouf",
+"Shalnark",
+"Shikamaru",
+"Shino",
+"Shisui",
+"Shizuku",
+"Shukaku",
+"Silva",
+"Six Paths Naruto",
+"Soshiro",
+"Stark",
+"Suigetsu",
+"Sukuna",
+"Temari",
+"Tobirama",
+"Todo",
+"Toge",
+"Toji",
+"Trunks",
+"Tsunade",
+"Utahime",
+"Uvogin",
+"Vegeta",
+"Walker",
+"Yamato",
+"Yuji",
+"Yuki",
 ]
 
     if form.validate_on_submit():
@@ -1298,6 +1345,8 @@ def new_battle():
 
         if form.data['round'] in champ:
             teampnts += 3
+        if form.data['round'] == 'Preliminary Round':
+            teampnts += 2
         if form.data['round'] in cons:
             teampnts += 1
         if form.data['round'] in badge_round:
@@ -1639,4 +1688,9 @@ def new_history():
 
 @app.route('/match-ups')
 def match():
-    return render_template('match-ups.html')
+    players = Player.query.all()
+    players_serialized = [
+        {"name": p.name, "img": p.img} for p in players
+    ]
+    print(players)
+    return render_template('match-ups.html', players=players_serialized)

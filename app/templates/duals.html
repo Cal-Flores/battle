@@ -64,7 +64,17 @@
                 <div></div>
                 <div class="match-cell team-away">{{ dual.away }}</div>
                 <div class="match-cell team-away">{{ dual.ascore }}</div>
+                {% if dual.winnerId == dual.away %}
+                <div class="kunaiwin">W</div>
+                {% else %}
+                <div></div>
+                {% endif %}
                 <div class="match-cell vs"><a href="/duals/{{ dual.id }}">vs</a></div>
+                {% if dual.winnerId == dual.home %}
+                <div class="kunaiwin">W</div>
+                {% else %}
+                <div></div>
+                {% endif %}
                 <div class="match-cell team-home">{{ dual.hscore }} </div>
                 <div class="match-cell team-home">{{ dual.home }}</div>
                 <div class="match-cell week">| {{ dual.week }}</div>

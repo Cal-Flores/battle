@@ -1524,6 +1524,11 @@ input[type=text]:hover {
     background-color: rgba(14, 14, 14, 0.75);
 }
 
+#coach {
+    width: 80px;
+    border-radius: 20px;
+}
+
 .rank {
     font-size: 28px;
 }
@@ -1926,7 +1931,8 @@ body#dual {
 }
 
 .schedule-header h1 {
-    color: #c0392b;
+    /* color: #c0392b; */
+    color: rgb(183, 182, 182);
     text-shadow: 1px 1px 2px #000;
     font-weight: bold;
     margin-bottom: 3%;
@@ -2027,7 +2033,7 @@ body#dual {
 /* MATCH DISPLAY */
 .match {
     display: grid;
-    grid-template-columns: .5fr 2fr .5fr .5fr .5fr 2fr .5fr;
+    grid-template-columns: .5fr 1.5fr .5fr .5fr .5fr .5fr .5fr 1.5fr .5fr;
     gap: 10px;
     align-items: center;
     background-color: #333;
@@ -2080,6 +2086,11 @@ body#dual {
     background-size: cover;
 }
 
+.kunaiwin {
+    font-size: 26px;
+    color: rgb(14, 93, 14);
+}
+
 /* one dual page */
 body#oneDual {
     background-color: #0b0b0b;
@@ -2104,7 +2115,7 @@ h2 {
 
 .match-row {
     display: grid;
-    grid-template-columns: 1.5fr 60px 1.5fr 80px 100px 1fr;
+    grid-template-columns: 3fr 1fr 3fr 1fr 1fr 2fr;
     align-items: center;
     gap: 12px;
     padding: 12px;
@@ -2112,11 +2123,14 @@ h2 {
     border: 2px solid #f39c12;
     border-radius: 10px;
     box-shadow: 0 0 8px rgba(243, 156, 18, 0.5);
+    padding-left: 5%;
 }
 
 .fighter-side {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
+    /* border: 1px solid white; */
     gap: 10px;
 }
 
@@ -2124,7 +2138,7 @@ h2 {
     height: 40px;
     width: 40px;
     border-radius: 50%;
-    border: 2px solid #3498db;
+    border: 1px solid #3498db;
     background-color: white;
 }
 
@@ -2144,6 +2158,10 @@ h2 {
 
 .fighter-name {
     font-weight: bold;
+    color: #ecf0f1;
+}
+
+.fighter-name>a {
     color: #ecf0f1;
 }
 
@@ -2168,7 +2186,7 @@ h2 {
 
 .team-points {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 6px;
     align-items: center;
 }
@@ -2186,7 +2204,7 @@ h2 {
 .dual-title {
     text-align: center;
     font-size: 28px;
-    color: #f1c40f;
+    margin-top: 5%;
     text-shadow: 2px 2px 3px #000;
     margin-bottom: 25px;
 }
@@ -2251,4 +2269,210 @@ h2 {
     border: 2px solid #e74c3c;
     border-radius: 8px;
     background-color: #222;
+}
+
+
+
+#teamPage {
+    /* background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364); */
+    background-image: url('https://images.alphacoders.com/306/thumb-1920-306501.jpg');
+    font-family: 'Trebuchet MS', sans-serif;
+    color: #e0f7fa;
+    padding: 20px;
+}
+
+.team-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: #1c1c1c;
+    padding: 20px;
+    border: 2px solid #29b6f6;
+    border-radius: 12px;
+    box-shadow: 0 0 10px #29b6f6;
+    margin-bottom: 30px;
+}
+
+
+
+.team-info h1 {
+    margin: 0;
+    font-size: 32px;
+    color: #81d4fa;
+}
+
+.team-info p {
+    margin: 4px 0;
+    font-size: 18px;
+}
+
+.duals-history {
+    background: #121212;
+    border: 2px solid #43a047;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.duals-history h2 {
+    color: #a5d6a7;
+    border-bottom: 2px solid #43a047;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.dual-line {
+    display: grid;
+    grid-template-columns: 40px 1fr 100px 100px 100px;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    background-color: #1e1e1e;
+    transition: background 0.3s ease;
+}
+
+.dual-line.win {
+    border-left: 5px solid #66bb6a;
+}
+
+.dual-line.loss {
+    border-left: 5px solid #ef5350;
+}
+
+.wl {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.opponent {
+    font-size: 18px;
+}
+
+.score,
+.week,
+.running-record {
+    text-align: right;
+    font-size: 16px;
+}
+
+
+/* TEAM DUAL RECORD PAGE */
+#teamPage2 {
+    /* background-image: url('https://i.pinimg.com/736x/ff/0e/10/ff0e1093c8db72f2a54dfdda6da6f127.jpg'); */
+    background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/dfee3ac0-96c7-4f20-bef9-ffeaad744b5f/d6ofv4k-e28e82ed-01ee-4139-9dcf-1d57c42d14d2.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2RmZWUzYWMwLTk2YzctNGYyMC1iZWY5LWZmZWFhZDc0NGI1ZlwvZDZvZnY0ay1lMjhlODJlZC0wMWVlLTQxMzktOWRjZi0xZDU3YzQyZDE0ZDIucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.spUJTvHSXXsrviO_G7jMVwLNP87LasyFUwhIcXT-z_Q');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Segoe UI', sans-serif;
+    color: #f0f0f0;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.team-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1a1a1a;
+    padding: 25px 30px;
+    border: 3px solid #3d3d3d;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #7c4dff55;
+    margin-bottom: 30px;
+    max-width: 500px;
+    width: 90%;
+    margin-top: 4%;
+}
+
+.team-logo2 {
+    height: 110px;
+    width: 110px;
+    border-radius: 10px;
+    /* border: 3px solid #f44336; */
+    object-fit: contain;
+    background-color: white;
+    margin-bottom: 10px;
+}
+
+.team-info h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 900;
+    color: #e0e0e0;
+    text-shadow: 0 0 5px #312a44;
+    text-align: center;
+}
+
+.record {
+    text-align: center;
+    font-weight: bold;
+
+}
+
+.stats {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #bdbdbd;
+    text-align: center;
+}
+
+.duals-history {
+    background: #111;
+    border: 2px solid #e6e6e6;
+    padding: 25px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+}
+
+.duals-history h2 {
+    color: #d8d8d8;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e3e3e3;
+    padding-bottom: 8px;
+    text-align: center;
+}
+
+.dual-line {
+    display: grid;
+    grid-template-columns: 40px 1fr 100px 80px 80px;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    background-color: #212121;
+    border-left: 5px solid transparent;
+    font-size: 16px;
+}
+
+.dual-line.win {
+    border-left-color: #4caf50;
+    background-color: #1b2b1f;
+}
+
+.dual-line.loss {
+    border-left-color: #f44336;
+    background-color: #2e1c1c;
+}
+
+.wl {
+    font-weight: 900;
+    font-size: 22px;
+}
+
+.opponent {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.score,
+.week,
+.running-record {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
 }
