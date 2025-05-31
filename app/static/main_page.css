@@ -421,7 +421,8 @@ h2 {
 }
 
 .medal2 {
-    font-size: 40px;
+    font-size: 20px;
+    color: whitesmoke;
 }
 
 span {
@@ -490,6 +491,7 @@ span {
     align-items: center;
     justify-content: space-between;
     width: 45%;
+    height: 130px;
 }
 
 
@@ -529,6 +531,24 @@ span {
     margin-bottom: 5%;
     width: 100%;
     background-color: hsla(244, 18%, 16%, 0.75);
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+
+.leadercard2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    border: solid whitesmoke;
+    border-radius: 10px;
+    padding-left: 3%;
+    padding-right: 3%;
+    /* padding-top: .5%;
+    padding-bottom: .5%; */
+    margin-bottom: 2%;
+    width: 100%;
+    background-color: hsla(244, 18%, 16%, 0.95);
     padding-top: 1%;
     padding-bottom: 1%;
 }
@@ -1577,7 +1597,7 @@ input[type=text]:hover {
 }
 
 #obitosc {
-    width: 65px;
+    width: 75px;
 }
 
 #advstatbg {
@@ -1930,6 +1950,7 @@ body#dual {
     margin-top: 10%;
 }
 
+
 .schedule-header h1 {
     /* color: #c0392b; */
     color: rgb(183, 182, 182);
@@ -1948,7 +1969,8 @@ body#dual {
     cursor: pointer;
     transition: background 0.3s ease;
     margin-top: 10px;
-    margin-left: 45%;
+    margin-left: 25%;
+    width: 110px;
 }
 
 #toggleFormBtn:hover {
@@ -2359,7 +2381,7 @@ h2 {
 /* TEAM DUAL RECORD PAGE */
 #teamPage2 {
     /* background-image: url('https://i.pinimg.com/736x/ff/0e/10/ff0e1093c8db72f2a54dfdda6da6f127.jpg'); */
-    background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/dfee3ac0-96c7-4f20-bef9-ffeaad744b5f/d6ofv4k-e28e82ed-01ee-4139-9dcf-1d57c42d14d2.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2RmZWUzYWMwLTk2YzctNGYyMC1iZWY5LWZmZWFhZDc0NGI1ZlwvZDZvZnY0ay1lMjhlODJlZC0wMWVlLTQxMzktOWRjZi0xZDU3YzQyZDE0ZDIucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.spUJTvHSXXsrviO_G7jMVwLNP87LasyFUwhIcXT-z_Q');
+    background-image: url('https://wallpapercg.com/media/ts_orig/23308.webp');
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-size: cover;
@@ -2371,24 +2393,24 @@ h2 {
     align-items: center;
 }
 
-.team-header {
+#team-header2 {
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #1a1a1a;
+    opacity: .95;
     padding: 25px 30px;
-    border: 3px solid #3d3d3d;
     border-radius: 12px;
     box-shadow: 0 0 15px #7c4dff55;
     margin-bottom: 30px;
     max-width: 500px;
     width: 90%;
-    margin-top: 4%;
+    margin-top: 6%;
 }
 
 .team-logo2 {
-    height: 110px;
-    width: 110px;
+    height: 80px;
+    width: 80px;
     border-radius: 10px;
     /* border: 3px solid #f44336; */
     object-fit: contain;
@@ -2423,8 +2445,7 @@ h2 {
     border: 2px solid #e6e6e6;
     padding: 25px;
     border-radius: 12px;
-    width: 90%;
-    max-width: 700px;
+    width: 70%;
 }
 
 .duals-history h2 {
@@ -2475,4 +2496,22 @@ h2 {
     text-align: center;
     font-size: 16px;
     font-weight: bold;
+}
+
+#rankChart {
+    width: 100% !important;
+    max-width: 800px;
+    height: 400px !important;
+    background: rgba(30, 30, 30, 0.95);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 40px auto;
+    display: block;
+}
+
+#dlead {
+    background-image: url('https://de7i3bh7bgh0d.cloudfront.net/2023/09/22/18/03/54/b89a7e6a-bd28-421a-8ac7-4b02601a0b54/ChainsawMan_Boxset_Blog_1200x630.jpg');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
 }

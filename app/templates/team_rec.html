@@ -11,25 +11,32 @@
         <style>
             @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
         </style>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
     </head>
 
     <body id="teamPage2">
         {% include 'nav.html' %}
-        <div class="team-header">
+        <div id="team-header2">
             <a href="/team_rec/{{team.id}}">
                 <img src="{{ team.logo }}" class="team-logo2">
             </a>
             <div class="team-info">
-                <h1>{{ team.name }}</h1>
+                <!-- <h1>{{ team.name }}</h1> -->
                 <p class="record">{{ team.wins }}–{{ team.loss }}</p>
                 <p class="stats">Dual Points: {{ team.points }}</p>
                 <p class="stats">Tournament Points: {{ team.tour_points }}</p>
+                <p class="stats">Current Rank: {{ team.rank }}</p>
             </div>
+        </div>
+        <div>
+            <canvas id="rankChart" width="400" height="200"></canvas>
+            <div id="rankData" data-values='{{ ranks | tojson | safe }}'></div>
+            <div id="myColor" data-color="{{ color }}"></div>
         </div>
 
         <div class="duals-history">
-            <h2>Dual History</h2>
+            <!-- <h2>Dual History</h2> -->
             {% set record = {'wins': 0, 'losses': 0} %}
             {% for dual in opponents %}
             {% set is_home = dual.home == team.name %}
@@ -53,6 +60,82 @@
             </a>
             {% endfor %}
         </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+
+            const dynamicColor = $('#myColor').attr('data-color');
+            const rankDiv = document.getElementById('rankData');
+            const rankRaw = JSON.parse(rankDiv.dataset.values || "[]");
+
+            const weeks = Array.from({ length: 14 }, (_, i) => i + 1);
+            const rankMap = {};
+            rankRaw.forEach(r => { rankMap[r.week] = r.rank; });
+
+            const rankLabels = weeks;
+            const rankValues = weeks.map(w => rankMap[w] || null); // Fill missing weeks with null
+
+            const ctx = document.getElementById('rankChart').getContext('2d');
+            const canvas = document.getElementById('rankChart');
+            canvas.style.border = `2px solid ${dynamicColor}`;
+            canvas.style.borderRadius = '8px';
+            const tt = document.getElementById('team-header2');
+            tt.style.border = `2px solid ${dynamicColor}`;
+            tt.style.borderRadius = '8px';
+            const rankChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: rankLabels,
+                    datasets: [{
+                        label: 'Weekly Rank',
+                        data: rankValues,
+                        borderColor: dynamicColor,
+                        backgroundColor: dynamicColor, // Add transparency (e.g., #FF000033)
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: dynamicColor,
+                        fill: true
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            reverse: true,
+                            min: 1,
+                            max: 14,
+                            title: {
+                                display: true,
+                                text: 'Rank',
+                                color: dynamicColor
+                            },
+                            ticks: {
+                                precision: 0,
+                                color: 'white'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Week',
+                                color: dynamicColor
+                            },
+                            ticks: {
+                                stepSize: 1,
+                                color: 'white'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+        </script>
+
     </body>
 
 </html>

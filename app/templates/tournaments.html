@@ -20,15 +20,17 @@
             {% for tour in tournaments %}
             <div class="tourdiv">
                 <a class="tourtxt" href="{{ tour.tourn.link }}">{{ tour.tourn.name }}</a>
-                <a class="tourtxt" href="/score/{{ tour.tourn.id }}">{{ tour.tourn.date }}</a>
+                <a class="tourtxt" href="/score/{{ tour.tourn.id }}">{{tour.tourn.date.strftime('%B %d')}}</a>
                 <div class="tourimg">
                     {% for team in tour.top_teams %}
                     {% if loop.index0 == 0 %}
-                    <p class="medal2">🥇</p>
+                    <p class="medal2">🏆</p>
                     {% elif loop.index0 == 1 %}
-                    <p class="medal2">🥈</p>
+                    <p class="medal2">2.</p>
                     {% elif loop.index0 == 2 %}
-                    <p class="medal2">🥉</p>
+                    <p class="medal2">3.</p>
+                    {% elif loop.index0 == 3 %}
+                    <p class="medal2">4.</p>
                     {% endif %}
                     <img id="obitosc" src="{{ team.logo }}" alt="{{ team.team }}">
                     {% endfor %}

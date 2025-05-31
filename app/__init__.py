@@ -4,7 +4,7 @@ from app.config import Configuration
 from sqlalchemy import and_, or_,func
 
 from flask_migrate import Migrate
-from app.models import db, Player, Tour, Result, Opponent, Battle, Dual, Team, TourScore,  TourTeam, RankHistory
+from app.models import db, Player, Tour, Result, Opponent, Battle, Dual, Team, TourScore,  TourTeam, RankHistory, TeamRank
 
 
 app = Flask(__name__)
@@ -22,7 +22,7 @@ Nebraska= "data:image/svg+xml,%3c?xml%20version=%271.0%27%20encoding=%27utf-8%27
 NC_State= "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/unc.sidearmsports.com/images/sng_2023/main_nav_logo.svg"
 Ohio_State= "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/ohiostatebuckeyes.com/images/nextgen_2023/logo_main.svg"
 Oklahoma_State= "https://sportslogohistory.com/wp-content/uploads/2018/07/oklahoma_state_cowboys_2015-pres.png"
-Penn_State= "https://gopsusports.com/_nuxt/logo-BDHEpLK6.svg"
+Penn_State= "https://gopsusports.com/_nuxt/logo.BDHEpLK6.svg"
 Stanford= "https://gostanford.com/imgproxy/l6GXJbFV4z1yPuiCbXCePofeGNcKTlM78I9yNaTuiU4/rs:fit:1980:0:0/g:ce/q:90/aHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL3N0YW5mb3JkLXByb2QvMjAyNC8wMy8yMC9hVXJvSkRQeEVBQzFBRE53M3M2YjBRQWNlcmd2WW9EOXRabHVsZHRrLnBuZw.png"
 Virginia_Tech= "https://sportslogohistory.com/wp-content/uploads/2018/01/virginia_tech_hokies_1983-pres.png"
 RTC ='https://banner2.cleanpng.com/20180418/uoq/avfkfh80z.webp'
@@ -89,6 +89,15 @@ def s_form():
 
 @app.route('/facts')
 def facts():
+    # CODE TO ADD NEW DUAL WEEK RESULTS
+    # teams = Team.query.order_by(Team.wins.desc(), Team.points.desc(), Team.loss).all()
+    # i = 1
+    # week = 1
+    # for team in teams:
+    #     team.rank = i
+    #     team_rank = TeamRank(week = week, teamId = team.id, score = team.points, rank = i)
+    #     db.session.add(team_rank)
+    #     i += 1
     return render_template('facts.html')
 
 @app.route('/duals', methods=['GET', 'POST'])
@@ -561,13 +570,13 @@ def opp_delete(id):
     player = Player.query.get(opponent.player_id)
     tourname = opponent.tour_name
 
-    tid = 0  # <---- Change this for Current Tour!!
-    fixedPnts = 1  # <---- Change this for appropriate number!!
+    tid = 4  # <---- Change this for Current Tour!!
+    fixedPnts = 3  # <---- Change this for appropriate number!!
     if opponent.victory == True:
         player.wins -= 1
         player.tour_points -= fixedPnts
         tourData = TourScore.query.filter((TourScore.name == tourname)).one()
-        tourData.okst -= fixedPnts # <---- Change this the .team to the winners team ex: tourData.mich!
+        tourData.osu -= fixedPnts # <---- Change this the .team to the winners team ex: tourData.mich!
 
         indvTeam = TourTeam.query.filter(and_(TourTeam.playerId == player.id, TourTeam.tourId == tid)).one()
         indvTeam.score -= fixedPnts
@@ -723,7 +732,7 @@ def tournaments():
             continue
         team_scores = {
             "Penn State": tour_score.psu,
-            "Ohio Sate": tour_score.osu,
+            "Ohio State": tour_score.osu,
             "Oklahoma State": tour_score.okst,
             "Cornell": tour_score.corn,
             "Lehigh": tour_score.leh,
@@ -738,7 +747,7 @@ def tournaments():
             "Michigan": tour_score.mich,
         }
 
-        sorted_teams = sorted(team_scores.items(), key=lambda x: x[1], reverse=True)[:3]
+        sorted_teams = sorted(team_scores.items(), key=lambda x: x[1], reverse=True)[:4]
 
         top_teams = []
         for team_name, score in sorted_teams:
@@ -766,6 +775,17 @@ def tour_form():
     form = NewTour()
     return render_template('create_tour.html', form=form)
 
+def sort_key(x):
+    if x['status']:
+        status = x['status'].lower()
+        is_cons = 1 if status == 'cons' else 0
+        return (
+        is_cons,
+        -x['score'],
+        -x['wins'],
+        x['loss']
+        )
+
 @app.route('/score/score/<int:id>/<team>')
 def get_score(id, team):
     print(team)
@@ -785,13 +805,8 @@ def get_score(id, team):
             'status': entry.status
             }
             data.append(score_data)
-    status_priority = {'all-american': 0, 'champion': 1, 'cons': 2}
-    data.sort(key=lambda x: (
-    status_priority.get(x['status'], 3),   # Status priority
-    -x['score'],                           # Higher score is better
-    -x['wins'],                            # More wins is better
-    x['loss']                              # Fewer losses is better
-    ))
+    if id >= 4:
+        data.sort(key=sort_key)
     return render_template('team_scorepage.html', team = curr_team, score_data=data)
 
 @app.route('/score/<id>')
@@ -922,7 +937,27 @@ def teams():
 def one_team(id):
     team = Team.query.get(id)
     opponents = Dual.query.filter(or_(Dual.home == team.name, Dual.away == team.name)).all()
-    return render_template('team_rec.html', team=team, opponents = opponents)
+    rank_objs = TeamRank.query.filter_by(teamId=id).order_by(TeamRank.week).all()
+    color = {
+        'Cornell': '#B31B1B',
+        'Iowa': '#FFCD00',
+        'Iowa State': '#F1BE48',
+        'Lehigh': '#653600',
+        'Michigan': '#00274c',
+        'Minnesota': '#7A0019',
+        'Missouri': '#F1B82D',
+        'Nebraska': '#E41C38',
+        'NC State': '#4B9CD3',
+        'Ohio State': '#BB0000',
+        'Oklahoma State': '#Fe5c00',
+        'Penn State': '#0E2B58',
+        'Stanford': '#4D4F53',
+        'Virginia Tech': '#630031'
+    }.get(team.name, 'Black')
+
+    ranks = [{'week': r.week, 'rank': r.rank} for r in rank_objs]
+    return render_template('team_rec.html', team=team, opponents=opponents, ranks=ranks, color=color)
+
 
 
 @app.route('/team_rec/<id>')
@@ -1694,3 +1729,9 @@ def match():
     ]
     print(players)
     return render_template('match-ups.html', players=players_serialized)
+
+@app.route('/dualLeaders')
+def dual_leaders():
+    players = Player.query.order_by(Player.dual_points.desc()).all()
+    print(players)
+    return render_template('dualleaders.html', players=players)

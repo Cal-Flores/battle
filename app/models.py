@@ -10,6 +10,8 @@ class Player(db.Model):
     name = db.Column(db.String(50), nullable=False)
     wins = db.Column(db.Integer)
     loss = db.Column(db.Integer)
+    d_wins = db.Column(db.Integer)
+    d_loss = db.Column(db.Integer)
     points = db.Column(db.Integer)
     img = db.Column(db.String(255))
     gold = db.Column(db.Integer)
@@ -138,6 +140,13 @@ class RankHistory(db.Model):
     playerId = db.Column(db.Integer)
     score = db.Column(db.Integer)
     total = db.Column(db.Integer)
+    rank = db.Column(db.Integer, default=0)
+
+class TeamRank(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    week = db.Column(db.Integer)
+    teamId = db.Column(db.Integer)
+    score = db.Column(db.Integer)
     rank = db.Column(db.Integer, default=0)
 
 # flask db migrate -m "Updated Battle model"
