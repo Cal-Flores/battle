@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Duals -Battle Royale</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="playoffbg">
+        {%include 'nav.html'%}
+
+
+
+
+
+
+
+
+        <div class="playoffs-page">
+            <h1 class="playoffs-title">Playoff Picture</h1>
+
+
+            <!-- 4 x 4 ranking grid: rows = place, cols = conference -->
+            <div class="playoff-grid">
+                {# rank: 0 = 1st, 1 = 2nd, 2 = 3rd, 3 = 4th #}
+                {% for rank in range(4) %}
+                {% for conf in conference_order %}
+                {% set teams = conf_standings.get(conf, []) %}
+                {% set team = teams[rank] if teams|length > rank else None %}
+
+                {% if team %}
+                {% set is_special = (team.id in conference_winner_ids) or (team.id in wildcard_ids) %}
+                <article class="team-card {% if is_special %}team-highlight{% endif %}">
+
+                    {# ==== NAME + (SEED) CHANGE IS HERE ==== #}
+                    <div class="team-name">
+                        {{ team.name }}
+                        {% for s in playoff_seeds %}
+                        {% if s.team.id == team.id %}
+                        ({{ s.seed }})
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {# ====================================== #}
+                    <a href="/teams/{{team.id}}">
+                        <img src="{{ team.logo }}" alt="{{ team.name }} logo" class="team-logod">
+                    </a>
+
+
+
+                    <div class="team-record">{{ team.wins }} - {{ team.loss }}</div>
+                    <div class="team-points">{{ team.points }} pts</div>
+                </article>
+                {% else %}
+                <article class="team-card team-empty"></article>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+            </div>
+
+            <!-- Seeding 1–7 -->
+
+
+            <!-- Matchups: 2 vs 7, 3 vs 6, 4 vs 5 -->
+            <section class="matchups-section">
+                <h2 class="matchups-title">Matchups</h2>
+                <div class="matchups-grid">
+                    {% for m in matchups %}
+                    <div class="matchup-card">
+                        <div class="matchup-seed-label">
+                            #{{ m.high.seed }} vs #{{ m.low.seed }}
+                        </div>
+                        <div class="matchup-teams">
+                            <div class="matchup-team">
+                                <img src="{{ m.high.team.logo }}" alt="{{ m.high.team.name }} logo"
+                                    class="matchup-logo">
+                                <div class="matchup-name">{{ m.high.team.name }}</div>
+                            </div>
+                            <span class="matchup-vs">VS</span>
+                            <div class="matchup-team">
+                                <img src="{{ m.low.team.logo }}" alt="{{ m.low.team.name }} logo" class="matchup-logo">
+                                <div class="matchup-name">{{ m.low.team.name }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+    </body>
+
+</html>

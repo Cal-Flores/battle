@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Blind Ranking</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="matchz">
+
+        <div id="players-json" data-players='{{ players | tojson | safe }}'></div>
+
+        <div class="blind-rank-container">
+
+            <h1>Blind Ranking</h1>
+
+            <div class="blind-top">
+                <div class="round-box">
+                    Round <span id="round">1</span>/10
+                </div>
+
+                <button id="startBtn">Generate Player</button>
+            </div>
+
+            <div id="randomCard" class="fighter-card blind-card">
+                <div class="empty-circle">?</div>
+                <div class="fighter-name">Press Start</div>
+                <div class="fighter-rank">Rank hidden</div>
+            </div>
+
+            <h2>Place Fighter 1-10</h2>
+
+            <div id="rankBoard" class="rank-board"></div>
+
+            <button id="revealBtn" style="display:none;">Reveal Results</button>
+
+            <div id="resultsBox"></div>
+
+        </div>
+
+        <script>
+            const players = JSON.parse(document.getElementById("players-json").dataset.players);
+
+            let selectedPlayers = [];
+            let currentPlayer = null;
+            let round = 1;
+            let spinning = false;
+            let gameOver = false;
+
+            const randomCard = document.getElementById("randomCard");
+            const rankBoard = document.getElementById("rankBoard");
+            const roundEl = document.getElementById("round");
+            const startBtn = document.getElementById("startBtn");
+            const revealBtn = document.getElementById("revealBtn");
+            const resultsBox = document.getElementById("resultsBox");
+
+            function shuffleArray(arr) {
+                return [...arr].sort(() => Math.random() - 0.5);
+            }
+
+            function initRankBoard() {
+                rankBoard.innerHTML = "";
+
+                for (let i = 1; i <= 10; i++) {
+                    const slot = document.createElement("div");
+                    slot.classList.add("rank-slot", "empty-rank-slot");
+                    slot.dataset.position = i;
+
+                    slot.innerHTML = `
+            <div class="rank-number">#${i}</div>
+            <div class="empty-circle small-empty">?</div>
+            <div class="fighter-name">Open Slot</div>
+        `;
+
+                    slot.addEventListener("click", placePlayer);
+                    rankBoard.appendChild(slot);
+                }
+            }
+
+            function generatePlayer() {
+                if (spinning || currentPlayer || gameOver) return;
+
+                spinning = true;
+                resultsBox.innerHTML = "";
+
+                const usedIds = selectedPlayers.map(p => p.player.id);
+
+                const availablePlayers = players.filter(p => !usedIds.includes(p.id));
+
+                let finalPlayer = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
+
+                let spinCount = 0;
+
+                const spinInterval = setInterval(() => {
+                    let tempPlayer = players[Math.floor(Math.random() * players.length)];
+
+                    randomCard.innerHTML = `
+            <img src="${tempPlayer.img}" class="big-circle-img">
+            <div class="fighter-name">${tempPlayer.name}</div>
+            <div class="fighter-rank">Rank hidden</div>
+        `;
+
+                    spinCount++;
+
+                    if (spinCount >= 25) {
+                        clearInterval(spinInterval);
+
+                        currentPlayer = finalPlayer;
+
+                        randomCard.innerHTML = `
+                <img src="${finalPlayer.img}" class="big-circle-img">
+                <div class="fighter-name">${finalPlayer.name}</div>
+                <div class="fighter-rank">Rank hidden</div>
+            `;
+
+                        spinning = false;
+                    }
+                }, 80);
+            }
+
+            function placePlayer(e) {
+                if (!currentPlayer || spinning || gameOver) return;
+
+                const slot = e.currentTarget;
+
+                if (slot.classList.contains("filled-rank-slot")) return;
+
+                const position = Number(slot.dataset.position);
+
+                slot.classList.remove("empty-rank-slot");
+                slot.classList.add("filled-rank-slot");
+
+                slot.innerHTML = `
+        <div class="rank-number">#${position}</div>
+        <img src="${currentPlayer.img}" class="circle-img">
+        <div class="fighter-name">${currentPlayer.name}</div>
+        <div class="fighter-rank">Rank hidden</div>
+    `;
+
+                selectedPlayers.push({
+                    position: position,
+                    player: currentPlayer
+                });
+
+                currentPlayer = null;
+                round++;
+
+                if (round > 10) {
+                    gameOver = true;
+                    roundEl.textContent = 10;
+                    startBtn.disabled = true;
+                    revealBtn.style.display = "inline-block";
+
+                    randomCard.innerHTML = `
+            <div class="empty-circle">✓</div>
+            <div class="fighter-name">Ranking Complete</div>
+            <div class="fighter-rank">Reveal when ready</div>
+        `;
+
+                    return;
+                }
+
+                roundEl.textContent = round;
+            }
+
+            function revealResults() {
+                /*
+                    This assumes rank #1 is better than rank #20.
+                    So LOWER rank number = better fighter.
+                */
+
+                const trueOrder = [...selectedPlayers].sort((a, b) => {
+                    return a.player.rank - b.player.rank;
+                });
+
+                let correctCount = 0;
+
+                selectedPlayers.forEach(choice => {
+                    const correctSpot = trueOrder.findIndex(item => item.player.id === choice.player.id) + 1;
+
+                    if (choice.position === correctSpot) {
+                        correctCount++;
+                    }
+
+                    const slot = document.querySelector(`.rank-slot[data-position="${choice.position}"]`);
+
+                    if (choice.position === correctSpot) {
+                        slot.classList.add("correct-slot");
+                    } else {
+                        slot.classList.add("wrong-slot");
+                    }
+
+                    slot.innerHTML += `
+            <div class="true-rank-info">
+                True Blind Spot: #${correctSpot}<br>
+                Game Rank: ${choice.player.rank}
+            </div>
+        `;
+                });
+
+                let html = `
+        <h2>Final Results</h2>
+        <div class="final-score">${correctCount}/10 Perfect Placements</div>
+        <h3>Correct Order Should Have Been:</h3>
+        <div class="true-order-list">
+    `;
+
+                trueOrder.forEach((item, index) => {
+                    html += `
+            <div class="true-order-card">
+                <span>#${index + 1}</span>
+                <img src="${item.player.img}" class="mini-img">
+                <strong>${item.player.name}</strong>
+                <small>Game Rank: ${item.player.rank}</small>
+            </div>
+        `;
+                });
+
+                html += `</div>`;
+
+                resultsBox.innerHTML = html;
+                revealBtn.disabled = true;
+            }
+
+            startBtn.addEventListener("click", generatePlayer);
+            revealBtn.addEventListener("click", revealResults);
+
+            initRankBoard();
+        </script>
+
+    </body>
+
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Leaderboard -Battle Royale</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="dash">
+        {%include 'nav.html'%}
+
+        <div id="dashcont">
+            <h2>{{today_label}}</h2>
+            <!-- PLAYER OF THE DAY -->
+            <div id="dash1">
+
+                <section class="dash-section">
+                    <h2>⭐ Player of the Day</h2>
+                    <div class="feature-card">
+                        <h1>{{random_player.name}}</h1>
+                        <img id="dashimg" src="{{random_player.img}}">
+                    </div>
+                </section>
+
+
+
+                <section class="dash-section">
+                    <h2>🔥 Match Spotlight</h2>
+
+                    <div class="match-card">
+
+                        <div class="match-side">
+                            <h3>{{spotlight_match.red_name}}</h3>
+                        </div>
+
+                        <div class="vs">
+                            VS
+                        </div>
+
+                        <div class="match-side">
+                            <h3>{{spotlight_match.blue_name}}</h3>
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+
+
+            <!-- BIRTHDAYS -->
+            <section>
+
+                <h2>🎂 Birthdays Today</h2>
+
+                <div class="birthday-row">
+
+                    {% for player in birthdays %}
+
+                    <div class="birthday-card">
+
+                        <img id="dashimg" src="{{player.img}}">
+
+                        <h4>{{player.name}}</h4>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+
+            <!-- PLAYER OF DAY HISTORY -->
+            <section class="dash-section">
+
+                <h2>Hall of Fame</h2>
+
+                <div class="history-row">
+
+                    {% for pick in player_of_day_history %}
+
+                    <div>
+
+                        <img id="dashimg" src="{{pick.player.img}}">
+
+                        <p>{{pick.player.name}}</p>
+
+                        <p>{{pick.date}}</p>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+
+        <style>
+            #dash {
+                margin-top: 10%;
+                background-image: url('https://wallpapercave.com/wp/wp9389571.png');
+                background-attachment: fixed;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+
+            #dashcont {
+                margin: auto;
+                width: 85%;
+                background-color: rgba(31, 31, 31, .8);
+            }
+
+            #dashimg {
+                width: 200px;
+                height: 200px;
+                margin: 20px;
+                border-radius: 10px;
+            }
+
+            #dash1 {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            .birthday-row {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+            }
+        </style>
+    </body>
+
+</html>
+<!-- {% for player in players %}
+<div>
+    <img id="dashimg" src="{{player.img}}">
+</div>
+{% endfor %} -->

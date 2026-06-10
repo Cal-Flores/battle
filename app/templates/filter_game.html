@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Filter</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="matchz">
+
+        <div id="players-json" data-players='{{ players | tojson | safe }}'></div>
+
+        <div class="filter-game-container">
+
+            <h1>Match Draws</h1>
+
+            <div class="score-box">
+                Score: <span id="score">0</span>/8
+            </div>
+
+            <div class="round-box">
+                Round <span id="round">1</span> of 8
+            </div>
+
+            <div class="random-area">
+                <div id="randomCard" class="fighter-card">
+                    <div class="fighter-img empty-circle">?</div>
+                    <div class="fighter-name">Press Start</div>
+                    <div class="fighter-rank"></div>
+                </div>
+
+                <button id="startBtn">Start Round</button>
+            </div>
+
+
+            <div id="gameBoard" class="game-board"></div>
+
+            <div id="resultMessage"></div>
+
+        </div>
+
+        <script>
+            const players = JSON.parse(document.getElementById("players-json").dataset.players);
+
+            let boardPlayers = [];
+            let usedChallengers = [];
+            let currentPlayer = null;
+            let round = 1;
+            let score = 0;
+            let spinning = false;
+            let gameOver = false;
+
+            const gameBoard = document.getElementById("gameBoard");
+            const randomCard = document.getElementById("randomCard");
+            const startBtn = document.getElementById("startBtn");
+            const scoreEl = document.getElementById("score");
+            const roundEl = document.getElementById("round");
+            const resultMessage = document.getElementById("resultMessage");
+
+            function shuffleArray(arr) {
+                return [...arr].sort(() => Math.random() - 0.5);
+            }
+
+            function initGame() {
+                boardPlayers = shuffleArray(players).slice(0, 8);
+
+                gameBoard.innerHTML = "";
+
+                boardPlayers.forEach((player, index) => {
+                    const row = document.createElement("div");
+                    row.classList.add("match-row");
+                    row.dataset.index = index;
+
+                    row.innerHTML = `
+            <div class="board-fighter">
+                <img src="${player.img}" class="circle-img">
+                <div class="fighter-name">${player.name}</div>
+
+            </div>
+
+            <div class="vs-box" id="vs-${index}">VS</div>
+
+            <div class="chosen-slot empty-slot" data-index="${index}">
+                <div class="empty-circle">?</div>
+                <div class="fighter-name">Choose</div>
+            </div>
+        `;
+
+                    gameBoard.appendChild(row);
+                });
+
+                document.querySelectorAll(".chosen-slot").forEach(slot => {
+                    slot.addEventListener("click", placePlayer);
+                });
+            }
+
+            function drawRandomPlayer() {
+                if (spinning || gameOver || currentPlayer) return;
+
+                spinning = true;
+                resultMessage.textContent = "";
+
+                let availablePlayers = players.filter(p => {
+                    return !usedChallengers.includes(p.id) &&
+                        !boardPlayers.some(bp => bp.id === p.id);
+                });
+
+                let finalPlayer = availablePlayers[Math.floor(Math.random() * availablePlayers.length)];
+
+                let spinCount = 0;
+                let spinInterval = setInterval(() => {
+                    let tempPlayer = players[Math.floor(Math.random() * players.length)];
+
+                    randomCard.innerHTML = `
+            <img src="${tempPlayer.img}" class="big-circle-img">
+            <div class="fighter-name">${tempPlayer.name}</div>
+
+        `;
+
+                    spinCount++;
+
+                    if (spinCount >= 25) {
+                        clearInterval(spinInterval);
+
+                        currentPlayer = finalPlayer;
+                        usedChallengers.push(finalPlayer.id);
+
+                        randomCard.innerHTML = `
+                <img src="${finalPlayer.img}" class="big-circle-img">
+                <div class="fighter-name">${finalPlayer.name}</div>
+
+            `;
+
+                        spinning = false;
+                    }
+
+                }, 80);
+            }
+
+            function placePlayer(e) {
+                if (!currentPlayer || spinning || gameOver) return;
+
+                const slot = e.currentTarget;
+
+                if (slot.classList.contains("filled")) return;
+
+                const index = Number(slot.dataset.index);
+                const boardPlayer = boardPlayers[index];
+                const vsBox = document.getElementById(`vs-${index}`);
+
+                slot.classList.remove("empty-slot");
+                slot.classList.add("filled");
+
+                slot.innerHTML = `
+        <img src="${currentPlayer.img}" class="circle-img">
+        <div class="fighter-name">${currentPlayer.name}</div>
+
+    `;
+
+                /*
+                  IMPORTANT:
+                  This assumes rank #1 is better than rank #20.
+                  So LOWER rank number wins.
+                */
+
+                const didWin = currentPlayer.rank < boardPlayer.rank;
+
+                if (didWin) {
+                    score++;
+                    vsBox.classList.add("win");
+                    resultMessage.textContent = `${currentPlayer.name} beat ${boardPlayer.name}!`;
+                } else {
+                    vsBox.classList.add("loss");
+                    resultMessage.textContent = `${currentPlayer.name} lost to ${boardPlayer.name}.`;
+                }
+
+                scoreEl.textContent = score;
+
+                currentPlayer = null;
+                round++;
+
+                if (round > 8) {
+                    gameOver = true;
+                    roundEl.textContent = 8;
+                    startBtn.disabled = true;
+
+                    if (score === 8) {
+                        resultMessage.textContent = "PERFECT SCORE! 8/8!";
+                    } else {
+                        resultMessage.textContent += ` Final Score: ${score}/8`;
+                    }
+
+                    return;
+                }
+
+                roundEl.textContent = round;
+            }
+
+            startBtn.addEventListener("click", drawRandomPlayer);
+
+            initGame();
+        </script>
+
+    </body>
+
+</html>

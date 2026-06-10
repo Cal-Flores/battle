@@ -62,27 +62,96 @@
                 </div>
             </form>
 
-            {% for dual in duals %}
-            <div class="match">
+            {% for row in dual_rows %}
+            {% set dual = row.dual %}
+            {% set home = row.home_team %}
+            {% set away = row.away_team %}
+
+            {# Week separator #}
+            {% if loop.first or dual.week != loop.previtem.dual.week %}
+            <div class="week-separator">
+                <div class="week-label">Week {{ dual.week }}</div>
+            </div>
+            {% endif %}
+
+            <div class="match {% if row.is_conf_game %}conf-game{% endif %}">
+                {# 1: spacer #}
                 <div></div>
-                <div class="match-cell team-away">{{ dual.away }}</div>
-                <div class="match-cell team-away">{{ dual.ascore }}</div>
-                {% if dual.winnerId == dual.away %}
-                <div class="kunaiwin">W</div>
-                {% else %}
-                <div></div>
-                {% endif %}
-                <div class="match-cell vs"><a href="/duals/{{ dual.id }}">vs</a></div>
-                {% if dual.winnerId == dual.home %}
-                <div class="kunaiwin">W</div>
-                {% else %}
-                <div></div>
-                {% endif %}
-                <div class="match-cell team-home">{{ dual.hscore }} </div>
-                <div class="match-cell team-home">{{ dual.home }}</div>
+
+                {# 2: AWAY TEAM cell #}
+                <div
+                    class="match-cell team-away {% if dual.ascore > dual.hscore %}team-win{% elif dual.hscore > dual.ascore %}team-loss{% endif %}">
+                    {% if away %}
+                    {% if away.logo %}
+                    <img src="{{ away.logo }}" alt="{{ away.name }} logo" class="team-logo-small">
+                    {% endif %}
+                    <span class="team-rank">({{ away.rank }})</span>
+                    <span class="team-name-inline">{{ away.name }}</span>
+                    <span class="team-record-inline">({{ away.wins }}-{{ away.loss }})</span>
+
+                    {% if row.away_streak >= 2 %}
+                    <span class="streak-badge">🔥{{ row.away_streak }}</span>
+                    {% endif %}
+                    {% else %}
+                    {{ dual.away }}
+                    {% endif %}
+                </div>
+
+                {# 3: Away score #}
+                <div class="match-cell">
+                    {{ dual.ascore }}
+                </div>
+
+                {# 4: Away W flag #}
+                <div class="match-cell">
+                    {% if dual.ascore > dual.hscore %}
+                    {% endif %}
+                </div>
+
+                {# 5: VS link #}
+                <div class="match-cell vs">
+                    <a href="/duals/{{ dual.id }}">vs</a>
+                </div>
+
+                {# 6: Home W flag #}
+                <div class="match-cell">
+                    {% if dual.hscore > dual.ascore %}
+                    {% endif %}
+                </div>
+
+                {# 7: Home score #}
+                <div class="match-cell">
+                    {{ dual.hscore }}
+                </div>
+
+                {# 8: HOME TEAM cell #}
+                <div
+                    class="match-cell team-home {% if dual.hscore > dual.ascore %}team-win{% elif dual.ascore > dual.hscore %}team-loss{% endif %}">
+                    {% if home %}
+                    {% if home.logo %}
+                    <img src="{{ home.logo }}" alt="{{ home.name }} logo" class="team-logo-small">
+                    {% endif %}
+                    <span class="team-name-inline">{{ home.name }}</span>
+                    <span class="team-record-inline">({{ home.wins }}-{{ home.loss }})</span>
+                    <span class="team-rank">({{ home.rank }})</span>
+
+                    {% if row.home_streak >= 2 %}
+                    <span class="streak-badge">🔥{{ row.home_streak }}</span>
+                    {% endif %}
+                    {% else %}
+                    {{ dual.home }}
+                    {% endif %}
+                </div>
+
+                {# 9: Week column #}
                 <div class="match-cell week">| {{ dual.week }}</div>
             </div>
+
             {% endfor %}
+
+
+
+
         </div>
 
         <script>

@@ -15,6 +15,7 @@
 
     <body id="hist">
         {% include 'nav.html' %}
+        {% if teamz %}
         <div class="historycont">
             <a href="player/{{player_1.id}}" class="histcard">
                 <img class="eimg" src="{{player_1.img}}">
@@ -22,7 +23,7 @@
                 <div class="editwl">
                     <p class="win">Victories: <span class="number">{{player_1.wins}}</span></p>
                     <p class="loss">Defeats: <span class="number">{{player_1.loss}}</span></p>
-                    <p class="points">Points: <span class="number">{{player_1.tour_points}}</span></p>
+                    <p class="points">Rank: <span class="number">{{player_1.rank}}</span></p>
                 </div>
             </a>
             <div>
@@ -34,7 +35,7 @@
                 <div class="editwl">
                     <p class="win">Victories: <span class="number">{{player_2.wins}}</span></p>
                     <p class="loss">Defeats: <span class="number">{{player_2.loss}}</span></p>
-                    <p class="points">Points: <span class="number">{{player_2.tour_points}}</span></p>
+                    <p class="points">Rank: <span class="number">{{player_2.rank}}</span></p>
                 </div>
             </a>
         </div>
@@ -72,6 +73,52 @@
         </div>
         {% endif %}
         {% endfor %}
+        {% else %}
+        <div class="historycont">
+            <a href="team/{{team_1.id}}" class="histcard">
+                <img class="eimg" src="{{team_1.logo}}">
+                <div class="histtxt">{{team_1.name}} ({{team_1.rank}})</div>
+                <div class="editwl">
+                    <p class="win">Victories: <span class="number">{{team_1_wins}}</span></p>
+                    <p class="loss">Defeats: <span class="number">{{team_2_wins}}</span></p>
+                    <p class="points">Points: <span class="number">{{team_1.tour_points}}</span></p>
+                </div>
+            </a>
+            <div>
+                <h1>VS</h1>
+            </div>
+            <a href="team/{{team_2.id}}" class="histcard">
+                <img class="eimg" src="{{team_2.logo}}">
+                <div class="histtxt">{{team_2.name}} ({{team_2.rank}})</div>
+                <div class="editwl">
+                    <p class="win">Victories: <span class="number">{{team_2_wins}}</span></p>
+                    <p class="loss">Defeats: <span class="number">{{team_1_wins}}</span></p>
+                    <p class="points">Points: <span class="number">{{team_2.tour_points}}</span></p>
+                </div>
+            </a>
+        </div>
+        {% for rec in common_opp %}
+        {% if rec.rec.victory == True %}
+        <div class="histlist">
+            <div class="listcont">
+                <img id="oppimage" src="{{rec.player_1.logo}}">
+                <img id="oppimage" src="{{rec.player_1.img}}">
+                <div class="histnum">{{rec.player_1.name}}</div>
+                <div class="histnum">DEF </div>
+                <img id="oppimage" src="{{rec.player_2.img}}">
+                <div class="histnum">{{rec.player_2.name}}</div>
+                <div class="histnum">{{rec.rec.score}}</div>
+                <div class="histnum">{{rec.rec.round}}</div>
+                <div class="histnum"> {{rec.rec.tour_name}}</div>
+            </div>
+
+        </div>
+        {% endif %}
+        {% endfor %}
+
+
+        {% endif %}
+
 
     </body>
 

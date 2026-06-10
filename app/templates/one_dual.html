@@ -22,12 +22,14 @@
     <body id="oneDual">
         {%include 'nav.html'%}
         <h2 class="dual-title">{{ away.name }} @ {{ home.name }} DUAL</h2>
+        <a class="edrecord" href="/finalize/{{dual.id}}">Finalize</a>
 
         <div class="dual-header-v2">
             <a href="../teams/{{away.id}}">
                 <div class="team-block">
                     <img class="team-logo" src="{{ away.logo }}">
-                    <div class="team-name">{{ dual.away }} ({{away.wins}} - {{away.loss}})</div>
+                    <div class="team-name">({{away.rank}}) {{ dual.away }}</div>
+                    <div>({{away.wins}} - {{away.loss}})</div>
                     <div class="team-score2">{{ away_score }}</div>
                 </div>
             </a>
@@ -39,7 +41,8 @@
             <a href="../teams/{{home.id}}">
                 <div class="team-block">
                     <img class="team-logo" src="{{ home.logo }}">
-                    <div class="team-name">{{ dual.home }} ({{home.wins}} - {{home.loss}})</div>
+                    <div class="team-name">({{home.rank}}) {{ dual.home }}</div>
+                    <div>({{home.wins}} - {{home.loss}})</div>
                     <div class="team-score2">{{ home_score }}</div>
                 </div>
             </a>
@@ -50,18 +53,34 @@
             <div class="dual-results">
                 {% for rec in players %}
                 <div class="match-row">
-                    <div class="fighter-side">
+                    {# Winner side #}
+                    <div class="fighter-side
+                        {% if (loop.index is odd and rec.winner.logo == away.logo)
+                              or (loop.index is even and rec.winner.logo == home.logo) %}
+                            dark-border
+                        {% endif %}
+                    ">
                         <img class="logo" src="{{ rec.winner.logo }}">
                         <img class="fighter-img" src="{{ rec.winner.img }}">
-                        <div class="fighter-name"><a href="../player/{{rec.winner.id}}">{{ rec.winner.name }}</a></div>
+                        <div class="fighter-name">
+                            <a href="../player/{{rec.winner.id}}">{{ rec.winner.name }}</a>
+                        </div>
                     </div>
 
                     <div class="versus-text">DEF</div>
 
-                    <div class="fighter-side">
+                    {# Loser side #}
+                    <div class="fighter-side
+                        {% if (loop.index is odd and rec.loser.logo == away.logo)
+                              or (loop.index is even and rec.loser.logo == home.logo) %}
+                            dark-border
+                        {% endif %}
+                    ">
                         <div></div>
                         <img class="fighter-img" src="{{ rec.loser.img }}">
-                        <div class="fighter-name"><a href="../player/{{rec.loser.id}}">{{ rec.loser.name }}</a></div>
+                        <div class="fighter-name">
+                            <a href="../player/{{rec.loser.id}}">{{ rec.loser.name }}</a>
+                        </div>
                     </div>
 
                     <div class="score">{{ rec.score }}</div>
@@ -70,13 +89,18 @@
                     <div class="team-points">
                         <div class="team-score">
                             <img class="logo small" src="{{ away.logo }}">
-                            <p>{{ rec.apts }}</p>
+                            <p class="{% if loop.index is odd %}first-sent{% endif %}">
+                                {{ rec.apts }}
+                            </p>
                         </div>
                         <div class="team-score">
                             <img class="logo small" src="{{ home.logo }}">
-                            <p>{{ rec.hpts }}</p>
+                            <p class="{% if loop.index is even %}first-sent{% endif %}">
+                                {{ rec.hpts }}
+                            </p>
                         </div>
                     </div>
+
                 </div>
                 {% endfor %}
             </div>
