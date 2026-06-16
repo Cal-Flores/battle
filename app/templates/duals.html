@@ -18,6 +18,19 @@
 
     <body id="dual">
         {% include 'nav.html' %}
+        <form method="GET" action="/duals" class="filter-form">
+            <select name="season" onchange="this.form.submit()">
+                <option value="all" {% if selected_season=='all' %}selected{% endif %}>
+                    All Time
+                </option>
+
+                {% for season in seasons %}
+                <option value="{{ season.id }}" {% if selected_season==season.id|string %}selected{% endif %}>
+                    {{ season.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </form>
         <div class="schedule-container">
             <div class="schedule-header">
                 <h1>ACCL Combat Duals</h1>
@@ -66,6 +79,8 @@
             {% set dual = row.dual %}
             {% set home = row.home_team %}
             {% set away = row.away_team %}
+            {% set home_stats = row.home_stats %}
+            {% set away_stats = row.away_stats %}
 
             {# Week separator #}
             {% if loop.first or dual.week != loop.previtem.dual.week %}

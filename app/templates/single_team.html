@@ -18,29 +18,65 @@
         {%include 'nav.html'%}
         <div id="teamcont">
             <h2>TEAM STANDINGS</h2>
+            <form method="GET" action="/team_rec/{{ team.id }}" class="filter-form">
+                <select name="season" onchange="this.form.submit()">
+                    <option value="all" {% if selected_season=='all' %}selected{% endif %}>
+                        All Time
+                    </option>
+
+                    {% for season in seasons %}
+                    <option value="{{ season.id }}" {% if selected_season==season.id|string %}selected{% endif %}>
+                        {{ season.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
             <div id="tdivfor">
-                {% for player in players %}
-                <a href="../player/{{player.id}}" class="card">
+                {% for row in players %}
+
+                {% if selected_season == 'all' %}
+                {% set player = row %}
+                {% set stats = row %}
+                {% set position = player.position %}
+                {% else %}
+                {% set player = row.player %}
+                {% set stats = row.stats %}
+                {% set position = row.position %}
+                {% endif %}
+                <a href="../player/{{ player.id }}" class="card">
                     <div class="wlcont">
                         <div class="namecard">
-                            <img id="obito" src="{{player.img}}">
-                            <div class="nametxt"><span style="color: rgb(180, 180, 180);">#{{player.rank}}</span>
-                                {{player.name}}
+                            <img id="obito" src="{{ player.img }}">
+
+                            <div class="nametxt">
+                                <span style="color: rgb(180, 180, 180);">#{{ stats.rank if stats else 0 }}</span>
+                                {{ player.name }}
+
+                                {% if position %}
+                                <span style="color: orange; font-size: 12px;">{{ position }}</span>
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="maincard">
 
+                        <div class="maincard">
                             <div class="anchortag">
                                 <div class="wlcontt">
-                                    <p class="win">Victories: <span class="number">{{player.wins}}</span></p>
-                                    <p class="loss">Defeats: <span class="number">{{player.loss}}</span></p>
+                                    <p class="win">Victories: <span
+                                            class="number">{{ stats.wins if stats else 0 }}</span></p>
+                                    <p class="loss">Defeats: <span
+                                            class="number">{{ stats.loss if stats else 0 }}</span></p>
                                 </div>
-                                <div class="medalcont">
-                                    <p class="loss" style="color: whitesmoke;">{{player.tour_points}} <span
-                                            style="color: orange;" class="number">Tour</span></p>
-                                    <p class="loss" style="color: whitesmoke;">{{player.dual_points}} <span
-                                            style="color: rgb(2, 160, 18);" class="number">Dual</span></p>
 
+                                <div class="medalcont">
+                                    <p class="loss" style="color: whitesmoke;">
+                                        {{ stats.tour_points if stats else 0 }}
+                                        <span style="color: orange;" class="number">Tour</span>
+                                    </p>
+
+                                    <p class="loss" style="color: whitesmoke;">
+                                        {{ stats.dual_points if stats else 0 }}
+                                        <span style="color: rgb(2, 160, 18);" class="number">Dual</span>
+                                    </p>
                                 </div>
                             </div>
                         </div>

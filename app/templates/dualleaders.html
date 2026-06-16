@@ -30,19 +30,55 @@
 
     <body id="dlead">
         {%include 'nav.html'%}
+        <form style="margin-top: 100px;" method="GET" action="/dualLeaders" class="filter-form">
+            <select name="season" onchange="this.form.submit()">
+                <option value="all" {% if selected_season=='all' %}selected{% endif %}>All Time</option>
+
+                {% for season in seasons %}
+                <option value="{{ season.id }}" {% if selected_season==season.id|string %}selected{% endif %}>
+                    {{ season.name }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <select name="position" onchange="this.form.submit()">
+                <option value="all" {% if selected_position=='all' %}selected{% endif %}>All Positions</option>
+                <option value="guards" {% if selected_position=='guards' %}selected{% endif %}>Guards / Centers</option>
+                <option value="vanguard" {% if selected_position=='vanguard' %}selected{% endif %}>Vanguard</option>
+                <option value="defender" {% if selected_position=='defender' %}selected{% endif %}>Defender</option>
+                <option value="captain" {% if selected_position=='captain' %}selected{% endif %}>Captain</option>
+            </select>
+        </form>
         <ol type="1" class="leadercont">
-            {% for player in players%}
+            {% for row in players %}
+            {% set player = row.player %}
+            {% set stats = row.stats %}
+            {% set position = row.position %}
+
             <div class="leadercard2">
                 <li class="place"></li>
+
                 <div class="namecard">
-                    <img id="obito" src="{{player.img}}">
+                    <img id="obito" src="{{ player.img }}">
                 </div>
-                <a href="player/{{player.id}}" class="win">Victories: <span class="number">{{player.d_wins}}</span></a>
-                <p class="loss">Defeats: <span class="number">{{player.d_loss}}</span></p>
-                <p class="number">{{player.dual_points}} pts</p>
-                <img id="leaderlogo" src="{{player.logo}}">
+
+                <a href="player/{{ player.id }}" class="win">
+                    Victories: <span class="number">{{ stats.d_wins }}</span>
+                </a>
+
+                <p class="loss">
+                    Defeats: <span class="number">{{ stats.d_loss }}</span>
+                </p>
+
+                <p class="number">{{ stats.dual_points }} pts</p>
+
+                {% if position %}
+                <p class="number" style="color: orange;">{{ position }}</p>
+                {% endif %}
+
+                <img id="leaderlogo" src="{{ player.logo }}">
             </div>
-            {% endfor%}
+            {% endfor %}
         </ol>
     </body>
 

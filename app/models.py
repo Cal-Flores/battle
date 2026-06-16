@@ -29,6 +29,8 @@ class Player(db.Model):
     rank = db.Column(db.Integer, default=0)  # <-- New column
     pos_rank = db.Column(db.Integer, default=0)
     bonus = db.Column(db.Integer, default=0)  # <-- New column
+    active = db.Column(db.Boolean, default=True)
+
 
 
 # add new column to the model: ex: tour_points = db.Column(db.Integer, default=0)  # <-- New column
@@ -160,6 +162,7 @@ class RankHistory(db.Model):
     score = db.Column(db.Integer)
     total = db.Column(db.Integer)
     rank = db.Column(db.Integer, default=0)
+    season_id = db.Column(db.Integer, default=1)
 
 class TeamRank(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -242,9 +245,31 @@ class TeamRosterSeason(db.Model):
     player_id = db.Column(db.Integer, nullable=False)
     team_id = db.Column(db.Integer, nullable=False)
     season_id = db.Column(db.Integer, nullable=False)
-    position = db.Column(db.String, nullable=False)
+    position = db.Column(db.String)
 
     team_name = db.Column(db.String(255))
+
+class PositionRankHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    week = db.Column(db.Integer)
+    player_id = db.Column(db.Integer)
+    season_id = db.Column(db.Integer)
+
+    position = db.Column(db.String)
+
+    points = db.Column(db.Integer)
+    rank = db.Column(db.Integer)
+
+class PositionSeasonFinish(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    player_id = db.Column(db.Integer)
+    season_id = db.Column(db.Integer)
+
+    position = db.Column(db.String)
+
+    final_rank = db.Column(db.Integer)
 
 # flask db migrate -m "Updated Battle model"
 # flask db upgrade

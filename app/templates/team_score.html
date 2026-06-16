@@ -16,8 +16,23 @@
 
     <body id="teamboard">
         {% include 'nav.html' %}
-        ]<div id="teamcont">
+        <div id="teamcont">
             <h2>{{ tour.name }} - Team Scores</h2>
+            <a href="/tournamentpage/{{tour.id}}" style="
+                  display:inline-block;
+                  padding:8px 14px;
+                  background:#161a21;
+                  color:white;
+                  border:1px solid #a97608;
+                  border-radius:6px;
+                  text-decoration:none;
+                  font-size:12px;
+                  font-weight:600;
+                  margin-top:5px;
+                  margin-left: 45%;
+               ">
+                Advanced Stats
+            </a>
             {% for score in scores %}
             <div class="oneteamsc">
                 <span class="rank">{{ loop.index }}.</span>

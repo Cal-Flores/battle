@@ -40,11 +40,23 @@
             <p>In-depth player performance and rival analysis</p>
         </header>
         <main id="asmain">
+            <form method="GET" action="/playerStat/{{ player.id }}" class="filter-form">
+                <select name="season" onchange="this.form.submit()">
+                    <option value="all" {% if selected_season=='all' %}selected{% endif %}>All Time</option>
+                    <option value="1" {% if selected_season=='1' %}selected{% endif %}>Season 1</option>
+                    <option value="2" {% if selected_season=='2' %}selected{% endif %}>Season 2</option>
+                </select>
+            </form>
             <div>
                 <canvas id="chart"></canvas>
                 <div id="myDiv" data-values='{{ rank | tojson | safe }}'></div>
                 <div id="myHist" data-values='{{ history | tojson | safe }}'></div>
                 <div id="myColor" data-color="{{ color }}"></div>
+            </div>
+            <div>
+                <canvas id="positionChart"></canvas>
+                <div id="positionWeeks" data-values='{{ position_weeks | tojson | safe }}'></div>
+                <div id="positionRanks" data-values='{{ position_ranks | tojson | safe }}'></div>
             </div>
             <div id="aspiecont">
                 <div id="ascard">
@@ -59,10 +71,17 @@
                     <p class="card-team">{{ player.team }}</p>
 
                     <div class="card-stats">
-                        <div><strong>Wins:</strong> {{ player.wins }}</div>
-                        <div><strong>Losses:</strong> {{ player.loss }}</div>
-                        <div><strong>Points:</strong> {{ player.points }}</div>
-                        <div><strong>Tour Pts:</strong> {{ player.tour_points }}</div>
+                        <div class="season-record-breakdown">
+                            <h3>Season Records</h3>
+
+                            {% for rec in season_records %}
+                            <div>
+                                <strong>Season {{ rec.season }}:</strong>
+                                {{ rec.wins }} - {{ rec.losses }}
+                            </div>
+                            {% endfor %}
+                            <div><strong>Points:</strong> {{ player.tour_points }}</div>
+                        </div>
                     </div>
 
                     <div class="card-medals">
@@ -535,8 +554,69 @@
                 const baseColor = $('.adv-header').data('color') || '#f8e0e6';
                 $('.adv-header').css('background', `linear-gradient(to right, #fdf5e6, ${baseColor})`);
             });
-        </script>
 
+
+            const rawPositionWeeks = $('#positionWeeks').attr('data-values');
+            const rawPositionRanks = $('#positionRanks').attr('data-values');
+
+            const parsedPositionWeeks = JSON.parse(rawPositionWeeks);
+            const parsedPositionRanks = JSON.parse(rawPositionRanks);
+
+            const positionCtx = document.getElementById('positionChart').getContext('2d');
+
+            new Chart(positionCtx, {
+                type: 'line',
+                data: {
+                    labels: parsedPositionWeeks,
+                    datasets: [{
+                        label: 'Position Rank',
+                        data: parsedPositionRanks,
+                        borderColor: color,
+                        fill: false,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    plugins: {
+                        datalabels: {
+                            display: true,
+                            align: 'top',
+                            color: 'white',
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            borderRadius: 5,
+                            padding: 6,
+                            formatter: (value) => value
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 1,
+                            reverse: true,
+                            ticks: {
+                                color: 'white',
+                                stepSize: 5
+                            },
+                            title: {
+                                display: true,
+                                text: 'Position Rank',
+                                color: 'white'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'white'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Week',
+                                color: 'white'
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
     </body>
 
 </html>

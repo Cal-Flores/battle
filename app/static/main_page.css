@@ -125,7 +125,8 @@
 
 #newbattle {
     /* background-image: url("images/bg-2.jpeg"); */
-    background: url('https://i.redd.it/ij89pisoiyc61.png') no-repeat center center fixed;
+    /* background: url('https://i.redd.it/ij89pisoiyc61.png') no-repeat center center fixed; */
+    background: url('https://preview.redd.it/i-made-a-new-wallpaper-for-myself-and-thought-id-leave-it-v0-1a0syfwj6yxy.jpg?width=640&crop=smart&auto=webp&s=5771b8311910773d5f2eb708e25048f751fcb480') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -478,7 +479,7 @@ span {
     margin-right: 10%;
     align-items: center;
     justify-content: flex-start;
-    margin-top: 200px;
+    margin-top: 20px;
 }
 
 .tourdiv {
@@ -523,7 +524,8 @@ span {
     margin-left: 7%;
     margin-right: 10%;
     width: 80%;
-    margin-top: 200px;
+    margin-bottom: 20px;
+    margin-top: 30px;
 }
 
 .leadercard {
@@ -3229,4 +3231,87 @@ h2 {
 .running-record {
     text-align: right;
     font-size: 16px;
+}
+
+/* global dropdown styling */
+/* ---------- Global Dropdown Styling ---------- */
+
+.filter-form {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.filter-form select,
+select {
+    background: linear-gradient(180deg, #2e2e2e, #1f1f1f);
+    color: white;
+    border: 2px solid #444;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, .35),
+        inset 0 1px 1px rgba(255, 255, 255, .05);
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    min-width: 180px;
+    text-align: center;
+}
+
+/* Hover */
+
+.filter-form select:hover,
+select:hover {
+    border-color: #ff7a00;
+    box-shadow:
+        0 0 10px rgba(255, 122, 0, .4),
+        0 2px 8px rgba(0, 0, 0, .4);
+    transform: translateY(-1px);
+}
+
+/* Focus */
+
+.filter-form select:focus,
+select:focus {
+    outline: none;
+    border-color: #ff7a00;
+    box-shadow:
+        0 0 15px rgba(255, 122, 0, .6);
+}
+
+/* Dropdown menu */
+
+.filter-form select option,
+select option {
+    background: #242424;
+    color: white;
+}
+
+/* Optional glow animation */
+
+@keyframes subtleGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 122, 0, .15);
+    }
+
+    50% {
+        box-shadow: 0 0 12px rgba(255, 122, 0, .3);
+    }
+
+    100% {
+        box-shadow: 0 0 5px rgba(255, 122, 0, .15);
+    }
+}
+
+.filter-form select.active-filter {
+    animation: subtleGlow 2.5s infinite;
 }

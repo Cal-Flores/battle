@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ tour.name }} - Advanced Stats</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body>
+
+        <style>
+            body {
+                margin: 0;
+                background-image: url('https://wallpapers-clan.com/wp-content/uploads/2025/02/demon-slayer-tanjiro-kamado-pixel-desktop-wallpaper-preview.jpg');
+                color: #f8efe4;
+                font-family: Arial, sans-serif;
+            }
+
+            .container {
+                width: 92%;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 35px 0;
+                margin-top: 30px;
+            }
+
+            h1,
+            h2,
+            h3 {
+                font-family: 'Ninja Naruto', Arial, sans-serif;
+                letter-spacing: 2px;
+            }
+
+            .page-title {
+                text-align: center;
+                font-size: 42px;
+                color: #f7c873;
+                text-shadow: 0 0 12px #b91c1c;
+                margin-bottom: 30px;
+            }
+
+            .hero {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 35px;
+            }
+
+            .champion-card,
+            .story-card,
+            .section {
+                background: rgba(18, 18, 24, .88);
+                border: 1px solid rgba(247, 200, 115, .35);
+                border-radius: 18px;
+                box-shadow: 0 0 25px rgba(185, 28, 28, .35);
+            }
+
+            .champion-card {
+                text-align: center;
+                padding: 28px;
+                width: 360px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .champion-img {
+                width: 170px;
+                height: 170px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 4px solid #f7c873;
+                box-shadow: 0 0 22px #7e22ce;
+            }
+
+            .badge {
+                display: inline-block;
+                margin-top: 8px;
+                padding: 6px 14px;
+                border-radius: 999px;
+                background: #7f1d1d;
+                color: #fff7d6;
+                border: 1px solid #f7c873;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
+            .story-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 18px;
+                margin-bottom: 30px;
+            }
+
+            .story-card {
+                padding: 22px;
+                text-align: center;
+                min-height: 280px;
+            }
+
+            .fight-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin: 18px 0;
+            }
+
+            .fighter-box {
+                width: 42%;
+            }
+
+            .fighter-box img {
+                width: 95px;
+                height: 95px;
+                object-fit: cover;
+                border-radius: 14px;
+                border: 2px solid #f7c873;
+                box-shadow: 0 0 12px rgba(126, 34, 206, .8);
+            }
+
+            .vs {
+                color: #ef4444;
+                font-size: 18px;
+                text-shadow: 0 0 10px #ef4444;
+            }
+
+            .score-big {
+                font-size: 38px;
+                color: #f7c873;
+                margin: 8px 0;
+                text-shadow: 0 0 12px #b91c1c;
+            }
+
+            .section {
+                padding: 22px;
+                margin-bottom: 30px;
+            }
+
+            .fight-card {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                background: rgba(255, 255, 255, .05);
+                border: 1px solid rgba(247, 200, 115, .22);
+                border-radius: 12px;
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+
+            .fight-card img {
+                width: 48px;
+                height: 48px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 2px solid #7e22ce;
+            }
+
+            .fight-score {
+                margin-left: auto;
+                color: #f7c873;
+                font-weight: bold;
+            }
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                overflow: hidden;
+                border-radius: 14px;
+            }
+
+            .table th {
+                background: #3b0a12;
+                color: #f7c873;
+                padding: 12px;
+                text-align: left;
+            }
+
+            .table td {
+                padding: 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, .08);
+            }
+
+            .table tr:hover {
+                background: rgba(126, 34, 206, .18);
+            }
+
+            .standings-img {
+                width: 46px;
+                height: 46px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 2px solid #f7c873;
+                vertical-align: middle;
+                margin-right: 8px;
+            }
+
+            @media (max-width: 900px) {
+                .story-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .fight-card {
+                    flex-wrap: wrap;
+                }
+
+                .fight-score {
+                    margin-left: 0;
+                }
+            }
+
+            .collapse-box {
+                margin-bottom: 25px;
+            }
+
+            .collapse-box summary {
+                cursor: pointer;
+                list-style: none;
+                font-family: 'Ninja Naruto', Arial, sans-serif;
+                font-size: 24px;
+                color: #f7c873;
+                text-shadow: 0 0 10px #b91c1c;
+                padding: 5px;
+            }
+
+            .collapse-box summary::-webkit-details-marker {
+                display: none;
+            }
+
+            .collapse-box summary::after {
+                content: " ▼";
+                float: right;
+                color: #ef4444;
+                transition: .2s;
+            }
+
+            .collapse-box[open] summary::after {
+                content: " ▲";
+            }
+
+            .collapse-box table,
+            .collapse-box .fight-card {
+                margin-top: 15px;
+            }
+        </style>
+        {% include 'nav.html' %}
+        <div class="container">
+
+            <h1 class="page-title">{{ tour.name }}</h1>
+
+            <div class="hero">
+                {% if champion %}
+                <div class="champion-card">
+                    <h2>Tournament Champion</h2>
+                    <img src="{{ champion.player.img }}" class="champion-img">
+                    <h3>{{ champion.player.name }}</h3>
+                    <p>{{ champion.points }} Points</p>
+                    <p>{{ champion.wins }}-{{ champion.losses }}</p>
+                    <span class="badge">CHAMPION</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="story-grid">
+
+                {% if biggest_upset %}
+                <div class="story-card">
+                    <h3>🔥 Biggest Upset</h3>
+
+                    <div class="fight-row">
+                        <div class="fighter-box">
+                            <img src="{{ biggest_upset.winner.img }}">
+                            <p>{{ biggest_upset.winner.name }}</p>
+                            <small>Rank {{ biggest_upset.winner_rank }}</small>
+                        </div>
+
+                        <strong class="vs">DEF</strong>
+
+                        <div class="fighter-box">
+                            <img src="{{ biggest_upset.loser.img }}">
+                            <p>{{ biggest_upset.loser.name }}</p>
+                            <small>Rank {{ biggest_upset.loser_rank }}</small>
+                        </div>
+                    </div>
+
+                    <p>Gap: {{ biggest_upset.rank_gap }}</p>
+                    <p>Score: {{ biggest_upset.score }}</p>
+                    <p>{{ biggest_upset.round }}</p>
+                </div>
+                {% endif %}
+
+                {% if biggest_win %}
+                <div class="story-card">
+                    <h3>💥 Biggest Win</h3>
+
+                    <div class="fight-row">
+                        <div class="fighter-box">
+                            <img src="{{ biggest_win.winner.img }}">
+                            <p>{{ biggest_win.winner.name }}</p>
+                        </div>
+
+                        <strong class="vs">DEF</strong>
+
+                        <div class="fighter-box">
+                            <img src="{{ biggest_win.loser.img }}">
+                            <p>{{ biggest_win.loser.name }}</p>
+                        </div>
+                    </div>
+
+                    <h1 class="score-big">{{ biggest_win.score }}</h1>
+                    <small>{{ biggest_win.round }}</small>
+                </div>
+                {% endif %}
+
+                {% if closest_win %}
+                <div class="story-card">
+                    <h3>😱 Closest Win</h3>
+
+                    <div class="fight-row">
+                        <div class="fighter-box">
+                            <img src="{{ closest_win.winner.img }}">
+                            <p>{{ closest_win.winner.name }}</p>
+                        </div>
+
+                        <strong class="vs">DEF</strong>
+
+                        <div class="fighter-box">
+                            <img src="{{ closest_win.loser.img }}">
+                            <p>{{ closest_win.loser.name }}</p>
+                        </div>
+                    </div>
+
+                    <h1 class="score-big">{{ closest_win.score }}</h1>
+                    <small>{{ closest_win.round }}</small>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <details class="section collapse-box">
+                <summary>Overtime Fights</summary>
+
+                {% if overtime_fights %}
+
+                {% for fight in overtime_fights %}
+                <div class="fight-card">
+
+                    <img src="{{ fight.winner.img }}">
+
+                    <strong>{{ fight.winner.name }}</strong>
+
+                    <span>defeated</span>
+
+                    <img src="{{ fight.loser.img }}">
+
+                    <strong>{{ fight.loser.name }}</strong>
+
+                    <span>{{ fight.round }}</span>
+
+                    <span class="fight-score">
+                        Score: {{ fight.score }}
+                    </span>
+
+                </div>
+                {% endfor %}
+
+                {% else %}
+
+                <p>No overtime matches.</p>
+
+                {% endif %}
+
+            </details>
+
+            <details class="section collapse-box">
+                <summary>Tournament Standings</summary>
+
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Fighter</th>
+                            <th>Points</th>
+                            <th>Record</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for row in fighter_standings %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+                                <img src="{{ row.player.img }}" class="standings-img">
+
+                                {{ row.player.name }}
+                            </td>
+
+                            <td>{{ row.points }}</td>
+
+                            <td>
+                                {{ row.wins }}-{{ row.losses }}
+                            </td>
+
+                            <td>
+                                {{ row.status }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </details>
+
+        </div>
+
+    </body>
+
+</html>

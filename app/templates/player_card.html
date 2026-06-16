@@ -290,6 +290,22 @@
                     class="oppbtn">Statistics</a>
                 <button onclick="showMed()" class="oppbtn">View Medals</button>
             </div>
+            <form method="GET" action="/player/{{ player.id }}" class="pcfilterform">
+
+                <select name="season" onchange="this.form.submit()">
+                    <option value="all" {% if selected_season=='all' %}selected{% endif %}>All Time</option>
+                    <option value="1" {% if selected_season=='1' %}selected{% endif %}>Season 1</option>
+                    <option value="2" {% if selected_season=='2' %}selected{% endif %}>Season 2</option>
+                </select>
+
+                <select name="fight_type" onchange="this.form.submit()">
+                    <option value="all" {% if selected_type=='all' %}selected{% endif %}>All Fights</option>
+                    <option value="tournament" {% if selected_type=='tournament' %}selected{% endif %}>Tournament Fights
+                    </option>
+                    <option value="dual" {% if selected_type=='dual' %}selected{% endif %}>Dual Fights</option>
+                </select>
+
+            </form>
 
             <div id="oppcont">
 

@@ -16,6 +16,19 @@
 
     <body id="tourn-body">
         {% include 'nav.html' %}
+        <form style="margin-top: 150px;" method="GET" action="/tournaments" class="filter-form">
+            <select name="season" onchange="this.form.submit()">
+                <option value="all" {% if selected_season=='all' %}selected{% endif %}>
+                    All Time
+                </option>
+
+                {% for season in seasons %}
+                <option value="{{ season.id }}" {% if selected_season==season.id|string %}selected{% endif %}>
+                    {{ season.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </form>
         <div class="tourcont">
             {% for tour in tournaments %}
             <div class="tourdiv">
