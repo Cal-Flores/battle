@@ -7,11 +7,12 @@ from sqlalchemy import desc
 from datetime import datetime
 from collections import Counter
 import random
-
+from datetime import datetime
+import random
 
 from flask_migrate import Migrate
 from flask import request
-from app.models import db, Player, Tour, Result, Opponent, Battle, Dual, Team, Tour,  TourTeam, RankHistory, TeamRank, TourScore, TeamRankHistory, PlayerOfDay, PositionRankHistory, PlayerSeasonStats, Season, TeamSeasonStats, TeamRosterSeason
+from app.models import db, Player, Tour, Result, Opponent, Battle, Dual, Team, Tour,  TourTeam, RankHistory, TeamRank, TourScore, TeamRankHistory, PlayerOfDay, PositionRankHistory, PlayerSeasonStats, Season, TeamSeasonStats, TeamRosterSeason, TournamentPlacement,TournamentTeamScore
 
 
 app = Flask(__name__)
@@ -38,24 +39,63 @@ colorado = 'https://www.sdstate.edu/sites/default/files/2024-05/Jackrabbit-5%402
 asu = 'https://logos-world.net/wp-content/uploads/2022/11/Arizona-State-Sun-Devils-Logo.png'
 unc = 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f9/Northern_Colorado_Bears_logo.svg/250px-Northern_Colorado_Bears_logo.svg.png'
 rtc = 'https://sportslogohistory.com/wp-content/uploads/2022/05/north_carolina_state_wolfpack_2011-pres_a.png'
+
+
 @app.route('/')
 def index():
-    # player1 = Player(name='',team='RTC',logo=rtc, wins=0, loss=0, points=0, img='', gold=0,silver=0,bronze=0,medal=0,badge=0, tour_points=0,rank=0,dual_points=0,d_wins=0,d_loss=0)
     players = Player.query.filter_by(active=True).order_by(Player.name.asc()).all()
-
-
-    # player1 = Player.query.get()
-    # player1.img = ''
-
     db.session.commit()
     return render_template('main_page.html', players = players)
 
 
-from datetime import datetime
-import random
 
-from datetime import datetime
-import random
+
+@app.route('/index')
+def pictures():
+    player = Player.query.get(4)
+    player.img = 'https://i.pinimg.com/1200x/13/a9/2c/13a92c4d018b3e6d9c28c88c222c992f.jpg'
+    db.session.commit()
+    month_order = {
+        "January": 1,
+        "February": 2,
+        "March": 3,
+        "April": 4,
+        "May": 5,
+        "June": 6,
+        "July": 7,
+        "August": 8,
+        "September": 9,
+        "October": 10,
+        "November": 11,
+        "December": 12
+    }
+
+    players = Player.query.filter_by(active=True).all()
+
+    def birthday_sort(player):
+
+        if not player.birthday or player.birthday == "Unknown":
+            return (999, 999)
+
+        try:
+            month, day = player.birthday.split(" ")
+            return (
+                month_order.get(month, 999),
+                int(day)
+            )
+        except:
+            return (999, 999)
+
+    players.sort(key=birthday_sort)
+
+    return render_template(
+        'index.html',
+        players=players
+    )
+
+
+
+
 
 @app.route('/dashboard')
 def dashboard():
@@ -457,22 +497,18 @@ def one_duals(id):
 @app.route('/tournamentpage/<int:id>')
 def tournamentpage(id):
 
-    tour = TourScore.query.get_or_404(id)
+    tour = Tour.query.get_or_404(id)
 
-    # Build player lookup
     players = Player.query.all()
     player_map = {p.id: p for p in players}
 
-    # All tournament fights
     fights = Opponent.query.filter_by(
-    tour_name=tour.name
+        tour_name=tour.name
     ).all()
 
-    # Winner-side only so fights don't duplicate
     winning_fights = []
 
     for fight in fights:
-
         if fight.victory != True:
             continue
 
@@ -490,46 +526,18 @@ def tournamentpage(id):
             "date": fight.date
         })
 
-    # ----------------------------
-    # OVERTIME MATCHES
-    # ----------------------------
-
-    overtime_fights = [
-    fight for fight in winning_fights
-    if fight["score"] < 0
-    ]
-
     overtime_fights = sorted(
-        overtime_fights,
+        [fight for fight in winning_fights if fight["score"] < 0],
         key=lambda fight: fight["score"]
     )
-
-    # ----------------------------
-    # BIGGEST / CLOSEST WIN
-    # ----------------------------
 
     normal_wins = [
         fight for fight in winning_fights
         if fight["score"] >= 0
     ]
 
-    biggest_win = None
-    closest_win = None
-
-    if normal_wins:
-        biggest_win = max(
-            normal_wins,
-            key=lambda x: x["score"]
-        )
-
-        closest_win = min(
-            normal_wins,
-            key=lambda x: x["score"]
-        )
-
-    # ----------------------------
-    # TOURNAMENT STANDINGS
-    # ----------------------------
+    biggest_win = max(normal_wins, key=lambda x: x["score"]) if normal_wins else None
+    closest_win = min(normal_wins, key=lambda x: x["score"]) if normal_wins else None
 
     tour_team_rows = TourTeam.query.filter_by(
         tourId=id
@@ -538,7 +546,6 @@ def tournamentpage(id):
     fighter_standings = []
 
     for row in tour_team_rows:
-
         player = player_map.get(row.playerId)
 
         if not player:
@@ -547,16 +554,15 @@ def tournamentpage(id):
         wins = row.wins or 0
         losses = row.loss or 0
 
-    # skip players who did not participate
         if wins == 0 and losses == 0:
             continue
 
         fighter_standings.append({
-        "player": player,
-        "points": row.score or 0,
-        "wins": wins,
-        "losses": losses,
-        "status": row.status
+            "player": player,
+            "points": row.score or 0,
+            "wins": wins,
+            "losses": losses,
+            "status": row.status
         })
 
     fighter_standings = sorted(
@@ -567,11 +573,6 @@ def tournamentpage(id):
 
     champion = fighter_standings[0] if fighter_standings else None
 
-    # ----------------------------
-    # BIGGEST UPSET
-    # ----------------------------
-
-
     biggest_upset = None
     biggest_gap = -1
 
@@ -579,28 +580,22 @@ def tournamentpage(id):
         winner_rank = fight["winner"].rank
         loser_rank = fight["loser"].rank
 
-        if winner_rank is None or loser_rank is None:
-            continue
-
-        if winner_rank == 0 or loser_rank == 0:
+        if not winner_rank or not loser_rank:
             continue
 
         gap = winner_rank - loser_rank
-
-        if gap <= 0:
-            continue
 
         if gap > biggest_gap:
             biggest_gap = gap
 
             biggest_upset = {
-            "winner": fight["winner"],
-            "loser": fight["loser"],
-            "winner_rank": winner_rank,
-            "loser_rank": loser_rank,
-            "rank_gap": gap,
-            "score": fight["score"],
-            "round": fight["round"]
+                "winner": fight["winner"],
+                "loser": fight["loser"],
+                "winner_rank": winner_rank,
+                "loser_rank": loser_rank,
+                "rank_gap": gap,
+                "score": fight["score"],
+                "round": fight["round"]
             }
 
     return render_template(
@@ -1052,27 +1047,14 @@ def player_card(id):
 
     selected_season = request.args.get('season', 'all')
     selected_type = request.args.get('fight_type', 'all')
+    player_placements = TournamentPlacement.query.filter_by(
+    player_id=id
+    ).order_by(
+    TournamentPlacement.result_id.desc(),
+    TournamentPlacement.place.asc()
+    ).all()
 
     player_img = player.img
-
-    result = Result.query.filter(or_(
-        Result.first == player_img,
-        Result.second == player_img,
-        Result.third == player_img,
-        Result.fourth == player_img,
-        Result.fifth == player_img,
-        Result.sixth == player_img,
-        Result.seventh == player_img,
-        Result.eigth == player_img,
-        Result.ninth == player_img,
-        Result.tenth == player_img,
-        Result.eleventh == player_img,
-        Result.twelfth == player_img,
-        Result.thirtenth == player_img,
-        Result.fourtenth == player_img,
-        Result.fifthtenth == player_img,
-        Result.sixtenth == player_img
-    )).all()
 
     opponent_query = Opponent.query.filter(Opponent.player_id == id)
 
@@ -1104,7 +1086,8 @@ def player_card(id):
         player=player,
         opponents=opponents,
         all_opponents=all_opponents,
-        result=result,
+            player_placements=player_placements,
+
         player_img=player_img,
         selected_season=selected_season,
         selected_type=selected_type
@@ -1128,7 +1111,9 @@ def add_opponent(id):
             'opponent_id': opp.id,
             'victory': form.data['victory'],
             'tour_name': form.data['tournamnet'],
-            'round': form.data['round']
+            'round': form.data['round'],
+            'is_ressist': form.data['is_ressist'],
+            'fotn': form.data['fotn']
         }
         new_record = Opponent(**params)
         db.session.add(new_record)
@@ -1349,62 +1334,51 @@ def tournaments():
 
     tour_list = tour_query.order_by(Tour.id.desc()).all()
 
+    teams = Team.query.all()
+    team_map = {
+        team.id: team
+        for team in teams
+    }
+
     data = []
 
     for tour in tour_list:
-        tour_score_query = TourScore.query.filter_by(name=tour.name)
+
+        score_query = TournamentTeamScore.query.filter_by(
+            tour_id=tour.id
+        )
 
         if selected_season != 'all':
-            tour_score_query = tour_score_query.filter_by(
+            score_query = score_query.filter_by(
                 season_id=int(selected_season)
             )
 
-        tour_score = tour_score_query.first()
+        score_rows = score_query.all()
 
-        if not tour_score:
+        if not score_rows:
             continue
 
-        team_scores = {
-            "Penn State": tour_score.psu or 0,
-            "Ohio State": tour_score.osu or 0,
-            "Oklahoma State": tour_score.okst or 0,
-            "Cornell": tour_score.corn or 0,
-            "Lehigh": tour_score.leh or 0,
-            "NC State": tour_score.ncst or 0,
-            "Iowa": tour_score.iowa or 0,
-            "Iowa State": tour_score.isu or 0,
-            "Minnesota": tour_score.minn or 0,
-            "Virginia Tech": tour_score.vt or 0,
-            "Missouri": tour_score.mizz or 0,
-            "Nebraska": tour_score.neb or 0,
-            "Stanford": tour_score.stan or 0,
-            "Michigan": tour_score.mich or 0,
-            "Northern Iowa": tour_score.Northern_Iowa or 0,
-            "Wyoming": tour_score.Wyoming or 0,
-            "Arizona State": tour_score.Arizona_State or 0,
-            "Colorado": tour_score.Colorado or 0,
-            "Sacred Heart": tour_score.sh or 0
-        }
-
-        sorted_teams = sorted(
-            team_scores.items(),
-            key=lambda x: x[1],
+        sorted_scores = sorted(
+            score_rows,
+            key=lambda row: row.score or 0,
             reverse=True
         )[:4]
 
         top_teams = []
 
-        for team_name, score in sorted_teams:
-            team_instance = Team.query.filter_by(name=team_name).first()
+        for row in sorted_scores:
+            team = team_map.get(row.team_id)
 
-            if team_instance:
-                top_teams.append({
-                    "team": team_instance.name,
-                    "score": score,
-                    "wins": team_instance.wins,
-                    "loss": team_instance.loss,
-                    "logo": team_instance.logo,
-                })
+            if not team:
+                continue
+
+            top_teams.append({
+                "team": team.name,
+                "score": row.score or 0,
+                "wins": team.wins,
+                "loss": team.loss,
+                "logo": team.logo,
+            })
 
         data.append({
             "tourn": tour,
@@ -1468,90 +1442,278 @@ def get_score(id, team):
     data.sort(key=team_sort_key)
     return render_template('team_scorepage.html', team = curr_team, score_data=data)
 
-@app.route('/score/<id>')
+@app.route('/score/<int:id>')
 def one_tourscore(id):
-    tour = TourScore.query.get(id)
-    teams = Team.query.all()
-    scores = sorted(
-    [
-        {'team': 'Penn State', 'score': tour.psu, 'logo': Penn_State, 'img':'../static/images/niah.jpeg'},
-        {'team': 'Cornell', 'score': tour.corn, 'logo': "https://sportslogohistory.com/wp-content/uploads/2019/06/cornell_big_red_2002-pres.png"},
-        {'team': 'Iowa', 'score': tour.iowa, 'logo': "https://storage.googleapis.com/hawkeyesports-com/2021/02/cf540990-logo-e1722875756178.png"},
-        {'team': 'Iowa State', 'score': tour.isu, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/isuni.sidearmsports.com/images/responsive_2021/logo_nav.svg"},
-        {'team': 'Lehigh', 'score': tour.leh, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/lehighsports.com/responsive_2020/images/svgs/logo_main2-new.svg"},
-        {'team': 'Michigan', 'score': tour.mich, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/mgoblue.com/images/sng_2023/main_nav_logo.svg"},
-        {'team': 'Minnesota', 'score': tour.minn, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/gophersports.com/images/nextgen_2022/main_logo.svg"},
-        {'team': 'Missouri', 'score': tour.mizz, 'logo': "https://loodibee.com/wp-content/uploads/Missouri_Tigers_logo.png"},
-        {'team': 'Nebraska', 'score': tour.neb, 'logo': "data:image/svg+xml,%3c?xml%20version=%271.0%27%20encoding=%27utf-8%27?%3e%3c!--%20Generator:%20Adobe%20Illustrator%2026.4.1,%20SVG%20Export%20Plug-In%20.%20SVG%20Version:%206.00%20Build%200)%20--%3e%3csvg%20version=%271.1%27%20id=%27Nebraska_N%27%20xmlns=%27http://www.w3.org/2000/svg%27%20xmlns:xlink=%27http://www.w3.org/1999/xlink%27%20x=%270px%27%20y=%270px%27%20viewBox=%270%200%20163%20152%27%20style=%27enable-background:new%200%200%20163%20152;%27%20xml:space=%27preserve%27%3e%3cstyle%20type=%27text/css%27%3e%20.st0{fill:%23FFFFFF;}%20%3c/style%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M159.1,144c-2.3,0-4.1,1.8-4.1,4s1.8,4,4,4s4-1.8,4-4S161.2,144,159.1,144z%20M159,151.2c-1.8,0-3.2-1.4-3.2-3.2%20s1.4-3.2,3.2-3.2c1.7,0,3.2,1.5,3.2,3.2C162.2,149.8,160.8,151.2,159,151.2z%27/%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M157.4,145.6h1.4c0.6,0,0.8,0,1.1,0.2c0.4,0.2,0.6,0.6,0.6,1.1c0,0.4-0.1,0.7-0.3,1c-0.1,0.2-0.3,0.2-0.6,0.4%20h-0.1l1.1,2.1h-0.8l-1-2h-0.6v2h-0.8L157.4,145.6L157.4,145.6z%20M158.6,147.7c0,0,0.3,0,0.4,0c0.4-0.1,0.6-0.3,0.6-0.8%20c0-0.3-0.1-0.5-0.4-0.6c-0.1,0-0.1,0-0.6,0h-0.4v1.4L158.6,147.7L158.6,147.7z%27/%3e%3c/g%3e%3c/g%3e%3cg%3e%3cpath%20class=%27st0%27%20d=%27M147,0H93h-5v5v35v5h5h5v24.8L55.2,2.3L53.7,0H51H5H0v5v35v5h5h5v62H5H0v5v35v5h5h54h5v-5v-35v-5h-5h-5V82.2%20l42.8,67.5l1.5,2.3h2.7h46h5v-5v-35v-5h-5h-5V45h5h5v-5V5V0H147z%20M150,5v35v3h-3h-7v66h7h3v3v35v3h-3h-46h-1.6l-0.9-1.4L52,75.3%20V109h7h3v3v35v3h-3H5H2v-3v-35v-3h3h7V43H5H2v-3V5V2h3h46h1.7l0.9,1.4L100,76.7V43h-7h-3v-3V5V2h3h54h3V5z%27/%3e%3c/g%3e%3cpath%20class=%27st0%27%20d=%27M103,87L103,87L51,5H5v35c0,0,7.8,0,10,0c0,3.3,0,68.7,0,72l0,0c-2.2,0-10,0-10,0v35h54v-35c0,0-7.8,0-10,0l0,0%20c0-2.6,0-47,0-47l52,82h46v-35c0,0-7.8,0-10,0l0,0c0-3.3,0-68.7,0-72c2.2,0,10,0,10,0V5H93v35c0,0,7.8,0,10,0%20C103,42.6,103,87,103,87z%27/%3e%3c/svg%3e"},
-        {'team': 'NC State', 'score': tour.ncst, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/unc.sidearmsports.com/images/sng_2023/main_nav_logo.svg"},
-        {'team': 'Ohio State', 'score': tour.osu, 'logo': "https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/ohiostatebuckeyes.com/images/nextgen_2023/logo_main.svg"},
-        {'team': 'Oklahoma State', 'score': tour.okst, 'logo': "https://sportslogohistory.com/wp-content/uploads/2018/07/oklahoma_state_cowboys_2015-pres.png"},
-        {'team': 'Stanford', 'score': tour.stan, 'logo': "https://gostanford.com/imgproxy/l6GXJbFV4z1yPuiCbXCePofeGNcKTlM78I9yNaTuiU4/rs:fit:1980:0:0/g:ce/q:90/aHR0cHM6Ly9zdG9yYWdlLmdvb2dsZWFwaXMuY29tL3N0YW5mb3JkLXByb2QvMjAyNC8wMy8yMC9hVXJvSkRQeEVBQzFBRE53M3M2YjBRQWNlcmd2WW9EOXRabHVsZHRrLnBuZw.png"},
-        {'team': 'Virginia Tech', 'score': tour.vt, 'logo': "https://sportslogohistory.com/wp-content/uploads/2018/01/virginia_tech_hokies_1983-pres.png"},
-        {'team': 'Northern Iowa', 'score': tour.Northern_Iowa, 'logo':'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/uni.sidearmsports.com/images/nextgen_2023/logo_main.svg'},
-        {'team': 'Wyoming', 'score': tour.Wyoming, 'logo':'https://sportslogohistory.com/wp-content/uploads/2024/05/wyoming_cowboys_1986-2007.png'},
-        {'team': 'Arizona State', 'score': tour.Arizona_State, 'logo':'https://storage.googleapis.com/statbroadcast-prod/2024/09/04/97c7abc1-17cc-47c6-8143-e4856a3eaf06.png'},
-        {'team': 'Colorado', 'score': tour.Colorado, 'logo':'https://www.sdstate.edu/sites/default/files/2024-05/Jackrabbit-5%402x_1.png'},
-        {'team': 'Sacred Heart', 'score': tour.sh, 'logo':'https://upload.wikimedia.org/wikipedia/en/thumb/f/f9/Northern_Colorado_Bears_logo.svg/250px-Northern_Colorado_Bears_logo.svg.png'}
-    ],
-    key=lambda x: x['score'],
-    reverse=True
-)
 
-    return render_template('team_score.html', scores=scores, tour=tour, id=id)
+    tour = Tour.query.get_or_404(id)
+
+    score_rows = TournamentTeamScore.query.filter_by(
+        tour_id=tour.id
+    ).all()
+
+    teams = Team.query.all()
+
+    team_map = {
+        team.id: team
+        for team in teams
+    }
+
+    scores = []
+
+    for row in score_rows:
+
+        team = team_map.get(row.team_id)
+
+        if not team:
+            continue
+
+        scores.append({
+            "team": team.name,
+            "score": row.score or 0,
+            "logo": team.logo,
+            "wins": team.wins,
+            "loss": team.loss
+        })
+
+    scores = sorted(
+        scores,
+        key=lambda x: x["score"],
+        reverse=True
+    )
+
+    return render_template(
+        'team_score.html',
+        scores=scores,
+        tour=tour,
+        id=id
+    )
 
 
 @app.route('/new_tournament', methods=['POST'])
-def  new_tour():
+def new_tour():
     form = NewTour()
+
     if form.validate_on_submit():
-        params = {
-            'link': form.data['link'],
-            'name': form.data['name'],
-            'date': form.data['date'],
-        }
-        score = {
-             'name' : form.data['name'],
-             'psu': 0,
-             'osu': 0,
-             'okst': 0,
-             'corn': 0,
-             'leh': 0,
-             'ncst': 0,
-             'iowa': 0,
-             'isu': 0,
-             'minn': 0,
-             'vt': 0,
-             'mizz': 0,
-             'neb': 0,
-             'stan': 0,
-             'mich': 0,
-             'Northern_Iowa': 0,
-             'Wyoming': 0,
-             'Arizona_State': 0,
-             'Colorado':0,
-             'sh': 0
-        }
-        new_tourn = Tour(**params)
-        new_score = TourScore(**score)
+
+        active_season = Season.query.filter_by(active=True).first()
+        season_id = active_season.id if active_season else 1
+
+        new_tourn = Tour(
+            link=form.data['link'],
+            name=form.data['name'],
+            date=form.data['date'],
+            season_id=season_id
+        )
+
         db.session.add(new_tourn)
-        db.session.add(new_score)
-        db.session.commit()
-        for i in range(257):
-            newPlayer = TourTeam(tourId = new_tourn.id, playerId = i + 1, score = 0, status='Champ')
+        db.session.flush()
+
+        teams = Team.query.filter_by(
+            season_id=season_id
+        ).all()
+
+        for team in teams:
+            team_score = TournamentTeamScore(
+                tour_id=new_tourn.id,
+                team_id=team.id,
+                score=0,
+                season_id=season_id
+            )
+
+            db.session.add(team_score)
+
+        active_players = Player.query.filter_by(active=True).all()
+
+        for player in active_players:
+            newPlayer = TourTeam(
+                tourId=new_tourn.id,
+                playerId=player.id,
+                score=0,
+                wins=0,
+                loss=0,
+                status='Champ',
+                season_id=season_id
+            )
+
             db.session.add(newPlayer)
-            db.session.commit()
+
+        db.session.commit()
+
         return redirect('/tournaments')
+
     return 'Bad Data'
 
 
 ##@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Results @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 @app.route('/results')
 def result():
-    all_results = Result.query.all()
-    results = list(reversed(all_results))
-    return render_template('results.html', results = results)
+
+    all_results = Result.query.order_by(Result.id.desc()).all()
+
+    results = []
+
+    for result_row in all_results:
+
+        placements = TournamentPlacement.query.filter_by(
+            result_id=result_row.id
+        ).all()
+
+        # skip old/broken Result rows with no new placements
+        if not placements:
+            continue
+
+        placement_map = {}
+
+        for placement in placements:
+            player = Player.query.get(placement.player_id)
+
+            if player:
+                placement_map[placement.place] = player.img
+
+        results.append({
+            'tour_name': result_row.tour_name,
+
+            'first': placement_map.get(1, ''),
+            'second': placement_map.get(2, ''),
+            'third': placement_map.get(3, ''),
+            'fourth': placement_map.get(4, ''),
+
+            'fifth': placement_map.get(5, ''),
+            'sixth': placement_map.get(6, ''),
+            'seventh': placement_map.get(7, ''),
+            'eigth': placement_map.get(8, ''),
+
+            'ninth': placement_map.get(9, ''),
+            'tenth': placement_map.get(10, ''),
+            'eleventh': placement_map.get(11, ''),
+            'twelfth': placement_map.get(12, ''),
+
+            'thirtenth': placement_map.get(13, ''),
+            'fourtenth': placement_map.get(14, ''),
+            'fifthtenth': placement_map.get(15, ''),
+            'sixtenth': placement_map.get(16, ''),
+        })
+
+    return render_template('results.html', results=results)
+
+PLACE_FIELDS = [
+    ("first", 1),
+    ("second", 2),
+    ("third", 3),
+    ("fourth", 4),
+    ("fifth", 5),
+    ("sixth", 6),
+    ("seventh", 7),
+    ("eighth", 8),
+    ("ninth", 9),
+    ("tenth", 10),
+    ("eleventh", 11),
+    ("twelfth", 12),
+    ("thirteenth", 13),
+    ("fourteenth", 14),
+    ("fifteenth", 15),
+    ("sixteenth", 16),
+    ("blood1", 17),
+    ("blood2", 18),
+    ("blood3", 19),
+    ("blood4", 20),
+    ("blood5", 21),
+    ("blood6", 22),
+    ("blood7", 23),
+    ("blood8", 24),
+]
+
+
+def award_for_place(place):
+    if place == 1:
+        return "gold"
+    if place == 2:
+        return "silver"
+    if place == 3:
+        return "bronze"
+    if place == 4:
+        return "wood"
+    if place in [5, 6, 7, 8]:
+        return "medal"
+    if place in [9, 10, 11, 12]:
+        return "badge"
+    if place in [13, 14, 15, 16]:
+        return "ribbon"
+    if 17 <= place <= 24:
+        return "blood"
+
+    return None
+
+
+@app.route('/new_placement', methods=['GET', 'POST'])
+def new_placement():
+    players = Player.query.filter_by(active=True).order_by(Player.name.asc()).all()
+    names = [p.name for p in players]
+
+    if request.method == 'POST':
+        tour_name = request.form.get('tour_name')
+
+        result = Result(
+            tour_name=tour_name,
+
+            first="",
+            second="",
+            third="",
+            fourth="",
+            fifth="",
+            sixth="",
+            seventh="",
+            eigth="",
+            ninth="",
+            tenth="",
+
+            eleventh="",
+            twelfth="",
+            thirtenth="",
+            fourtenth="",
+            fifthtenth="",
+            sixtenth="",
+
+            blood1="",
+            blood2="",
+            blood3="",
+            blood4=""
+        )
+
+        db.session.add(result)
+        db.session.flush()
+
+        for field_name, place in PLACE_FIELDS:
+            player_name = request.form.get(field_name)
+
+            if not player_name:
+                continue
+
+            player = Player.query.filter_by(name=player_name).first()
+
+            if not player:
+                print("Could not find player:", player_name)
+                continue
+
+            placement = TournamentPlacement(
+                result_id=result.id,
+                player_id=player.id,
+                place=place,
+                award=award_for_place(place),
+                season_id=result.season_id
+            )
+
+            db.session.add(placement)
+
+        db.session.commit()
+
+        return redirect('/results')
+
+    return render_template(
+        'new_placement.html',
+        names=names
+    )
+
 
 @app.route('/new_result')
 def rform():
@@ -1559,9 +1721,73 @@ def rform():
     return render_template('create_result.html', form=form)
 
 
+@app.route('/all-americans')
+def all_americans():
 
-from collections import defaultdict
-from sqlalchemy import func
+    placements = TournamentPlacement.query.filter(
+        TournamentPlacement.award != "blood"
+    ).all()
+
+    player_awards = {}
+
+    for placement in placements:
+        player = Player.query.get(placement.player_id)
+
+        if not player:
+            continue
+
+        if player.id not in player_awards:
+            player_awards[player.id] = {
+                "player": player,
+                "total": 0,
+                "gold": 0,
+                "silver": 0,
+                "bronze": 0,
+                "wood": 0,
+                "medal": 0,
+                "badge": 0,
+                "ribbon": 0
+            }
+
+        player_awards[player.id]["total"] += 1
+
+        if placement.award in player_awards[player.id]:
+            player_awards[player.id][placement.award] += 1
+
+    grouped = {}
+
+    for row in player_awards.values():
+        if row["total"] < 2:
+            continue
+
+        total = row["total"]
+
+        if total not in grouped:
+            grouped[total] = []
+
+        grouped[total].append(row)
+
+    grouped = dict(
+        sorted(
+            grouped.items(),
+            reverse=True
+        )
+    )
+
+    for total in grouped:
+        grouped[total] = sorted(
+        grouped[total],
+        key=lambda x: x["player"].points or 0,
+        reverse=True
+        )
+
+    return render_template(
+        "all_americans.html",
+        grouped=grouped
+    )
+
+
+
 
 @app.route('/playoffs')
 def playoffs():

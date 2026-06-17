@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Tournament</title>
+        <link href="../static/main_page.css" rel="stylesheet">
+        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <style>
+            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+        </style>
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body>
+
+        <form method="post" action="/new_placement">
+
+            <label>Tournament Name</label>
+            <input type="text" name="tour_name">
+
+            <datalist id="fighters">
+                {% for name in names %}
+                <option value="{{ name }}">
+                    {% endfor %}
+            </datalist>
+
+            <h3>Placers</h3>
+
+            <input list="fighters" name="first" placeholder="1st Place">
+            <input list="fighters" name="second" placeholder="2nd Place">
+            <input list="fighters" name="third" placeholder="3rd Place">
+            <input list="fighters" name="fourth" placeholder="4th Place">
+
+            <input list="fighters" name="fifth" placeholder="5th Place">
+            <input list="fighters" name="sixth" placeholder="6th Place">
+            <input list="fighters" name="seventh" placeholder="7th Place">
+            <input list="fighters" name="eighth" placeholder="8th Place">
+
+            <input list="fighters" name="ninth" placeholder="9th Place">
+            <input list="fighters" name="tenth" placeholder="10th Place">
+            <input list="fighters" name="eleventh" placeholder="11th Place">
+            <input list="fighters" name="twelfth" placeholder="12th Place">
+
+            <input list="fighters" name="thirteenth" placeholder="13th Place">
+            <input list="fighters" name="fourteenth" placeholder="14th Place">
+            <input list="fighters" name="fifteenth" placeholder="15th Place">
+            <input list="fighters" name="sixteenth" placeholder="16th Place">
+
+            <h3>Blood Round</h3>
+
+            <input list="fighters" name="blood1" placeholder="Blood Round 1">
+            <input list="fighters" name="blood2" placeholder="Blood Round 2">
+            <input list="fighters" name="blood3" placeholder="Blood Round 3">
+            <input list="fighters" name="blood4" placeholder="Blood Round 4">
+            <input list="fighters" name="blood5" placeholder="Blood Round 5">
+            <input list="fighters" name="blood6" placeholder="Blood Round 6">
+            <input list="fighters" name="blood7" placeholder="Blood Round 7">
+            <input list="fighters" name="blood8" placeholder="Blood Round 8">
+
+            <button type="submit">Save Result</button>
+
+        </form>
+
+    </body>
+
+</html>

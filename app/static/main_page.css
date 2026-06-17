@@ -50,7 +50,7 @@
 
 #matchz {
     background-size: cover;
-    background: url("https://preview.redd.it/i-upscaled-shots-from-my-fav-hunter-x-hunter-endings-for-my-v0-uordnt5njr8c1.png?width=640&crop=smart&auto=webp&s=94d32ba33a3ae4fa47794e644ad71256f7383c04") no-repeat center center fixed;
+    background: url("https: //images7.alphacoders.com/952/thumb-1920-952142.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -126,7 +126,7 @@
 #newbattle {
     /* background-image: url("images/bg-2.jpeg"); */
     /* background: url('https://i.redd.it/ij89pisoiyc61.png') no-repeat center center fixed; */
-    background: url('https://preview.redd.it/i-made-a-new-wallpaper-for-myself-and-thought-id-leave-it-v0-1a0syfwj6yxy.jpg?width=640&crop=smart&auto=webp&s=5771b8311910773d5f2eb708e25048f751fcb480') no-repeat center center fixed;
+    background: url('https://images3.alphacoders.com/714/714324.png') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -1532,7 +1532,7 @@ input[type=text]:hover {
     height: 70px;
     padding: 5px;
     margin-bottom: 1%;
-    background-color: rgba(14, 14, 14, 0.75);
+    background-color: rgba(14, 14, 14, 0.95);
 }
 
 .oneteamscore {
@@ -2378,11 +2378,11 @@ body#dual {
 /* playoffsssss */
 
 #playoffbg {
-    background-image: url('https://c4.wallpaperflare.com/wallpaper/149/224/855/anime-fairy-tail-erza-scarlet-gray-fullbuster-wallpaper-preview.jpg');
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    min-height: 100vh;
+    background-image: url('https://i.pinimg.com/originals/47/50/8c/47508cf0aaeb0bc0bf840e5df208fb79.jpg');
+    background-position: top center;
+    background-size: 100% auto;
+    background-color: #000;
 }
 
 /* Page shell */
@@ -2434,6 +2434,7 @@ body#dual {
     align-items: center;
     justify-content: space-between;
     text-align: center;
+    opacity: .9;
 }
 
 .team-card * {
@@ -3314,4 +3315,107 @@ select option {
 
 .filter-form select.active-filter {
     animation: subtleGlow 2.5s infinite;
+}
+
+
+.newbattle-submit-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0;
+}
+
+.newbattle-submit-btn {
+
+    width: 120px !important;
+    height: 45px !important;
+
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+    padding: 0 !important;
+
+    background: rgba(25, 25, 25, .95) !important;
+
+    color: #ff7b00 !important;
+
+    border: 2px solid #ff7b00 !important;
+
+    border-radius: 12px !important;
+
+    font-size: 14px !important;
+    font-weight: bold !important;
+
+    font-family: inherit !important;
+
+    cursor: pointer !important;
+
+    transition: .25s ease !important;
+
+    box-shadow:
+        0 0 12px rgba(255, 123, 0, .25);
+}
+
+.newbattle-submit-btn:hover {
+
+    background: rgba(40, 40, 40, .95) !important;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 0 18px rgba(255, 123, 0, .45);
+}
+
+.newbattle-submit-btn:active {
+
+    transform: translateY(0px);
+}
+
+.newbattle-page input[type="checkbox"] {
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 32px;
+    height: 32px;
+
+    background: rgba(20, 20, 20, .95);
+
+    border: 2px solid #ff7b00;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.newbattle-page input[type="checkbox"]:hover {
+
+    box-shadow:
+        0 0 8px rgba(255, 123, 0, .4);
+}
+
+.newbattle-page input[type="checkbox"]:checked {
+
+    background: #ff7b00;
+}
+
+.newbattle-page input[type="checkbox"]:checked::after {
+
+    content: "✓";
+
+    color: white;
+
+    font-weight: bold;
+
+    font-size: 20px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    height: 100%;
 }

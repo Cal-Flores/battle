@@ -47,16 +47,21 @@
                     <option value="2" {% if selected_season=='2' %}selected{% endif %}>Season 2</option>
                 </select>
             </form>
-            <div>
-                <canvas id="chart"></canvas>
-                <div id="myDiv" data-values='{{ rank | tojson | safe }}'></div>
-                <div id="myHist" data-values='{{ history | tojson | safe }}'></div>
-                <div id="myColor" data-color="{{ color }}"></div>
-            </div>
-            <div>
-                <canvas id="positionChart"></canvas>
-                <div id="positionWeeks" data-values='{{ position_weeks | tojson | safe }}'></div>
-                <div id="positionRanks" data-values='{{ position_ranks | tojson | safe }}'></div>
+            <div class="line-chart-row">
+
+                <div class="rank-chart-wrap">
+                    <canvas id="chart" width="950" height="400"></canvas>
+                    <div id="myDiv" data-values='{{ rank | tojson | safe }}'></div>
+                    <div id="myHist" data-values='{{ history | tojson | safe }}'></div>
+                    <div id="myColor" data-color="{{ color }}"></div>
+                </div>
+
+                <div class="position-chart-wrap">
+                    <canvas id="positionChart" width="520" height="400"></canvas>
+                    <div id="positionWeeks" data-values='{{ position_weeks | tojson | safe }}'></div>
+                    <div id="positionRanks" data-values='{{ position_ranks | tojson | safe }}'></div>
+                </div>
+
             </div>
             <div id="aspiecont">
                 <div id="ascard">
@@ -85,11 +90,14 @@
                     </div>
 
                     <div class="card-medals">
-                        🥇 {{ player.gold }} | 🥈 {{ player.silver }} | 🥉 {{ player.bronze }}
-                    </div>
-
-                    <div class="card-badges">
-                        🎖️ Medal: {{ player.medal }} | 🏅 Badge: {{ player.badge }}
+                        {% if player.gold and player.gold >= 1 %}🥇 {{ player.gold }} |{% endif %}
+                        {% if player.silver and player.silver >= 1 %}🥈 {{ player.silver }} |{% endif %}
+                        {% if player.bronze and player.bronze >= 1 %}🥉 {{ player.bronze }} |{% endif %}
+                        {% if player.wood and player.wood >= 1 %}🪵 {{ player.wood }} |{% endif %}
+                        {% if player.medal and player.medal >= 1 %}🏅 {{ player.medal }} |{% endif %}
+                        {% if player.badge and player.badge >= 1 %}🎖️ {{ player.badge }} |{% endif %}
+                        {% if player.ribbon and player.ribbon >= 1 %}🎗️ {{ player.ribbon }} |{% endif %}
+                        {% if player.blood and player.blood >= 1 %}🩸 {{ player.blood }}{% endif %}
                     </div>
                 </div>
 
@@ -516,7 +524,7 @@
                         scales: {
                             y: {
                                 min: 1,
-                                max: 180,
+                                max: 256,
                                 reverse: true,
                                 ticks: {
                                     color: 'white',
@@ -582,20 +590,27 @@
                         datalabels: {
                             display: true,
                             align: 'top',
+                            font: {
+                                weight: 'bold',
+                                size: 16
+                            },
                             color: 'white',
                             backgroundColor: 'rgba(0, 0, 0, 0.7)',
                             borderRadius: 5,
                             padding: 6,
+                            borderWidth: 2,
+                            borderColor: 'rgba(255, 255, 255, 0.8)',
                             formatter: (value) => value
                         }
                     },
                     scales: {
                         y: {
                             min: 1,
+                            max: 64,
                             reverse: true,
                             ticks: {
                                 color: 'white',
-                                stepSize: 5
+                                stepSize: 2
                             },
                             title: {
                                 display: true,
@@ -604,12 +619,12 @@
                             }
                         },
                         x: {
-                            ticks: {
-                                color: 'white'
-                            },
                             title: {
                                 display: true,
                                 text: 'Week',
+                                color: 'white'
+                            },
+                            ticks: {
                                 color: 'white'
                             }
                         }
@@ -617,6 +632,53 @@
                 }
             });
         </script>
+        <style>
+            #positionChart {
+                background-color: #4a4848;
+                width: 70%;
+                height: 300px;
+                margin: 35px auto;
+                display: block;
+            }
+
+            .line-chart-row {
+                width: 96%;
+                margin: 20px auto 25px;
+
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 14px;
+
+                align-items: start;
+            }
+
+            .rank-chart-wrap,
+            .position-chart-wrap {
+                background-color: #4a4848;
+                padding: 8px;
+                border-radius: 8px;
+                box-sizing: border-box;
+            }
+
+            .rank-chart-wrap canvas,
+            .position-chart-wrap canvas {
+                width: 100% !important;
+                height: 400px !important;
+                display: block;
+            }
+
+            #chart,
+            #positionChart {
+                margin: 0 !important;
+                background-color: transparent !important;
+            }
+
+            @media(max-width: 1000px) {
+                .line-chart-row {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
     </body>
 
 </html>

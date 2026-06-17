@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>All-Americans - Battle Royale</title>
+        <link rel="stylesheet" href="../static/main_page.css">
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body class="aa-body">
+        {% include 'nav.html' %}
+
+        <div class="aa-page">
+
+            <h1>Multiple Time All-Americans</h1>
+
+            {% for total, players in grouped.items() %}
+
+            <section class="aa-section">
+
+                <h2>{{ total }}x All-Americans</h2>
+
+                <div class="aa-grid">
+
+                    {% for row in players %}
+
+                    <div class="aa-card">
+
+                        <img src="{{ row.player.img }}" class="aa-img">
+
+                        <h3>{{ row.player.name }}</h3>
+
+                        <div class="aa-awards">
+                            <span>🥇 {{ row.gold }}</span>
+                            <span>🥈 {{ row.silver }}</span>
+                            <span>🥉 {{ row.bronze }}</span>
+                            <span>🪵 {{ row.wood }}</span>
+                            <span>🎖️ {{ row.medal }}</span>
+                            <span>🏅 {{ row.badge }}</span>
+                            <span>🎗️ {{ row.ribbon }}</span>
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+            {% endfor %}
+
+        </div>
+
+        <style>
+            .aa-body {
+                min-height: 100vh;
+                background-image: url('https://wallpapers.com/images/hd/akame-ga-kill-characters-under-moon-scoo5fb7drhy4l0f.jpg');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+
+            .aa-page {
+                width: 92%;
+                margin: auto;
+                padding-top: 115px;
+                padding-bottom: 50px;
+            }
+
+            .aa-page h1 {
+                text-align: center;
+                color: white;
+                margin-bottom: 30px;
+                text-shadow: 0 2px 6px rgba(0, 0, 0, .8);
+            }
+
+            .aa-section {
+                margin-bottom: 35px;
+                padding: 20px;
+                background: rgba(0, 0, 0, .42);
+                backdrop-filter: blur(7px);
+                border-radius: 16px;
+            }
+
+            .aa-section h2 {
+                text-align: center;
+                color: white;
+                margin: 0 0 18px;
+            }
+
+            .aa-grid {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 18px;
+            }
+
+            .aa-card {
+                width: 180px;
+                padding: 12px;
+                text-align: center;
+                background: rgba(0, 0, 0, .45);
+                border-radius: 14px;
+            }
+
+            .aa-img {
+                width: 100%;
+                aspect-ratio: 1 / 1;
+                object-fit: cover;
+                border-radius: 10px;
+            }
+
+            .aa-card h3 {
+                color: white;
+                margin: 10px 0;
+                font-size: 17px;
+            }
+
+            .aa-awards {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5px;
+                color: white;
+                font-size: 13px;
+            }
+        </style>
+
+    </body>
+
+</html>

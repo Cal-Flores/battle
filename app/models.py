@@ -18,11 +18,15 @@ class Player(db.Model):
     gold = db.Column(db.Integer)
     silver = db.Column(db.Integer)
     bronze = db.Column(db.Integer)
+    wood = db.Column(db.Integer)
     medal = db.Column(db.Integer)
     badge = db.Column(db.Integer)
+    ribbon = db.Column(db.Integer)
+    blood = db.Column(db.Integer)
     team = db.Column(db.String(255))
     logo = db.Column(db.String)
     birthday = db.Column(db.String)
+    height = db.Column(db.String)
     position = db.Column(db.String)
     tour_points = db.Column(db.Integer, default=0)  # <-- New column
     dual_points = db.Column(db.Integer, default=0)  # <-- New column
@@ -47,6 +51,15 @@ class Tour(db.Model):
     date = db.Column(db.Date)
     season_id = db.Column(db.Integer, default=1)
 
+class TournamentPlacement(db.Model):
+    __tablename__ = 'tournament_placements'
+    id = db.Column(db.Integer, primary_key=True)
+    result_id = db.Column(db.Integer, db.ForeignKey('results.id'))
+    player_id = db.Column(db.Integer, db.ForeignKey('players.id'))
+    place = db.Column(db.Integer)  # 1-16, or 17-20 for blood round
+    award = db.Column(db.String(50))  # gold, silver, bronze, wood, medal, badge, ribbon, blood
+    season_id = db.Column(db.Integer, default=1)
+
 
 class Result(db.Model):
     __tablename__ = 'results'
@@ -68,6 +81,11 @@ class Result(db.Model):
     fourtenth = db.Column(db.String(255), nullable=True)
     fifthtenth = db.Column(db.String(255), nullable=True)
     sixtenth = db.Column(db.String(255), nullable=True)
+    blood1 = db.Column(db.String(255), nullable=True)
+    blood2 = db.Column(db.String(255), nullable=True)
+    blood3 = db.Column(db.String(255), nullable=True)
+    blood4 = db.Column(db.String(255), nullable=True)
+    tour_name = db.Column(db.String(255), nullable=True)
     season_id = db.Column(db.Integer, default=1)
 
 
@@ -77,6 +95,8 @@ class Opponent(db.Model):
     player_id = db.Column(db.Integer)
     opponent_id = db.Column(db.Integer)
     victory = db.Column(db.Boolean)
+    is_ressist = db.Column(db.Boolean)
+    fotn = db.Column(db.Boolean)
     tour_name = db.Column(db.Integer)
     round = db.Column(db.String(255))
     score = db.Column(db.Integer)
@@ -144,6 +164,15 @@ class TourScore(db.Model):
     Colorado = db.Column(db.Integer)
     sh = db.Column(db.Integer)
     season_id = db.Column(db.Integer, default=1)
+## THIS WILL REPLACE TOUR SCORE IN THE NEAR FUTRURE ######
+class TournamentTeamScore(db.Model):
+    __tablename__ = 'tournament_team_scores'
+    id = db.Column(db.Integer, primary_key=True)
+    tour_id = db.Column(db.Integer)
+    team_id = db.Column(db.Integer)
+    score = db.Column(db.Integer, default=0)
+    season_id = db.Column(db.Integer, default=1)
+
 
 class TourTeam(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -220,6 +249,9 @@ class PlayerSeasonStats(db.Model):
     silver = db.Column(db.Integer, default=0)
     bronze = db.Column(db.Integer, default=0)
     medal = db.Column(db.Integer, default=0)
+    wood = db.Column(db.Integer, default=0)
+    ribbon = db.Column(db.Integer, default=0)
+    blood = db.Column(db.Integer, default=0)
     badge = db.Column(db.Integer, default=0)
 
 class TeamSeasonStats(db.Model):

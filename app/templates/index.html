@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Standings - Battle Royale</title>
+        <link href="../static/main_page.css" rel="stylesheet">
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+    </head>
+
+    <body id="bg">
+        {% include 'nav.html' %}
+        <div id="stat">
+            <a id='b' href="#bottom">⬇</a>
+            <a id='b' href="/index">🎥</a>
+            <div id="cont">
+                {% for player in players %}
+                <a href="player/{{player.id}}">
+                    <div class="fighter-card">
+
+                        <img src="{{ player.img }}" class="fighter-img">
+
+                        <div class="fighter-info">
+                            <h3>{{ player.name }}</h3>
+                            <p>{{ player.birthday }} | {{player.height}}</p>
+                        </div>
+
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            <a href="#b" id="bottom">⬆</a>
+        </div>
+        <style>
+            #cont {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .fighter-card {
+                background: #000;
+                border: 2px solid #ff7b00;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            .fighter-img {
+                width: 100%;
+                height: 250px;
+                display: block;
+                object-fit: cover;
+            }
+
+            .fighter-info {
+                padding: 6px;
+                text-align: center;
+                background: #000;
+            }
+
+            .fighter-info h3 {
+                margin: 0;
+                color: white;
+                font-size: 18px;
+            }
+
+            .fighter-info p {
+                margin: 2px 0 0;
+                color: #888;
+                font-size: 10px;
+            }
+        </style>
+    </body>
+
+</html>

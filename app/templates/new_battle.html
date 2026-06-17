@@ -7,80 +7,310 @@
         <title>New Battle</title>
         <link href="../static/main_page.css" rel="stylesheet">
         <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
+        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+
         <style>
             @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
+
+            .newbattle-page form,
+            .newbattle-page form * {
+                box-sizing: border-box;
+            }
+
+            .newbattle-title {
+                text-align: center;
+                color: #ff7b00;
+                font-family: 'Ninja Naruto', Arial, sans-serif;
+                font-size: 42px;
+                letter-spacing: 4px;
+                margin-top: 40px;
+                margin-bottom: 35px;
+            }
+
+            .newbattle-form {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .newbattle-arena {
+                width: 78%;
+                min-height: 320px;
+                margin: 0 auto 50px;
+                padding: 45px 60px;
+
+                display: grid;
+                grid-template-columns: 1fr 170px 1fr;
+                align-items: center;
+                justify-items: center;
+
+                border: 3px solid white;
+                border-radius: 10px;
+            }
+
+            .newbattle-fighter-panel {
+                width: 100%;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 42px;
+            }
+
+            .newbattle-field-group {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .newbattle-label {
+                color: white;
+                font-family: 'Ninja Naruto', Arial, sans-serif;
+                font-size: 22px;
+                letter-spacing: 1px;
+                text-align: center;
+            }
+
+            .newbattle-fighter-input input {
+                width: 360px;
+                height: 58px;
+                padding: 14px 18px;
+
+                background: rgba(20, 20, 20, .9) !important;
+                color: white !important;
+
+                border: 2px solid #ff7b00;
+                border-radius: 10px;
+
+                font-size: 20px;
+                outline: none;
+            }
+
+            .newbattle-fighter-input input:focus {
+                background: rgba(20, 20, 20, .95) !important;
+                color: white !important;
+                border-color: #ffb347;
+                box-shadow: 0 0 10px rgba(255, 123, 0, .5);
+            }
+
+            .newbattle-checkbox-block {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .newbattle-checkbox-block input[type="checkbox"] {
+                width: 28px;
+                height: 28px;
+                transform: none;
+                margin: 0;
+                accent-color: #ff7b00;
+                cursor: pointer;
+            }
+
+            .newbattle-vs-panel {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 28px;
+            }
+
+            .newbattle-vs {
+                color: #ff7b00;
+                font-family: 'Ninja Naruto', Arial, sans-serif;
+                font-size: 58px;
+                margin: 0;
+            }
+
+            .newbattle-fotn {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .newbattle-fotn .newbattle-label {
+                font-size: 18px;
+                line-height: 1.15;
+            }
+
+            .newbattle-fotn input[type="checkbox"] {
+                width: 28px;
+                height: 28px;
+                transform: none;
+                margin: 0;
+                accent-color: #ff7b00;
+                cursor: pointer;
+            }
+
+            .newbattle-details {
+                width: 72%;
+                margin: 0 auto 45px;
+
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 35px;
+
+                justify-items: center;
+                align-items: end;
+            }
+
+            .newbattle-detail-field {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .newbattle-detail-field input,
+            .newbattle-detail-field select {
+                width: 260px;
+                height: 52px;
+                padding: 12px;
+
+                background: rgba(20, 20, 20, .9) !important;
+                color: white !important;
+
+                border: 2px solid #ff7b00;
+                border-radius: 10px;
+
+                font-size: 18px;
+                outline: none;
+            }
+
+            .newbattle-detail-field input:focus,
+            .newbattle-detail-field select:focus {
+                background: rgba(20, 20, 20, .95) !important;
+                color: white !important;
+                border-color: #ffb347;
+                box-shadow: 0 0 10px rgba(255, 123, 0, .5);
+            }
+
+            .newbattle-submit-wrap {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 50px;
+            }
+
+            .newbattle-submit-wrap input[type="submit"] {
+                padding: 14px 34px;
+
+                background: #ff7b00;
+                color: white;
+
+                border: none;
+                border-radius: 10px;
+
+                font-size: 20px;
+                font-weight: bold;
+
+                cursor: pointer;
+            }
+
+            .newbattle-submit-wrap input[type="submit"]:hover {
+                background: #ff9500;
+            }
+
+            .newbattle-page input:-webkit-autofill,
+            .newbattle-page input:-webkit-autofill:hover,
+            .newbattle-page input:-webkit-autofill:focus,
+            .newbattle-page input:-webkit-autofill:active {
+                -webkit-box-shadow: 0 0 0 1000px rgba(20, 20, 20, .95) inset !important;
+                -webkit-text-fill-color: white !important;
+            }
         </style>
-        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
     </head>
 
-    <body id="leader">
-        {% block javascript %}
-        <script>
+    <body id="leader" class="newbattle-page">
 
-        </script>
+        <h1 class="newbattle-title">🎃🍁 NEW Battle 🍁🎃</h1>
 
-        {% endblock %}
-
-        <h1>🎃🍁 NEW Battle 🍁🎃</h1>
-
-        <form method="post" action="/new_battle">
+        <form class="newbattle-form" method="post" action="/new_battle">
             {{ form.csrf_token }}
 
-            <div class="battlecont">
-                <div class="battlecard">
-                    <div class="battlehold">
-                        <div class="battlelable1">Fighter 1 🥷</div>
-                        {{form.player_1(list="programmingLanguages")}}
-                        <datalist id="programmingLanguages">
+            <div class="newbattle-arena">
+
+                <div class="newbattle-fighter-panel">
+                    <div class="newbattle-field-group">
+                        <div class="newbattle-label">Fighter 1 🥷</div>
+
+                        <div class="newbattle-fighter-input">
+                            {{ form.player_1(list="fighterOneList") }}
+                        </div>
+
+                        <datalist id="fighterOneList">
                             {% for name in names %}
-                            <option value="{{name}}">
+                            <option value="{{ name }}">
                                 {% endfor %}
                         </datalist>
                     </div>
-                    <div class="reshold">
-                        <div class="labletabe">Victory</div>
+
+                    <div class="newbattle-checkbox-block">
+                        <div class="newbattle-label">Victory</div>
                         {{ form.victory_1 }}
                     </div>
                 </div>
-                <div>
-                    <h1>VS</h1>
+
+                <div class="newbattle-vs-panel">
+                    <h1 class="newbattle-vs">VS</h1>
+
+                    <div class="newbattle-fotn">
+                        <div class="newbattle-label">Classic 🔥</div>
+                        {{ form.fotn }}
+                    </div>
                 </div>
-                <div class="battlecard">
-                    <div class="battlehold">
-                        <div class="battlelable2">Fighter 2 🥷</div>
-                        {{form.player_2(list="programmingLanguages")}}
-                        <datalist id="programmingLanguages">
+
+                <div class="newbattle-fighter-panel">
+                    <div class="newbattle-field-group">
+                        <div class="newbattle-label">Fighter 2 🥷</div>
+
+                        <div class="newbattle-fighter-input">
+                            {{ form.player_2(list="fighterTwoList") }}
+                        </div>
+
+                        <datalist id="fighterTwoList">
                             {% for name in names %}
-                            <option value="{{name}}">
+                            <option value="{{ name }}">
                                 {% endfor %}
                         </datalist>
                     </div>
-                    <div class="reshold">
-                        <div class="labletab">Victory</div>
+
+                    <div class="newbattle-checkbox-block">
+                        <div class="newbattle-label">Victory</div>
                         {{ form.victory_2 }}
                     </div>
                 </div>
-            </div>
-            <div class="trbattle">
-                <div class="reshold">
-                    <div class="labletabe">Score</div>
-                    <span class="spanforn">{{ form.score }}</span>
-                </div>
-                <div class="reshold">
-                    <div class="labletabe">Tournament Number</div>
-                    <span class="spanforn">{{ form.tournamnet|default('Battle Royal 1')}}</span>
-                </div>
-                <div class="reshold">
-                    <div class="labletabe">Round</div>
-                    <span class="spanforn">{{ form.round }}</span>
-                </div>
+
             </div>
 
+            <div class="newbattle-details">
 
-            <div class="opponentbtn">
+                <div class="newbattle-detail-field">
+                    <div class="newbattle-label">Score</div>
+                    {{ form.score }}
+                </div>
+
+                <div class="newbattle-detail-field">
+                    <div class="newbattle-label">Tournament Name</div>
+                    {{ form.tournamnet|default('Battle Royal 1') }}
+                </div>
+
+                <div class="newbattle-detail-field">
+                    <div class="newbattle-label">Round</div>
+                    {{ form.round }}
+                </div>
+
+            </div>
+
+            <div class="newbattle-submit-wrap">
                 {{ form.submit }}
             </div>
-            </div>
+
         </form>
 
     </body>

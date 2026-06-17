@@ -25,12 +25,16 @@
             <div id="dash1">
 
                 <section class="dash-section player-day-card">
-                    <h2>⭐ Player of the Day</h2>
+                    <h2>🗡️ Player of the Day</h2>
 
                     {% if random_player %}
                     <div class="feature-card">
                         <img class="dash-img main-img" src="{{ random_player.img }}">
                         <h1>{{ random_player.name }}</h1>
+                        <p>{{ random_player.team }}</p>
+                        <p>Rank: #{{ random_player.rank }}</p>
+                        <p>Birthday: {{ random_player.birthday }}</p>
+                        <p>Height: {{ random_player.height }}</p>
                     </div>
                     {% endif %}
                 </section>
