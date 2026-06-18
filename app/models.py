@@ -49,6 +49,8 @@ class Tour(db.Model):
     link = db.Column(db.String(250), nullable=False)
     name = db.Column(db.String(250), nullable=False)
     date = db.Column(db.Date)
+    week = db.Column(db.Integer)
+    finalized = db.Column(db.Boolean, default=False)
     season_id = db.Column(db.Integer, default=1)
 
 class TournamentPlacement(db.Model):
@@ -65,28 +67,9 @@ class Result(db.Model):
     __tablename__ = 'results'
 
     id = db.Column(db.Integer, primary_key=True)
-    first = db.Column(db.String(255), nullable=False)
-    second = db.Column(db.String(255), nullable=False)
-    third = db.Column(db.String(255), nullable=False)
-    fourth = db.Column(db.String(255), nullable=False)
-    fifth = db.Column(db.String(255), nullable=False)
-    sixth = db.Column(db.String(255), nullable=False)
-    seventh = db.Column(db.String(255), nullable=False)
-    eigth = db.Column(db.String(255), nullable=False)
-    ninth = db.Column(db.String(255), nullable=False)
-    tenth = db.Column(db.String(255), nullable=False)
-    eleventh = db.Column(db.String(255), nullable=True)
-    twelfth = db.Column(db.String(255), nullable=True)
-    thirtenth = db.Column(db.String(255), nullable=True)
-    fourtenth = db.Column(db.String(255), nullable=True)
-    fifthtenth = db.Column(db.String(255), nullable=True)
-    sixtenth = db.Column(db.String(255), nullable=True)
-    blood1 = db.Column(db.String(255), nullable=True)
-    blood2 = db.Column(db.String(255), nullable=True)
-    blood3 = db.Column(db.String(255), nullable=True)
-    blood4 = db.Column(db.String(255), nullable=True)
     tour_name = db.Column(db.String(255), nullable=True)
     season_id = db.Column(db.Integer, default=1)
+    date = db.Column(db.Date, default=date.today)
 
 
 class Opponent(db.Model):

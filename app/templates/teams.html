@@ -14,16 +14,17 @@
         <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
     </head>
 
-    <body id="newbattle">
-        {%include 'nav.html'%}
+    <body id="team-standings-bg">
+        {% include 'nav.html' %}
 
         <div id="teamcont">
+
             <h2>TEAM STANDINGS</h2>
-            <form method="GET" action="/teams" class="filter-form">
+
+            <form method="GET" action="/teams" class="team-filter-form">
+
                 <select name="season" onchange="this.form.submit()">
-                    <option value="all" {% if selected_season=='all' %}selected{% endif %}>
-                        All Time
-                    </option>
+                    <option value="all" {% if selected_season=='all' %}selected{% endif %}>All Time</option>
 
                     {% for season in seasons %}
                     <option value="{{ season.id }}" {% if selected_season==season.id|string %}selected{% endif %}>
@@ -31,35 +32,239 @@
                     </option>
                     {% endfor %}
                 </select>
+
+                <select name="sort" onchange="this.form.submit()">
+                    <option value="points" {% if selected_sort=='points' %}selected{% endif %}>Sort by Total Points
+                    </option>
+                    <option value="wins" {% if selected_sort=='wins' %}selected{% endif %}>Sort by Wins</option>
+                    <option value="dual" {% if selected_sort=='dual' %}selected{% endif %}>Sort by Dual Points</option>
+                    <option value="tour" {% if selected_sort=='tour' %}selected{% endif %}>Sort by Tour Points</option>
+                </select>
+
             </form>
-            {% for row in teams %}
 
-            {% if selected_season == 'all' %}
-            {% set team = row %}
-            {% set stats = row %}
-            {% else %}
-            {% set team = row[0] %}
-            {% set stats = row[1] %}
-            {% endif %}
+            <div class="team-grid">
 
-            <div class="oneteam">
-                <img id="teamlogo" src="{{ team.logo }}">
+                {% for row in teams %}
 
-                <div class="teaminfo">
-                    <a id="Tname" href="teams/{{ team.id }}">
-                        {{ loop.index }}. {{ team.name }}
-                    </a>
-                </div>
+                {% if selected_season == 'all' %}
+                {% set team = row %}
+                {% set stats = row %}
+                {% else %}
+                {% set team = row[0] %}
+                {% set stats = row[1] %}
+                {% endif %}
 
-                <div class="teaminfo">{{ stats.wins }} - {{ stats.loss }}</div>
-                <div class="teaminfo">{{ stats.points }} Dual Pts</div>
-                <div class="teaminfo">{{ stats.tour_points }} Tour pts</div>
+                <a href="/teams/{{ team.id }}" class="league-team-card">
+
+                    <div class="team-rank">#{{ loop.index }}</div>
+
+                    <img class="league-team-logo" src="{{ team.logo }}">
+
+                    <div class="league-team-info">
+                        <h3>{{ team.name }}</h3>
+
+                        <div class="team-record">
+                            {{ stats.wins or 0 }} - {{ stats.loss or 0 }}
+                        </div>
+
+                        <div class="team-stat-row">
+                            <span>Total Pts</span>
+                            <strong>{{ stats.points or 0 }}</strong>
+                        </div>
+
+                        <div class="team-stat-row">
+                            <span>Dual Pts</span>
+                            <strong>{{ stats.points or 0 }}</strong>
+                        </div>
+
+                        <div class="team-stat-row">
+                            <span>Tour Pts</span>
+                            <strong>{{ stats.tour_points or 0 }}</strong>
+                        </div>
+                    </div>
+
+                </a>
+
+                {% endfor %}
+
             </div>
 
-            {% endfor %}
-            <a href="/finalize/week">Finalize Week</a>
-        </div>
+            <a class="finalize-link" href="/finalize/week">Finalize Week</a>
 
+        </div>
+        <style>
+            #team-standings-bg {
+                min-height: 100vh;
+
+                background-image:
+                    linear-gradient(rgba(0, 0, 0, .55), rgba(0, 0, 0, .7)),
+                    url('https://wallpapercg.com/download/my-hero-academia-season-3-3840x2160-33145.jpg');
+
+                background-size: cover;
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+
+            #teamcont {
+                width: 92%;
+                margin: auto;
+                padding-top: 120px;
+                padding-bottom: 50px;
+            }
+
+            #teamcont h2 {
+                text-align: center;
+                color: white;
+                font-size: 42px;
+                margin-bottom: 22px;
+                letter-spacing: 2px;
+                text-shadow: 0 3px 8px rgba(0, 0, 0, .9);
+            }
+
+            .team-filter-form {
+                display: flex;
+                justify-content: center;
+                gap: 14px;
+                margin-bottom: 32px;
+                flex-wrap: wrap;
+            }
+
+            .team-filter-form select {
+                padding: 10px 18px;
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, .35);
+                background: rgba(0, 0, 0, .6);
+                color: white;
+                font-weight: bold;
+                outline: none;
+                cursor: pointer;
+            }
+
+            .team-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+                gap: 22px;
+            }
+
+            .league-team-card {
+                position: relative;
+
+                min-height: 175px;
+                padding: 22px;
+
+                display: grid;
+                grid-template-columns: 140px 1fr;
+                align-items: center;
+                gap: 22px;
+
+                text-decoration: none;
+                color: white;
+
+                background: rgba(0, 0, 0, .90);
+                backdrop-filter: blur(8px);
+
+                border: 1px solid rgba(255, 255, 255, .22);
+                border-radius: 16px;
+
+                box-shadow: 0 8px 22px rgba(0, 0, 0, .35);
+
+                transition: .2s ease;
+            }
+
+            .league-team-card:hover {
+                transform: translateY(-4px);
+                background: rgba(0, 0, 0, .62);
+            }
+
+            .team-rank {
+                position: absolute;
+                top: 12px;
+                left: 14px;
+
+                width: 38px;
+                height: 38px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                border-radius: 50%;
+
+                background: rgba(255, 255, 255, .9);
+                color: black;
+
+                font-weight: 900;
+                font-size: 15px;
+            }
+
+            .league-team-logo {
+                width: 130px;
+                height: 130px;
+                object-fit: contain;
+                justify-self: center;
+            }
+
+            .league-team-info h3 {
+                margin: 0 0 8px;
+                font-size: 30px;
+                color: white;
+            }
+
+            .team-record {
+                font-size: 22px;
+                font-weight: bold;
+                margin-bottom: 12px;
+                color: #f1f1f1;
+            }
+
+            .team-stat-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                max-width: 230px;
+                margin: 5px 0;
+                padding: 5px 10px;
+
+                background: rgba(255, 255, 255, .12);
+                border-radius: 8px;
+
+                font-size: 15px;
+            }
+
+            .team-stat-row strong {
+                font-size: 18px;
+            }
+
+            .finalize-link {
+                display: block;
+                width: fit-content;
+                margin: 35px auto 0;
+                padding: 12px 24px;
+
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+
+                background: rgba(0, 0, 0, .55);
+                border-radius: 10px;
+                backdrop-filter: blur(6px);
+            }
+
+            @media(max-width: 700px) {
+                .league-team-card {
+                    grid-template-columns: 1fr;
+                    text-align: center;
+                }
+
+                .team-stat-row {
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+            }
+        </style>
     </body>
 
 </html>

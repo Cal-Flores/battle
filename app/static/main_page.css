@@ -103,15 +103,12 @@
 }
 
 #tourn-body {
-    /* height: 100%;
-    background-repeat: no-repeat; */
-    background-size: cover;
-    /* background: url("images/bg6.jpeg") no-repeat center center fixed; */
     background-image: url('https://wallpapersok.com/images/hd/black-and-white-attack-on-titan-logo-qib40rskdp9p813l.jpg');
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
     background-size: cover;
+    min-height: 100vh;
 }
 
 #leader {
@@ -126,7 +123,17 @@
 #newbattle {
     /* background-image: url("images/bg-2.jpeg"); */
     /* background: url('https://i.redd.it/ij89pisoiyc61.png') no-repeat center center fixed; */
-    background: url('https://images3.alphacoders.com/714/714324.png') no-repeat center center fixed;
+    background: url('https://wallpapercg.com/download/my-hero-academia-season-3-3840x2160-33145.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#bgindex {
+    /* background-image: url("images/bg-2.jpeg"); */
+    /* background: url('https://i.redd.it/ij89pisoiyc61.png') no-repeat center center fixed; */
+    background: url('https://images2.alphacoders.com/119/1195940.jpg') no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -1945,9 +1952,14 @@ input[type=text]:hover {
 /* DUAL STYLES FOR THE FORM :) */
 /* Hide the form initially */
 #dual {
-    background-image: url('https://4kwallpapers.com/images/wallpapers/fullmetal-alchemist-3840x2160-10399.png');
+    background-image:
+        linear-gradient(rgba(0, 0, 0, .55),
+            rgba(0, 0, 0, .7)),
+        url('https://4kwallpapers.com/images/wallpapers/fullmetal-alchemist-3840x2160-10399.png');
+
     background-attachment: fixed;
     background-repeat: no-repeat;
+    background-position: center center;
     background-size: cover;
 }
 
@@ -2379,10 +2391,12 @@ body#dual {
 
 #playoffbg {
     min-height: 100vh;
-    background-image: url('https://i.pinimg.com/originals/47/50/8c/47508cf0aaeb0bc0bf840e5df208fb79.jpg');
-    background-position: top center;
-    background-size: 100% auto;
-    background-color: #000;
+    background-image: url('https://images.hdqwalls.com/download/fairy-tail-anime-logo-5k-ac-1366x768.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    min-height: 100vh;
 }
 
 /* Page shell */

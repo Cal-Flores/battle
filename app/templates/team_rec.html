@@ -3,253 +3,615 @@
 
     <head>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Duals -Battle Royale</title>
-        <link rel="stylesheet" href="../static/main_page.css">
-        <link href="https://fonts.cdnfonts.com/css/ninja-naruto" rel="stylesheet">
-        <style>
-            @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
-        </style>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
-    </head>
+        <title>{{ team.name }} - Battle Royale</title>
 
-    <body id="teamPage2">
-        {% include 'nav.html' %}
-        <div id="team-header2">
-            <a href="/team_rec/{{team.id}}">
-                <img src="{{ team.logo }}" class="team-logo2">
-            </a>
-            <div class="team-info">
-                <!-- <h1>{{ team.name }}</h1> -->
-                <p class="record">{{ stats.wins }}–{{ stats.loss }}</p>
-                <p class="stats">Dual Points: {{ stats.points }}</p>
-                <p class="stats">Tournament Points: {{ stats.tour_points }}</p>
-                <p class="stats">Current Rank: {{ stats.rank }}</p>
-            </div>
-        </div>
-        <form method="GET" action="/teams/{{ team.id }}" class="filter-form">
-            <select name="season" onchange="this.form.submit()">
-                <option value="all" {% if selected_season=='all' %}selected{% endif %}>
-                    All Time
-                </option>
-
-                {% for season in seasons %}
-                <option value="{{ season.id }}" {% if selected_season==season.id|string %}selected{% endif %}>
-                    {{ season.name }}
-                </option>
-                {% endfor %}
-            </select>
-        </form>
-        <div style="display: inline-block;">
-            <div>
-                <canvas id="rankChart" width="400" height="200"></canvas>
-                <div id="rankData" data-values='{{ ranks | tojson | safe }}'></div>
-            </div>
-
-            <button id="toggleRadar" style="margin: auto;">Radar Chart</button>
-            <div id="radarContainer" style="display: none;">
-                <div id="myColor" data-color="{{ color }}"></div>
-                <canvas id="playerRadarChart" width="200" height="200"></canvas>
-                <div id="playersData" data-values='{{ players | tojson | safe }}'></div>
-            </div>
-
-        </div>
-
-        <div class="duals-history">
-            <!-- <h2>Dual History</h2> -->
-            {% set record = {'wins': 0, 'losses': 0} %}
-            {% for dual in opponents | sort(attribute='week', reverse=true)%}
-            {% set is_home = dual.home == team.name %}
-            {% set opponent = dual.away if is_home else dual.home %}
-            {% set team_score = dual.hscore if is_home else dual.ascore %}
-            {% set opponent_score = dual.ascore if is_home else dual.hscore %}
-
-            {# decide W/L from the scores #}
-            {% set won = team_score > opponent_score %}
-
-            {# (optional) handle ties if your sport allows them #}
-            {% if team_score == opponent_score %}
-            {% set result_letter = 'T' %}
-            {% else %}
-            {% set result_letter = 'W' if won else 'L' %}
-            {% endif %}
-
-            {% if team_score != opponent_score %}
-            {% if won %}
-            {% set record = {'wins': record.wins + 1, 'losses': record.losses} %}
-            {% else %}
-            {% set record = {'wins': record.wins, 'losses': record.losses + 1} %}
-            {% endif %}
-            {% endif %}
-
-            <a href="../duals/{{ dual.id }}">
-                <div class="dual-line {{ 'win' if won else 'loss' }}">
-                    <span class="wl">{{ result_letter }}</span>
-                    <span class="opponent">
-                        {{ 'vs' if is_home else '@' }} {{ opponent }}
-                    </span>
-                    <span class="score">{{ team_score }} - {{ opponent_score }}</span>
-                    <span class="week">Week {{ dual.week }}</span>
-                    <span class="running-record">{{ record.wins }}–{{ record.losses }}</span>
-                </div>
-            </a>
-            {% endfor %}
-
-        </div>
-
+        <!-- optional: leave off old css if it fights this page -->
+        <!-- <link href="../static/main_page.css" rel="stylesheet"> -->
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            function hexToRGBA(hex, alpha) {
-                // Remove the hash if present
-                hex = hex.replace('#', '');
+    </head>
 
-                // Parse r, g, b values
-                const r = parseInt(hex.substring(0, 2), 16);
-                const g = parseInt(hex.substring(2, 4), 16);
-                const b = parseInt(hex.substring(4, 6), 16);
+    <body class="teamx-body" style="--team-color: {{ color }};">
 
-                return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        {% include 'nav.html' %}
+
+        <div class="teamx-page">
+
+            <section class="teamx-hero">
+                <div class="teamx-hero-text">
+                    <div class="teamx-name">{{ team.name }}</div>
+                    <div class="teamx-sub">{{ team.conf or 'Conference TBD' }} {{ team.divison or 'Division TBD' }}
+                    </div>
+                    <div class="teamx-record">{{ stats.wins }} - {{ stats.loss }}</div>
+                </div>
+
+                <img src="{{ team.logo }}" class="teamx-logo">
+            </section>
+
+            <div class="teamx-tabs">
+                <button class="teamx-tab teamx-active" data-tab="roster">ROSTER</button>
+                <button class="teamx-tab" data-tab="stats">STATS</button>
+                <button class="teamx-tab" data-tab="record">RECORD</button>
+            </div>
+
+            <section id="roster" class="teamx-panel teamx-show">
+                <div class="teamx-section-title">Starting Formation</div>
+
+                <div class="teamx-formation">
+                    {% for item in formation_players %}
+                    <div class="teamx-player teamx-slot-{{ loop.index }}">
+                        {% if item.player %}
+                        <img src="{{ item.player.img }}">
+                        <div class="teamx-player-name">{{ item.player.name }}</div>
+                        <div class="teamx-player-pos">{{ item.slot }}</div>
+                        <div class="teamx-player-rank">
+                            Pos Rank:
+                            {% if item.player.pos_rank %}
+                            #{{ item.player.pos_rank }}
+                            {% else %}
+                            —
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section id="stats" class="teamx-panel">
+                <div class="teamx-stat-grid">
+                    <div class="teamx-stat-card">
+                        <span>Record</span>
+                        <strong>{{ stats.wins }} - {{ stats.loss }}</strong>
+                    </div>
+
+                    <div class="teamx-stat-card">
+                        <span>Dual Points</span>
+                        <strong>{{ stats.points }}</strong>
+                    </div>
+
+                    <div class="teamx-stat-card">
+                        <span>Tournament Points</span>
+                        <strong>{{ stats.tour_points }}</strong>
+                    </div>
+
+                    <div class="teamx-stat-card">
+                        <span>Current Rank</span>
+                        <strong>#{{ stats.rank }}</strong>
+                    </div>
+                </div>
+
+                <div class="teamx-chart-row">
+                    <div class="teamx-chart-card">
+                        <div class="teamx-chart-title">Weekly Rank</div>
+                        <canvas id="rankChart"></canvas>
+                        <div id="rankData" data-values='{{ ranks | tojson | safe }}'></div>
+                    </div>
+
+                    <div class="teamx-chart-card">
+                        <div class="teamx-chart-title">Roster Dual Points</div>
+                        <canvas id="playerRadarChart"></canvas>
+                        <div id="playersData" data-values='{{ players | tojson | safe }}'></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="record" class="teamx-panel">
+                <div class="teamx-record-table">
+
+                    <div class="teamx-record-head">
+                        <div>Result</div>
+                        <div>Opponent</div>
+                        <div>Score</div>
+                        <div>Week</div>
+                        <div>Record</div>
+                    </div>
+
+                    {% set total = namespace(wins=0, losses=0) %}
+
+                    {% for dual in opponents %}
+                    {% set is_home = dual.home == team.name %}
+                    {% set team_score = dual.hscore if is_home else dual.ascore %}
+                    {% set opponent_score = dual.ascore if is_home else dual.hscore %}
+                    {% if team_score != opponent_score %}
+                    {% if team_score > opponent_score %}
+                    {% set total.wins = total.wins + 1 %}
+                    {% else %}
+                    {% set total.losses = total.losses + 1 %}
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+
+                    {% set running = namespace(wins=total.wins, losses=total.losses) %}
+
+                    {% for dual in opponents | sort(attribute='week', reverse=true) %}
+                    {% set is_home = dual.home == team.name %}
+                    {% set opponent = dual.away if is_home else dual.home %}
+                    {% set team_score = dual.hscore if is_home else dual.ascore %}
+                    {% set opponent_score = dual.ascore if is_home else dual.hscore %}
+                    {% set won = team_score > opponent_score %}
+
+                    <a href="../duals/{{ dual.id }}" class="teamx-record-row">
+                        <div class="{{ 'teamx-win' if won else 'teamx-loss' }}">
+                            {{ 'W' if won else 'L' }}
+                        </div>
+
+                        <div>{{ 'vs' if is_home else '@' }} {{ opponent }}</div>
+                        <div>{{ team_score }} - {{ opponent_score }}</div>
+                        <div>Week {{ dual.week }}</div>
+                        <div>{{ running.wins }} - {{ running.losses }}</div>
+                    </a>
+
+                    {% if team_score != opponent_score %}
+                    {% if won %}
+                    {% set running.wins = running.wins - 1 %}
+                    {% else %}
+                    {% set running.losses = running.losses - 1 %}
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+
+                </div>
+            </section>
+
+        </div>
+
+        <style>
+            * {
+                box-sizing: border-box;
             }
 
-            const dynamicColor = $('#myColor').attr('data-color');
-            const rankDiv = document.getElementById('rankData');
-            const rankRaw = JSON.parse(rankDiv.dataset.values || "[]");
+            body.teamx-body {
+                margin: 0;
+                min-height: 100vh;
+                font-family: Arial, Helvetica, sans-serif;
+                color: #1f1f1f;
 
-            const weeks = Array.from({ length: 14 }, (_, i) => i + 1);
+                background-image:
+                    linear-gradient(rgba(0, 0, 0, .45), rgba(0, 0, 0, .65)),
+                    url('PASTE-YOUR-ANIME-BG-URL-HERE');
+
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+
+            .teamx-page {
+                min-height: 100vh;
+                padding-top: 88px;
+                background: rgba(30, 28, 25, .55);
+            }
+
+            .teamx-hero {
+                min-height: 225px;
+                padding: 26px 7%;
+
+                display: grid;
+                grid-template-columns: 1fr 260px;
+                align-items: center;
+
+                background:
+                    linear-gradient(110deg,
+                        rgba(245, 241, 233, .95) 0%,
+                        rgba(245, 241, 233, .95) 60%,
+                        var(--team-color) 60%,
+                        var(--team-color) 100%);
+            }
+
+            .teamx-name {
+                font-size: 46px;
+                line-height: 1;
+                font-weight: 900;
+                color: #222;
+                margin-bottom: 12px;
+            }
+
+            .teamx-sub {
+                font-size: 20px;
+                color: #444;
+                margin-bottom: 5px;
+            }
+
+            .teamx-record {
+                font-size: 22px;
+                color: #333;
+                font-weight: 700;
+            }
+
+            .teamx-logo {
+                width: 185px;
+                height: 185px;
+                object-fit: contain;
+                justify-self: center;
+                filter: drop-shadow(0 7px 8px rgba(0, 0, 0, .35));
+            }
+
+            .teamx-tabs {
+                width: 62%;
+                max-width: 900px;
+                margin: 30px auto;
+
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+
+                border: 2px solid var(--team-color);
+                background: #f8f4ed;
+            }
+
+            .teamx-tab {
+                padding: 16px;
+                border: none;
+                background: #f8f4ed;
+                color: #222 !important;
+                font-size: 16px;
+                font-weight: 900;
+                cursor: pointer;
+            }
+
+            .teamx-tab.teamx-active {
+                background: var(--team-color);
+                color: #fff !important;
+            }
+
+            .teamx-panel {
+                display: none;
+                width: 92%;
+                margin: auto;
+                padding-bottom: 60px;
+            }
+
+            .teamx-panel.teamx-show {
+                display: block;
+            }
+
+            .teamx-section-title {
+                text-align: center;
+                font-size: 38px;
+                color: #ff9f00;
+                font-weight: 900;
+                margin: 15px 0 24px;
+                letter-spacing: 1px;
+            }
+
+            .teamx-formation {
+                max-width: 1080px;
+                height: 520px;
+                margin: auto;
+                padding: 28px 38px;
+
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                grid-template-rows: repeat(4, 1fr);
+                align-items: center;
+                justify-items: center;
+
+                background: rgba(248, 244, 237, .92);
+                border-radius: 10px;
+                border: 1px solid rgba(0, 0, 0, .18);
+                overflow: hidden;
+            }
+
+            .teamx-player {
+                text-align: center;
+                max-width: 125px;
+            }
+
+            .teamx-player img {
+                width: 86px;
+                height: 86px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid var(--team-color);
+                background: white;
+            }
+
+            .teamx-player-name {
+                margin-top: 6px;
+                font-size: 14px;
+                font-weight: 900;
+            }
+
+            .teamx-player-pos {
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--team-color);
+            }
+
+            .teamx-player-rank {
+                font-size: 11px;
+                color: #555;
+            }
+
+            .teamx-slot-1 {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .teamx-slot-2 {
+                grid-column: 6;
+                grid-row: 1;
+            }
+
+            .teamx-slot-3 {
+                grid-column: 4;
+                grid-row: 2;
+            }
+
+            .teamx-slot-4 {
+                grid-column: 2;
+                grid-row: 3;
+            }
+
+            .teamx-slot-5 {
+                grid-column: 6;
+                grid-row: 3;
+            }
+
+            .teamx-slot-6 {
+                grid-column: 2;
+                grid-row: 4;
+            }
+
+            .teamx-slot-7 {
+                grid-column: 4;
+                grid-row: 4;
+            }
+
+            .teamx-slot-8 {
+                grid-column: 6;
+                grid-row: 4;
+            }
+
+            .teamx-stat-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 18px;
+                margin-bottom: 24px;
+            }
+
+            .teamx-stat-card {
+                background: rgba(248, 244, 237, .94);
+                padding: 22px;
+                border-left: 6px solid var(--team-color);
+                border-radius: 8px;
+            }
+
+            .teamx-stat-card span {
+                display: block;
+                color: #555;
+                margin-bottom: 8px;
+                font-weight: 700;
+            }
+
+            .teamx-stat-card strong {
+                font-size: 28px;
+            }
+
+            .teamx-chart-row {
+                display: grid;
+                grid-template-columns: 3fr 2fr;
+                gap: 24px;
+            }
+
+            .teamx-chart-card {
+                background: #242424;
+                color: white;
+                padding: 24px;
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, .18);
+            }
+
+            .teamx-chart-title {
+                font-size: 22px;
+                font-weight: 900;
+                margin-bottom: 15px;
+            }
+
+            .teamx-chart-card canvas {
+                width: 100% !important;
+                height: 370px !important;
+            }
+
+            .teamx-record-table {
+                background: rgba(248, 244, 237, .96);
+                border-radius: 8px;
+                overflow: hidden;
+                border: 1px solid rgba(0, 0, 0, .15);
+            }
+
+            .teamx-record-head,
+            .teamx-record-row {
+                display: grid;
+                grid-template-columns: 1fr 3fr 2fr 2fr 2fr;
+                align-items: center;
+            }
+
+            .teamx-record-head {
+                font-weight: 900;
+                background: #e8dfd1;
+                color: #222;
+            }
+
+            .teamx-record-head div,
+            .teamx-record-row div {
+                padding: 20px 22px;
+                border-right: 1px solid rgba(0, 0, 0, .08);
+            }
+
+            .teamx-record-row {
+                text-decoration: none;
+                color: #222;
+                border-top: 1px solid rgba(0, 0, 0, .08);
+                min-height: 74px;
+                background: rgba(255, 255, 255, .45);
+            }
+
+            .teamx-record-row:hover {
+                background: rgba(255, 255, 255, .75);
+            }
+
+            .teamx-win {
+                color: #118000;
+                font-size: 24px;
+                font-weight: 900;
+            }
+
+            .teamx-loss {
+                color: #c40000;
+                font-size: 24px;
+                font-weight: 900;
+            }
+
+            @media(max-width: 900px) {
+                .teamx-hero {
+                    grid-template-columns: 1fr;
+                    text-align: center;
+                }
+
+                .teamx-tabs {
+                    width: 90%;
+                }
+
+                .teamx-stat-grid,
+                .teamx-chart-row {
+                    grid-template-columns: 1fr;
+                }
+
+                .teamx-formation {
+                    height: auto;
+                    grid-template-columns: repeat(2, 1fr);
+                    grid-template-rows: auto;
+                    gap: 25px;
+                }
+
+                .teamx-slot-1,
+                .teamx-slot-2,
+                .teamx-slot-3,
+                .teamx-slot-4,
+                .teamx-slot-5,
+                .teamx-slot-6,
+                .teamx-slot-7,
+                .teamx-slot-8 {
+                    grid-column: auto;
+                    grid-row: auto;
+                }
+            }
+        </style>
+
+        <script>
+            const teamTabs = document.querySelectorAll('.teamx-tab');
+            const teamPanels = document.querySelectorAll('.teamx-panel');
+
+            teamTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    teamTabs.forEach(t => t.classList.remove('teamx-active'));
+                    teamPanels.forEach(p => p.classList.remove('teamx-show'));
+
+                    tab.classList.add('teamx-active');
+                    document.getElementById(tab.dataset.tab).classList.add('teamx-show');
+                });
+            });
+
+            const dynamicColor = getComputedStyle(document.body).getPropertyValue('--team-color').trim();
+
+            const rankRaw = JSON.parse(document.getElementById('rankData').dataset.values || "[]");
+            const weeks = Array.from({ length: 10 }, (_, i) => i + 1);
+
             const rankMap = {};
-            rankRaw.forEach(r => { rankMap[r.week] = r.rank; });
+            rankRaw.forEach(r => {
+                rankMap[r.week] = r.rank;
+            });
 
-            const rankLabels = weeks;
-            const rankValues = weeks.map(w => rankMap[w] || null); // Fill missing weeks with null
+            const rankValues = weeks.map(w => rankMap[w] || null);
 
-            const ctx = document.getElementById('rankChart').getContext('2d');
-            const canvas = document.getElementById('rankChart');
-            canvas.style.border = `2px solid ${dynamicColor}`;
-            canvas.style.borderRadius = '8px';
-            const tt = document.getElementById('team-header2');
-            tt.style.border = `2px solid ${dynamicColor}`;
-            tt.style.borderRadius = '8px';
-            const rankChart = new Chart(ctx, {
+            new Chart(document.getElementById('rankChart').getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: rankLabels,
+                    labels: weeks,
                     datasets: [{
                         label: 'Weekly Rank',
                         data: rankValues,
                         borderColor: dynamicColor,
-                        backgroundColor: dynamicColor, // Add transparency (e.g., #FF000033)
-                        tension: 0.3,
-                        pointRadius: 4,
+                        backgroundColor: 'transparent',
                         pointBackgroundColor: dynamicColor,
-                        fill: true
+                        pointBorderColor: '#fff',
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        tension: .3,
+                        fill: false
                     }]
                 },
                 options: {
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             reverse: true,
                             min: 1,
-                            max: 16,
-                            title: {
-                                display: true,
-                                text: 'Rank',
-                                color: dynamicColor
-                            },
+                            max: 32,
                             ticks: {
+                                color: '#f5f5f5',
                                 precision: 0,
-                                color: 'white'
-                            }
+                                font: { size: 13, weight: 'bold' }
+                            },
+                            grid: { color: 'rgba(255,255,255,.35)' }
                         },
                         x: {
-                            title: {
-                                display: true,
-                                text: 'Week',
-                                color: dynamicColor
+                            ticks: {
+                                color: '#f5f5f5',
+                                font: { size: 13, weight: 'bold' }
+                            },
+                            grid: { color: 'rgba(255,255,255,.25)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            const playersData = JSON.parse(document.getElementById('playersData').dataset.values || "[]");
+
+            new Chart(document.getElementById('playerRadarChart').getContext('2d'), {
+                type: 'radar',
+                data: {
+                    labels: playersData.map(p => p.name),
+                    datasets: [{
+                        label: 'Dual Points',
+                        data: playersData.map(p => p.dual_points),
+                        backgroundColor: 'transparent',
+                        borderColor: dynamicColor,
+                        pointBackgroundColor: dynamicColor,
+                        pointBorderColor: '#fff',
+                        borderWidth: 3,
+                        fill: false
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            pointLabels: {
+                                color: '#f5f5f5',
+                                font: { size: 12, weight: 'bold' }
                             },
                             ticks: {
-                                stepSize: 1,
-                                color: 'white'
-                            }
+                                color: '#f5f5f5',
+                                backdropColor: 'transparent',
+                                font: { size: 11 }
+                            },
+                            grid: { color: 'rgba(255,255,255,.35)' },
+                            angleLines: { color: 'rgba(255,255,255,.3)' }
                         }
                     },
                     plugins: {
                         legend: {
-                            display: false
+                            labels: { color: '#f5f5f5' }
                         }
                     }
                 }
             });
-            // RADAR CHART NOWWWWW
-            const bgColor = hexToRGBA(dynamicColor, 0.85);
-            document.addEventListener('DOMContentLoaded', () => {
-                const playersRaw = document.getElementById('playersData');
-                const playersData = JSON.parse(playersRaw.dataset.values || '[]');
-
-                const labels = playersData.map(p => p.name);
-                const dataPoints = playersData.map(p => p.points);
-
-                const canvas = document.getElementById('playerRadarChart');
-                if (!canvas) {
-                    console.error("Canvas element not found");
-                    return;
-                }
-
-                const ctx = canvas.getContext('2d');
-                if (!ctx) {
-                    console.error("Could not get 2D context from canvas");
-                    return;
-                }
-
-                new Chart(ctx, {
-                    type: 'radar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Player Points',
-                            data: dataPoints,
-                            backgroundColor: bgColor,
-                            borderColor: 'white',
-                            pointBackgroundColor: dynamicColor,
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            r: {
-                                beginAtZero: true,
-                                pointLabels: {
-                                    color: '#fff'
-                                },
-                                ticks: {
-                                    color: '#fff'
-                                },
-                                grid: {
-                                    color: '#888'
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                labels: {
-                                    color: '#fff'
-                                }
-                            }
-                        }
-                    }
-                });
-            });
-            document.getElementById('toggleRadar').addEventListener('click', () => {
-                const radarContainer = document.getElementById('radarContainer');
-                if (radarContainer.style.display === 'none') {
-                    radarContainer.style.display = 'block';
-                } else {
-                    radarContainer.style.display = 'none';
-                }
-            });
-
         </script>
 
     </body>

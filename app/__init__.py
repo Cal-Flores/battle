@@ -35,16 +35,50 @@ Stanford= "https://gostanford.com/imgproxy/l6GXJbFV4z1yPuiCbXCePofeGNcKTlM78I9yN
 Virginia_Tech= "https://sportslogohistory.com/wp-content/uploads/2018/01/virginia_tech_hokies_1983-pres.png"
 northern_iowa = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/uni.sidearmsports.com/images/nextgen_2023/logo_main.svg'
 wyoming = 'https://upload.wikimedia.org/wikipedia/commons/9/91/Wyoming_Athletics_logo.svg'
-colorado = 'https://www.sdstate.edu/sites/default/files/2024-05/Jackrabbit-5%402x_1.png'
 asu = 'https://logos-world.net/wp-content/uploads/2022/11/Arizona-State-Sun-Devils-Logo.png'
-unc = 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f9/Northern_Colorado_Bears_logo.svg/250px-Northern_Colorado_Bears_logo.svg.png'
 rtc = 'https://sportslogohistory.com/wp-content/uploads/2022/05/north_carolina_state_wolfpack_2011-pres_a.png'
-
+lsu = 'https://sportslogohistory.com/wp-content/uploads/2018/07/lsu_tigers_2002-2013_s.png'
+notre = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Notre_Dame_Fighting_Irish_logo.svg/250px-Notre_Dame_Fighting_Irish_logo.svg.png'
+tt = 'https://upload.wikimedia.org/wikipedia/commons/4/4e/Texas_Tech_Athletics_logo.svg'
+texas = 'https://logos-world.net/wp-content/uploads/2022/02/Texas-Longhorns-Logo-2011.png'
+sdsu = 'https://www.sdstate.edu/sites/default/files/2024-05/Jackrabbit-5%402x_1.png'
+unc = 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f9/Northern_Colorado_Bears_logo.svg/1280px-Northern_Colorado_Bears_logo.svg.png'
+bama = 'https://upload.wikimedia.org/wikipedia/commons/1/1b/Alabama_Crimson_Tide_logo.svg'
+florida = 'https://www.wruf.com/wp-content/uploads/2019/04/florida-gators-logo-png-transparent1.png'
+georgia = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Georgia_Athletics_logo.svg/1280px-Georgia_Athletics_logo.svg.png'
+clemson = 'https://upload.wikimedia.org/wikipedia/commons/7/72/Clemson_Tigers_logo.svg'
+rutgers = 'https://upload.wikimedia.org/wikipedia/commons/6/69/Rutgers_Athletics_Logo.png'
+orgeon_state = 'https://upload.wikimedia.org/wikipedia/en/thumb/1/1b/Oregon_State_Beavers_logo.svg/1280px-Oregon_State_Beavers_logo.svg.png'
+illinois = 'https://brand.illinois.edu/wp-content/uploads/2024/02/Color-Variation-Orange-Block-I-White-Background.png'
+orgeon = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Oregon_Ducks_logo.svg/330px-Oregon_Ducks_logo.svg.png'
 
 @app.route('/')
 def index():
     players = Player.query.filter_by(active=True).order_by(Player.name.asc()).all()
     db.session.commit()
+
+    new_team = Team(
+    name='',
+    logo='',
+    conf='',
+    divison='',
+
+    wins=0,
+    loss=0,
+    points=0,
+    tour_points=0,
+    rank=0,
+
+    season_id=2
+    )
+
+    db.session.add(new_team)
+
+
+
+
+
+
     return render_template('main_page.html', players = players)
 
 
@@ -634,6 +668,7 @@ def single_tour(id):
 from collections import defaultdict, Counter
 from sqlalchemy import or_
 champ2 = [ # 3
+    'Round of 256',
     'Round of 128',
     'Round of 64',
     'Round of 32',
@@ -1121,42 +1156,6 @@ def add_opponent(id):
         return render_template('redirect.html', player=player)
     return render_template('add_opponent.html',player=player, form=form)
 
-########DELETE#########
-@app.route('/delete/<id>')
-def opp_delete(id):
-    opponent = Opponent.query.get(id)
-    player = Player.query.get(opponent.player_id)
-    tourname = opponent.tour_name
-
-    tid = 7  # <---- Change this for Current Tour!!
-    fixedPnts = 1  # <---- Change this for appropriate number!!
-    if opponent.victory == True:
-        player.wins -= 1
-        player.tour_points -= fixedPnts
-        # tourData = TourScore.query.filter((TourScore.name == tourname)).one()
-        # tourData.osu -= fixedPnts # <---- Change this the .team to the winners team ex: tourData.mich!
-        # indvTeam = TourTeam.query.filter(and_(TourTeam.playerId == player.id, TourTeam.tourId == tid)).one()
-        # indvTeam.score -= fixedPnts
-        # indvTeam.wins -= 1
-
-
-        # player.dual_points -= 1.5
-        # player.d_wins -= 1
-        # player.tour_points -= fixedPnts
-
-
-        db.session.commit()
-    else:
-        #loserId = 84
-        player.loss -= 1
-        #player.d_loss -= 1
-        #indvTeam = TourTeam.query.filter(and_(TourTeam.playerId == loserId, TourTeam.tourId == tid)).one()
-        #indvTeam.loss -= 1
-        db.session.commit()
-
-    db.session.delete(opponent)
-    db.session.commit()
-    return render_template('redirect.html', player = player)
 
 
 
@@ -1653,31 +1652,12 @@ def new_placement():
     if request.method == 'POST':
         tour_name = request.form.get('tour_name')
 
+        active_season = Season.query.filter_by(active=True).first()
+        season_id = active_season.id if active_season else 1
+
         result = Result(
             tour_name=tour_name,
-
-            first="",
-            second="",
-            third="",
-            fourth="",
-            fifth="",
-            sixth="",
-            seventh="",
-            eigth="",
-            ninth="",
-            tenth="",
-
-            eleventh="",
-            twelfth="",
-            thirtenth="",
-            fourtenth="",
-            fifthtenth="",
-            sixtenth="",
-
-            blood1="",
-            blood2="",
-            blood3="",
-            blood4=""
+            season_id=season_id
         )
 
         db.session.add(result)
@@ -1700,7 +1680,7 @@ def new_placement():
                 player_id=player.id,
                 place=place,
                 award=award_for_place(place),
-                season_id=result.season_id
+                season_id=season_id
             )
 
             db.session.add(placement)
@@ -1865,37 +1845,44 @@ from flask import request
 @app.route('/teams')
 def teams():
     selected_season = request.args.get('season', 'all')
+    selected_sort = request.args.get('sort', 'points')
 
     if selected_season == 'all':
-        teams = Team.query.order_by(
-            Team.wins.desc(),
-            Team.loss.asc(),
-            Team.points.desc()
-        ).all()
+        teams = Team.query.all()
+
+        if selected_sort == 'wins':
+            teams = sorted(teams, key=lambda t: t.wins or 0, reverse=True)
+        elif selected_sort == 'dual':
+            teams = sorted(teams, key=lambda t: t.points or 0, reverse=True)
+        elif selected_sort == 'tour':
+            teams = sorted(teams, key=lambda t: t.tour_points or 0, reverse=True)
+        else:
+            teams = sorted(teams, key=lambda t: t.points or 0, reverse=True)
 
     else:
-        season_id = int(selected_season)
-
-        teams = db.session.query(Team, TeamSeasonStats).join(
-            TeamSeasonStats,
-            Team.id == TeamSeasonStats.team_id
-        ).filter(
-            TeamSeasonStats.season_id == season_id
-        ).order_by(
-            TeamSeasonStats.wins.desc(),
-            TeamSeasonStats.loss.asc(),
-            TeamSeasonStats.points.desc()
+        teams = db.session.query(Team, TeamSeasonStats).filter(
+            Team.id == TeamSeasonStats.team_id,
+            TeamSeasonStats.season_id == int(selected_season)
         ).all()
+
+        if selected_sort == 'wins':
+            teams = sorted(teams, key=lambda row: row[1].wins or 0, reverse=True)
+        elif selected_sort == 'dual':
+            teams = sorted(teams, key=lambda row: row[1].points or 0, reverse=True)
+        elif selected_sort == 'tour':
+            teams = sorted(teams, key=lambda row: row[1].tour_points or 0, reverse=True)
+        else:
+            teams = sorted(teams, key=lambda row: row[1].points or 0, reverse=True)
 
     seasons = Season.query.order_by(Season.id.asc()).all()
 
     return render_template(
         'teams.html',
         teams=teams,
+        seasons=seasons,
         selected_season=selected_season,
-        seasons=seasons
+        selected_sort=selected_sort
     )
-
 
 from flask import request
 from sqlalchemy import or_
@@ -1905,6 +1892,37 @@ def one_team(id):
     selected_season = request.args.get('season', 'all')
     team = Team.query.get_or_404(id)
 
+    team_players = Player.query.filter_by(team=team.name, active=True).all()
+
+    random.shuffle(team_players)
+
+    players_data = [
+    {
+        "name": p.name,
+        "img": p.img,
+        "position": p.position,
+        "pos_rank": p.pos_rank,
+        "dual_points": p.dual_points or 0
+    }
+    for p in team_players
+    ]
+
+    formation_slots = [
+    "Defender", "Defender",
+    "Captain",
+    "Vanguard", "Vanguard",
+    "Guard", "Center", "Guard"
+    ]
+
+    formation_players = []
+
+    for i, slot in enumerate(formation_slots):
+        player = team_players[i] if i < len(team_players) else None
+
+        formation_players.append({
+        "slot": slot,
+        "player": player
+        })
     # ---------------- TEAM STATS ----------------
     if selected_season == 'all':
         stats = team
@@ -2008,10 +2026,11 @@ def one_team(id):
         'team_rec.html',
         team=team,
         stats=stats,
+        players=players_data,
+        formation_players=formation_players,
         opponents=opponents,
         ranks=ranks,
         color=color,
-        players=players,
         seasons=seasons,
         selected_season=selected_season
     )
@@ -2087,156 +2106,154 @@ def one_team_rec(id):
     )
 
 
+PLACE_FIELDS = [
+    ("first", 1, 25),
+    ("second", 2, 21),
+    ("third", 3, 18),
+    ("fourth", 4, 15),
+    ("fifth", 5, 14),
+    ("sixth", 6, 12),
+    ("seventh", 7, 11),
+    ("eigth", 8, 10),
+    ("ninth", 9, 9),
+    ("tenth", 10, 8),
+    ("eleventh", 11, 7),
+    ("twelfth", 12, 6),
+    ("thirtenth", 13, 5),
+    ("fourtenth", 14, 4),
+    ("fifthtenth", 15, 3),
+    ("sixtenth", 16, 2),
+]
+
+
+def award_for_place(place):
+    if place == 1:
+        return "gold"
+    if place == 2:
+        return "silver"
+    if place == 3:
+        return "bronze"
+    if place == 4:
+        return "wood"
+    if place in [5, 6, 7, 8]:
+        return "medal"
+    if place in [9, 10, 11, 12]:
+        return "badge"
+    if place in [13, 14, 15, 16]:
+        return "ribbon"
+    if 17 <= place <= 24:
+        return "blood"
+
+    return None
+
+
 @app.route('/new_result', methods=['POST'])
 def new_result():
     form = NewResult()
+
     if form.validate_on_submit():
-        player1 = Player.query.filter(form.data['first'] == Player.name).one()
-        player_img = player1.img
-        player1.points += 25
-        player1.gold += 1
 
-        player2 = Player.query.filter(form.data['second'] == Player.name).one()
-        player_img2 = player2.img
-        player2.points += 21
-        player2.silver += 1
+        active_season = Season.query.filter_by(active=True).first()
+        season_id = active_season.id if active_season else 1
 
-        player3 = Player.query.filter(form.data['third'] == Player.name).one()
-        player_img3 = player3.img
-        player3.points += 18
-        player3.bronze += 1
+        tour_id = int(form.data.get("tour_id", 0))
+        tour = Tour.query.get(tour_id)
 
-        player4 = Player.query.filter(form.data['fourth'] == Player.name).one()
-        player_img4 = player4.img
-        player4.points += 15
-        player4.medal += 1
+        if not tour:
+            return "Tournament not found"
 
-        player5 = Player.query.filter(form.data['fifth'] == Player.name).one()
-        player_img5 = player5.img
-        player5.points += 14
-        player5.medal += 1
+        new_result = Result(
+            tour_name=tour.name,
+            season_id=season_id
+        )
 
-        player6 = Player.query.filter(form.data['sixth'] == Player.name).one()
-        player_img6 = player6.img
-        player6.points += 12
-        player6.medal += 1
-
-        player7 = Player.query.filter(form.data['seventh'] == Player.name).one()
-        player_img7 = player7.img
-        player7.points += 11
-        player7.medal += 1
-
-        player8 = Player.query.filter(form.data['eigth'] == Player.name).one()
-        player_img8 = player8.img
-        player8.points += 10
-        player8.medal += 1
-
-        player9 = Player.query.filter(form.data['ninth'] == Player.name).one()
-        player_img9 = player9.img
-        player9.points += 9
-        player9.badge += 1
-
-        player10 = Player.query.filter(form.data['tenth'] == Player.name).one()
-        player_img10 = player10.img
-        player10.points += 8
-        player10.badge += 1
-
-        player11 = Player.query.filter(form.data['eleventh'] == Player.name).one()
-        player_img11 = player11.img
-        player11.points += 7
-        player11.badge += 1
-
-        player12 = Player.query.filter(form.data['twelfth'] == Player.name).one()
-        player_img12 = player12.img
-        player12.points += 6
-        player12.badge += 1
-
-        player13 = Player.query.filter(form.data['thirtenth'] == Player.name).one()
-        player_img13 = player13.img
-        player13.points += 5
-        player13.badge += 1
-
-        player14 = Player.query.filter(form.data['fourtenth'] == Player.name).one()
-        player_img14 = player14.img
-        player14.points += 4
-        player14.badge += 1
-
-        player15 = Player.query.filter(form.data['fifthtenth'] == Player.name).one()
-        player_img15 = player15.img
-        player15.points += 3
-        player15.badge += 1
-
-        player16 = Player.query.filter(form.data['sixtenth'] == Player.name).one()
-        player_img16 = player16.img
-        player16.points += 2
-        player16.badge += 1
-        ####### LOGIC FOR RANKHISTORY ###########
-        tour_id = 6 ## change this?
-        RankHistory.query.filter(RankHistory.tourId == tour_id).delete()
-        for i in range(1,209):
-            if i != 132:
-                player = Player.query.get(i)
-                print(player.name)
-                today_score = TourTeam.query.filter(and_(TourTeam.tourId == tour_id, TourTeam.playerId == i)).first()
-                score = today_score.score
-                new_int = RankHistory(tourId = tour_id, playerId = i, score = score, rank = player.rank, total = player.tour_points)
-                db.session.add(new_int)
-        ######## LOGIC FOR TEAM TOUR POINTS ########
-                teams = Team.query.all()
-                tour = TourScore.query.get(tour_id)
-        for team in teams:
-                if team.name == 'Virginia Tech':
-                    team.tour_points += tour.vt
-                if team == 'Penn State':
-                    team.tour_points += tour.psu
-                if team == 'Oklahoma State':
-                    team.tour_points += tour.okst
-                if team == 'Iowa':
-                   team.tour_points += tour.iowa
-                if team == 'Iowa State':
-                    team.tour_points += tour.isu
-                if team == 'Minnesota':
-                    team.tour_points += tour.minn
-                if team == 'Stanford':
-                    team.tour_points += tour.stan
-                if team == 'NC State':
-                    team.tour_points += tour.ncst
-                if team == 'Missouri':
-                    team.tour_points += tour.mizz
-                if team == 'Lehigh':
-                    team.tour_points += tour.leh
-                if team == 'Cornell':
-                    team.tour_points += tour.corn
-                if team == 'Michigan':
-                    team.tour_points += tour.mich
-                if team == 'Ohio State':
-                    team.tour_points += tour.osu
-                if team == 'Nebraska':
-                    team.tour_points += tour.neb
-
-
-        params = {
-            'first': player_img,
-            'second': player_img2,
-            'third': player_img3,
-            'fourth': player_img4,
-            'fifth': player_img5,
-            'sixth': player_img6,
-            'seventh': player_img7,
-            'eigth': player_img8,
-            'ninth': player_img9,
-            'tenth': player_img10,
-            'eleventh': player_img11,
-            'twelfth': player_img12,
-            'thirtenth': player_img13,
-            'fourtenth': player_img14,
-            'fifthtenth': player_img15,
-            'sixtenth': player_img16,
-        }
-        new_result = Result(**params)
         db.session.add(new_result)
+        db.session.flush()
+
+        for field_name, place, points in PLACE_FIELDS:
+
+            player_name = form.data[field_name]
+
+            if not player_name:
+                continue
+
+            player = Player.query.filter_by(name=player_name).first()
+
+            if not player:
+                print("Could not find player:", player_name)
+                continue
+
+            award = award_for_place(place)
+
+            player.points = (player.points or 0) + points
+
+            if award == "gold":
+                player.gold = (player.gold or 0) + 1
+            elif award == "silver":
+                player.silver = (player.silver or 0) + 1
+            elif award == "bronze":
+                player.bronze = (player.bronze or 0) + 1
+            elif award == "wood":
+                player.wood = (player.wood or 0) + 1
+            elif award == "medal":
+                player.medal = (player.medal or 0) + 1
+            elif award == "badge":
+                player.badge = (player.badge or 0) + 1
+            elif award == "ribbon":
+                player.ribbon = (player.ribbon or 0) + 1
+            elif award == "blood":
+                player.blood = (player.blood or 0) + 1
+
+            placement = TournamentPlacement(
+                result_id=new_result.id,
+                player_id=player.id,
+                place=place,
+                award=award,
+                season_id=season_id
+            )
+
+            db.session.add(placement)
+
+        RankHistory.query.filter_by(tourId=tour.id).delete()
+
+        tour_team_rows = TourTeam.query.filter_by(
+            tourId=tour.id
+        ).all()
+
+        # We will move rankHistory to its own route for season 2 Caleb
+        for row in tour_team_rows:
+            player = Player.query.get(row.playerId)
+
+            if not player:
+                continue
+
+            new_rank = RankHistory(
+                tourId=tour.id,
+                playerId=player.id,
+                score=row.score or 0,
+                rank=player.rank,
+                total=player.tour_points or 0,
+                season_id=season_id
+            )
+
+            db.session.add(new_rank)
+
+        team_score_rows = TournamentTeamScore.query.filter_by(
+            tour_id=tour.id
+        ).all()
+
+        for row in team_score_rows:
+            team = Team.query.get(row.team_id)
+
+            if not team:
+                continue
+
+            team.tour_points = (team.tour_points or 0) + (row.score or 0)
+
         db.session.commit()
+
         return redirect('/results')
+
     return 'Bad Data'
 
 
@@ -2244,582 +2261,241 @@ def new_result():
 
 @app.route('/new_battle', methods=['GET', 'POST'])
 def new_battle():
-    champ = [ # 3
-    'Round of 128',
-    'Round of 64',
-    'Round of 32',
-    'Round of 16',
-    'Quarter-Final',
+
+    champ = [
+        'Round of 256',
+        'Round of 128',
+        'Round of 64',
+        'Round of 32',
+        'Round of 16',
+        'Quarter-Final',
     ]
-    cons = [ #1
-    'Consolation Round',
-    'Consolation Round 2',
-    'Consolation Round 3',
-    'Cons-Semi',
-    'Cons-Quarter',
-    'Blood Round',
-    'Round of 12',
-    'Cons-24',
-    'Cons-48',
-    'Cons-64',
-    'Cons-32',
-    'Cons-16',
-    'Cons-12',
-    'Placement Round'
+
+    cons = [
+        'Consolation Round',
+        'Consolation Round 2',
+        'Consolation Round 3',
+        'Cons-Semi',
+        'Cons-Quarter',
+        'Blood Round',
+        'Round of 12',
+        'Cons-24',
+        'Cons-48',
+        'Cons-64',
+        'Cons-32',
+        'Cons-16',
+        'Cons-12',
+        'Placement Round'
     ]
-    medal_round = [ # 4
-    'Bronze Medal Match',
-    '5th Place Match',
-    '7th Place Match',
-    'Semi-Final',
+
+    medal_round = [
+        'Bronze Medal Match',
+        '5th Place Match',
+        '7th Place Match',
+        'Semi-Final',
     ]
-    badge_round = [ #3.5
-    '9th Place Match',
-    '11th Place Match',
-    '13th Place Match',
-    '15th Place Match',
+
+    badge_round = [
+        '9th Place Match',
+        '11th Place Match',
+        '13th Place Match',
+        '15th Place Match',
     ]
+
     form = NewBattle()
-    names = [
-  "Abyss",
-"Adult Gon",
-"Akatsuki Sasuke",
-"Aki",
-"Alex Louis",
-"Alphonse",
-"Amaterasu Sasuke",
-"Anbu Itachi",
-"Anbu Kakashi",
-"Android 18",
-"Armor Titan",
-"Asta",
-"Asuma",
-"Attack Titan",
-"Beast Titan",
-"Bisky",
-"Bonolenov",
-"Byakuya",
-"Cammy",
-"Cart Titan",
-"Cell",
-"Chainsaw Man",
-"Chakra Naruto",
-"Choji",
-"Choso",
-"Chrollo",
-"Chun-Li",
-"Colossal Titan",
-"Deidara",
-"Dot",
-"Edward",
-"Envy",
-"Erwin",
-"Erza",
-"Feitan",
-"Female Titan",
-"Fern",
-"Flamme",
-"Franklin",
-"Frieren",
-"Frieza",
-"Fubuki",
-"Gaara",
-"Geto",
-"Ging",
-"Godspeed Killua",
-"Gohan",
-"Gojo",
-"Goku",
-"Gon",
-"Gotoh",
-"Gray",
-"Greed",
-"Hanzo",
-"Hashirama",
-"Hidan",
-"Himeno",
-"Hinata",
-"Hisoka",
-"Hitsugaya",
-"Ichigo",
-"Ikalgo",
-"Illumi",
-"Ino",
-"Inosuke",
-"Itachi",
-"Jaw Titan",
-"Jellal",
-"Jiraiya",
-"Juubi",
-"Juubito",
-"Kaguya",
-"Kaiju No. 8",
-"Kakashi",
-"Kakuzu",
-"Kalluto",
-"Kankuro",
-"Kasumi",
-"Katana Man",
-"Kenjaku",
-"Kiba",
-"Kikoru",
-"Killer Bee",
-"Killua",
-"Kisame",
-"Kishibe",
-"Kite",
-"Knuckle",
-"Kobeni",
-"Konan",
-"Kurama",
-"Kurapika",
-"Lance",
-"Laxus",
-"Leorio",
-"Levi",
-"Ling",
-"Luffy",
-"Lust",
-"Machi",
-"Madara",
-"Mahito",
-"Mai",
-"Majin Buu",
-"Maki",
-"Makima",
-"Mash",
-"May",
-"Mechamaru",
-"Megumi",
-"Mei Mei",
-"Menthuthuyoupi",
-"Meruem",
-"Might Guy",
-"Mikasa",
-"Mina",
-"Minato",
-"Momo",
-"Muzan",
-"Nami",
-"Nanami",
-"Natsu",
-"Neferpitou",
-"Neji",
-"Netero",
-"Nezuko",
-"Nobara",
-"Nobunaga",
-"Noelle",
-"Noritoshi",
-"Obito",
-"Olivier",
-"Orochimaru",
-"Pain",
-"Pakunoda",
-"Panda",
-"Phinks",
-"Piccolo",
-"Pokkle",
-"Ponzu",
-"Power",
-"Rage Tobi",
-"Rayne",
-"Renji",
-"Reno",
-"Reze",
-"Riza",
-"Rock Lee",
-"Roy",
-"Rukia",
-"Sage Naruto",
-"Sai",
-"Saitama",
-"Sakura",
-"Sasori",
-"Sasuke",
-"Scar",
-"Shaiapouf",
-"Shalnark",
-"Shikamaru",
-"Shino",
-"Shisui",
-"Shizuku",
-"Shukaku",
-"Silva",
-"Six Paths Naruto",
-"Soshiro",
-"Stark",
-"Suigetsu",
-"Sukuna",
-"Tanjiro",
-"Tatsumaki",
-"Temari",
-"Tobirama",
-"Todo",
-"Toge",
-"Toji",
-"Trunks",
-"Tsunade",
-"Uryū",
-"Utahime",
-"Uvogin",
-"Vegeta",
-"Walker",
-"Yamato",
-"Yamamoto",
-"Yoruichi",
-"Yuji",
-"Yuki",
-"Yuno",
-"Zenitsu",
-"Zoro",
-"Sheele",
-"Bulat",
-"Esdeath",
-"Akame",
-"Tatsumi",
-"Mine",
-"Leone",
-"Kurome",
-"Seryu",
-"Toa & Ju Fa",
-"Gabimaru",
-"Sagiri",
-"Chobei",
-"Yuzuriha",
-"Shion",
-"Gantetsusai",
-'Tao & Ju Fa',
-'Mahoraga',
-'Tengen',
-'Zohakuten',
-'Gyomei',
-'Rengoku',
-'Sanemi',
-'Daki',
-'Gluttony',
-'Giyu',
-'Obanai',
-'Muichiro',
-'Gyokko',
-'Hohenheim',
-'Nico Robin',
-'Jogo',
-'Shinobu',
-'Mitsuri',
-'All for One',
-'Tsukoyomi',
-'Uravity',
-'Eraser Head',
-'Deku',
-'All Might',
-'Lemillion',
-'Mirko',
-'Red Riot',
-'Endeavor',
-'Bakugo',
-'Shoto',
-'Dabi',
-'Kurogiri',
-'Nejire',
-'Stain',
-'Lady Nagant',
-'Hawks',
-'Yaoyorozu',
-'Overhaul',
-'Midnight',
-'Himiko',
-'Shigaraki',
-'Pinky',
-'Angel',
-'Lucy',
-'Viole',
-'Khun',
-'Rak',
-'Yuri',
-'Endorsi',
-'Yihwa',
-]
+
+    players = Player.query.filter_by(active=True).order_by(Player.name.asc()).all()
+    names = [player.name for player in players]
 
     if form.validate_on_submit():
-        player_1 = Player.query.filter(Player.name == form.data['player_1']).one()
-        player_2 = Player.query.filter(Player.name == form.data['player_2']).one()
-        if form.data['round'] == 'Dual':
-            print('Das a dual')
-            ### CALCULATING DUAL POINT LOGIC
+
+        player_1 = Player.query.filter_by(name=form.data['player_1']).one()
+        player_2 = Player.query.filter_by(name=form.data['player_2']).one()
+
+        score = form.data['score'] or 0
+        round_name = form.data['round']
+        tour_name = form.data['tournamnet'] or 'Battle Royale 1'
+
+        # ----------------------------
+        # DUAL MATCH
+        # ----------------------------
+
+        if round_name == 'Dual':
+
             dual_pts = 0
-            if form.data['score'] >= 1000:
+
+            if score >= 1000:
                 dual_pts = 7
-            elif form.data['score'] >= 700:
+            elif score >= 700:
                 dual_pts = 5
-            elif form.data['score'] >= 400:
+            elif score >= 400:
                 dual_pts = 4
             else:
                 dual_pts = 3
 
-            # DETERMINING THE WINNER HERE
             if form.data['victory_1'] == True:
-                player_1.wins += 1
-                player_1.d_wins += 1
-                player_1.dual_points += dual_pts
-                player_1.tour_points += (dual_pts / 2)
-                player_2.loss += 1
-                player_2.d_loss += 1
-            elif form.data['victory_2'] == True:
-                player_2.wins += 1
-                player_2.d_wins += 1
-                player_2.dual_points += dual_pts
-                player_2.tour_points += (dual_pts / 2)
-                player_1.loss += 1
-                player_1.d_loss += 1
-            # ADDING IT TO OPPS
-            params = {
-            'player_id': player_1.id,
-            'opponent_id': player_2.id,
-            'victory': form.data['victory_1'],
-            'score': form.data['score'],
-            'tour_name': form.data['tournamnet'] or 'Battle Royale 1',
-            'round': form.data['round']
-            }
-            para = {
-            'player_id': player_2.id,
-            'opponent_id': player_1.id,
-            'victory': form.data['victory_2'],
-            'score': form.data['score'],
-            'tour_name': form.data['tournamnet'] or 'Battle Royal 1',
-            'round': form.data['round']
-             }
+                player_1.wins = (player_1.wins or 0) + 1
+                player_1.d_wins = (player_1.d_wins or 0) + 1
+                player_1.dual_points = (player_1.dual_points or 0) + dual_pts
+                player_1.tour_points = (player_1.tour_points or 0) + (dual_pts / 2)
 
-            player_1_record = Opponent(**params)
+                player_2.loss = (player_2.loss or 0) + 1
+                player_2.d_loss = (player_2.d_loss or 0) + 1
+
+            elif form.data['victory_2'] == True:
+                player_2.wins = (player_2.wins or 0) + 1
+                player_2.d_wins = (player_2.d_wins or 0) + 1
+                player_2.dual_points = (player_2.dual_points or 0) + dual_pts
+                player_2.tour_points = (player_2.tour_points or 0) + (dual_pts / 2)
+
+                player_1.loss = (player_1.loss or 0) + 1
+                player_1.d_loss = (player_1.d_loss or 0) + 1
+
+            player_1_record = Opponent(
+                player_id=player_1.id,
+                opponent_id=player_2.id,
+                victory=form.data['victory_1'],
+                score=score,
+                tour_name=tour_name,
+                round=round_name,
+                fotn=form.data['fotn']
+            )
+
+            player_2_record = Opponent(
+                player_id=player_2.id,
+                opponent_id=player_1.id,
+                victory=form.data['victory_2'],
+                score=score,
+                tour_name=tour_name,
+                round=round_name,
+                fotn=form.data['fotn']
+            )
+
             db.session.add(player_1_record)
-            player_2_record = Opponent(**para)
             db.session.add(player_2_record)
             db.session.commit()
+
             return redirect('/')
+
+        # ----------------------------
+        # TOURNAMENT MATCH POINTS
+        # ----------------------------
 
         teampnts = 0
 
-        if form.data['round'] in champ:
+        if round_name in champ:
             teampnts += 3
-        if form.data['round'] == 'Round of 256':
+
+        if round_name == 'Round of 256':
             teampnts += 3
-        if form.data['round'] in cons:
+
+        if round_name in cons:
             teampnts += 1
-        if form.data['round'] in badge_round:
+
+        if round_name in badge_round:
             teampnts += 3.5
-        if form.data['round'] in medal_round:
+
+        if round_name in medal_round:
             teampnts += 4
-        if form.data['round'] == 'Gold Medal Match':
+
+        if round_name == 'Gold Medal Match':
             teampnts += 7
 
-        if form.data['score'] >= 1000:
+        if score >= 1000:
             teampnts += 2
-        elif form.data['score'] >= 750:
+        elif score >= 750:
             teampnts += 1.5
-        elif form.data['score'] >= 500:
+        elif score >= 500:
             teampnts += 1
 
+        tour = Tour.query.filter_by(name=tour_name).first()
+
+        if not tour:
+            return "Tournament not found"
+
+        def update_winner(winner):
+            winner.wins = (winner.wins or 0) + 1
+            winner.tour_points = (winner.tour_points or 0) + teampnts
+
+            if score >= 500:
+                winner.bonus = (winner.bonus or 0) + 1
+
+            team = Team.query.filter_by(name=winner.team).first()
+
+            if team:
+                team_score = TournamentTeamScore.query.filter_by(
+                    tour_id=tour.id,
+                    team_id=team.id
+                ).first()
+
+                if team_score:
+                    team_score.score = (team_score.score or 0) + teampnts
+
+            player_score = TourTeam.query.filter_by(
+                tourId=tour.id,
+                playerId=winner.id
+            ).first()
+
+            if player_score:
+                player_score.score = (player_score.score or 0) + teampnts
+                player_score.wins = (player_score.wins or 0) + 1
+
+                if round_name == 'Round of 16' or round_name == 'Blood Round':
+                    player_score.status = 'All-American'
+
+        def update_loser(loser):
+            loser.loss = (loser.loss or 0) + 1
+
+            player_score = TourTeam.query.filter_by(
+                tourId=tour.id,
+                playerId=loser.id
+            ).first()
+
+            if player_score:
+                player_score.loss = (player_score.loss or 0) + 1
+
+                if player_score.status == 'All-American':
+                    pass
+                elif player_score.status == 'Champ':
+                    player_score.status = 'Cons'
+                elif player_score.status == 'Cons':
+                    player_score.status = 'Eliminated'
+
         if form.data['victory_1'] == True:
-            player_1.wins += 1
-            player_1.tour_points += teampnts
-            if form.data['score'] >= 500:
-                player_1.bonus += 1
-            db.session.commit()
-            ##### NEW LOGIC FOR TEAM SCORES rudy#####
-            team = player_1.team
-            tourn =  TourScore.query.filter(TourScore.name == form.data['tournamnet']).first()
-            print(tourn)
-            if tourn:
-                if team == 'Virginia Tech':
-                    tourn.vt += teampnts
-                    db.session.commit()
-                if team == 'Penn State':
-                    tourn.psu += teampnts
-                    db.session.commit()
-                if team == 'Oklahoma State':
-                    tourn.okst += teampnts
-                    db.session.commit()
-                if team == 'Iowa':
-                    tourn.iowa += teampnts
-                    db.session.commit()
-                if team == 'Iowa State':
-                    tourn.isu += teampnts
-                    db.session.commit()
-                if team == 'Minnesota':
-                    tourn.minn += teampnts
-                    db.session.commit()
-                if team == 'Stanford':
-                    tourn.stan += teampnts
-                    db.session.commit()
-                if team == 'NC State':
-                    tourn.ncst += teampnts
-                    db.session.commit()
-                if team == 'Missouri':
-                    tourn.mizz += teampnts
-                    db.session.commit()
-                if team == 'Lehigh':
-                    tourn.leh += teampnts
-                    db.session.commit()
-                if team == 'Cornell':
-                    tourn.corn += teampnts
-                    db.session.commit()
-                if team == 'Michigan':
-                    tourn.mich += teampnts
-                    db.session.commit()
-                if team == 'Ohio State':
-                    tourn.osu += teampnts
-                    db.session.commit()
-                if team == 'Nebraska':
-                    tourn.neb += teampnts
-                    db.session.commit()
-                if team == 'Wyoming':
-                    tourn.Wyoming += teampnts
-                    db.session.commit()
-                if team == 'Northern Iowa':
-                    tourn.Northern_Iowa += teampnts
-                    db.session.commit()
-                if team == 'Colorado':
-                    tourn.Colorado += teampnts
-                    db.session.commit()
-                if team == 'Arizona State':
-                    tourn.Arizona_State += teampnts
-                    db.session.commit()
-                if team == 'Sacred Heart':
-                    tourn.sh += teampnts
-                    db.session.commit()
-                ####### even more logic for tourteam ##########
-                player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_1.id)).one()
-                player_score.score += teampnts
-                player_score.wins += 1
-                if form.data['round'] == 'Round of 16' or form.data['round'] == 'Blood Round':
-                    player_score.status = 'All-American'
-                db.session.commit()
-        else:
-            tourn =  TourScore.query.filter(TourScore.name == form.data['tournamnet']).first()
-            player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_1.id)).one()
-            player_score.loss += 1
-            player_1.loss += 1
-            if player_score.status == 'All-American':
-                pass
-            elif player_score.status == 'Champ':
-                player_score.status = 'Cons'
-            elif player_score.status == 'Cons':
-                player_score.status = 'Eliminated'
-            db.session.commit()
+            update_winner(player_1)
+            update_loser(player_2)
 
-        if form.data['victory_2'] == True:
-            player_2.wins += 1
-            player_2.tour_points += teampnts
-            if form.data['score'] >= 500:
-                player_2.bonus += 1
-            db.session.commit()
-             ##### NEW LOGIC FOR TEAM SCORES rudy#####
-            team = player_2.team
-            tourn =  TourScore.query.filter(TourScore.name == form.data['tournamnet']).first()
-            if tourn:
-                if team == 'Virginia Tech':
-                    tourn.vt += teampnts
-                    db.session.commit()
-                if team == 'Penn State':
-                    tourn.psu += teampnts
-                    db.session.commit()
-                if team == 'Oklahoma State':
-                    tourn.okst += teampnts
-                    db.session.commit()
-                if team == 'Iowa':
-                    tourn.iowa += teampnts
-                    db.session.commit()
-                if team == 'Iowa State':
-                    tourn.isu += teampnts
-                    db.session.commit()
-                if team == 'Minnesota':
-                    tourn.minn += teampnts
-                    db.session.commit()
-                if team == 'Stanford':
-                    tourn.stan += teampnts
-                    db.session.commit()
-                if team == 'NC State':
-                    tourn.ncst += teampnts
-                    db.session.commit()
-                if team == 'Missouri':
-                    tourn.mizz += teampnts
-                    db.session.commit()
-                if team == 'Lehigh':
-                    tourn.leh += teampnts
-                    db.session.commit()
-                if team == 'Cornell':
-                    tourn.corn += teampnts
-                    db.session.commit()
-                if team == 'Michigan':
-                    tourn.mich += teampnts
-                    db.session.commit()
-                if team == 'Ohio State':
-                    tourn.osu += teampnts
-                    db.session.commit()
-                if team == 'Nebraska':
-                    tourn.neb += teampnts
-                    db.session.commit()
-                if team == 'Wyoming':
-                    tourn.Wyoming += teampnts
-                    db.session.commit()
-                if team == 'Northern Iowa':
-                    tourn.Northern_Iowa += teampnts
-                    db.session.commit()
-                if team == 'Colorado':
-                    tourn.Colorado += teampnts
-                    db.session.commit()
-                if team == 'Arizona State':
-                    tourn.Arizona_State += teampnts
-                    db.session.commit()
-                if team == 'Sacred Heart':
-                    tourn.sh += teampnts
-                    db.session.commit()
-                ####### even more logic for tourteam ##########
-                player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_2.id)).one()
-                player_score.score += teampnts
-                player_score.wins += 1
-                if form.data['round'] == 'Round of 16' or form.data['round'] == 'Blood Round':
-                    player_score.status = 'All-American'
-                db.session.commit()
+        elif form.data['victory_2'] == True:
+            update_winner(player_2)
+            update_loser(player_1)
 
-        else:
-            tourn =  TourScore.query.filter(TourScore.name == form.data['tournamnet']).first()
-            player_score = TourTeam.query.filter(and_(TourTeam.tourId == tourn.id, TourTeam.playerId == player_2.id)).one()
-            player_score.loss += 1
-            player_2.loss += 1
-            if player_score.status == 'All-American':
-                pass
-            elif player_score.status == 'Champ':
-                player_score.status = 'Cons'
-            elif player_score.status == 'Cons':
-                player_score.status = 'Eliminated'
-            db.session.commit()
+        player_1_record = Opponent(
+            player_id=player_1.id,
+            opponent_id=player_2.id,
+            victory=form.data['victory_1'],
+            score=score,
+            tour_name=tour_name,
+            round=round_name,
+            fotn=form.data['fotn']
+        )
 
-        params = {
-            'player_id': player_1.id,
-            'opponent_id': player_2.id,
-            'victory': form.data['victory_1'],
-            'score': form.data['score'],
-            'tour_name': form.data['tournamnet'] or 'Battle Royale 1',
-            'round': form.data['round']
-        }
-        para = {
-            'player_id': player_2.id,
-            'opponent_id': player_1.id,
-            'victory': form.data['victory_2'],
-            'score': form.data['score'],
-            'tour_name': form.data['tournamnet'] or 'Battle Royal 1',
-            'round': form.data['round']
-        }
+        player_2_record = Opponent(
+            player_id=player_2.id,
+            opponent_id=player_1.id,
+            victory=form.data['victory_2'],
+            score=score,
+            tour_name=tour_name,
+            round=round_name,
+            fotn=form.data['fotn']
+        )
 
-        player_1_record = Opponent(**params)
         db.session.add(player_1_record)
-        player_2_record = Opponent(**para)
         db.session.add(player_2_record)
         db.session.commit()
-        return redirect('/')
-    return render_template('new_battle.html', names=names, form=form)
 
+        return redirect('/')
+
+    return render_template('new_battle.html', names=names, form=form)
 #################### H I S T O R Y ####################
 
 @app.route('/history_form', methods=['GET', 'POST'])
@@ -3068,3 +2744,206 @@ def rank_puzzle():
     ]
 
     return render_template('rank_puzzle.html', players=players_data)
+
+############################################### DELETE ##############################################
+
+def points_for_round(round_name, score):
+    champ = [
+        'Round of 256',
+        'Round of 128',
+        'Round of 64',
+        'Round of 32',
+        'Round of 16',
+        'Quarter-Final',
+    ]
+
+    cons = [
+        'Consolation Round',
+        'Consolation Round 2',
+        'Consolation Round 3',
+        'Cons-Semi',
+        'Cons-Quarter',
+        'Blood Round',
+        'Round of 12',
+        'Cons-24',
+        'Cons-48',
+        'Cons-64',
+        'Cons-32',
+        'Cons-16',
+        'Cons-12',
+        'Placement Round'
+    ]
+
+    medal_round = [
+        'Bronze Medal Match',
+        '5th Place Match',
+        '7th Place Match',
+        'Semi-Final',
+    ]
+
+    badge_round = [
+        '9th Place Match',
+        '11th Place Match',
+        '13th Place Match',
+        '15th Place Match',
+    ]
+
+    pts = 0
+
+    if round_name in champ:
+        pts += 3
+
+    if round_name == 'Round of 256':
+        pts += 3
+
+    if round_name in cons:
+        pts += 1
+
+    if round_name in badge_round:
+        pts += 3.5
+
+    if round_name in medal_round:
+        pts += 4
+
+    if round_name == 'Gold Medal Match':
+        pts += 7
+
+    if score >= 1000:
+        pts += 2
+    elif score >= 750:
+        pts += 1.5
+    elif score >= 500:
+        pts += 1
+
+    return pts
+
+
+def dual_points_for_score(score):
+    if score >= 1000:
+        return 7
+    elif score >= 700:
+        return 5
+    elif score >= 400:
+        return 4
+    return 3
+
+@app.route('/delete/<int:id>')
+def opp_delete(id):
+
+    opponent = Opponent.query.get_or_404(id)
+
+    pair = Opponent.query.filter(
+        Opponent.id != opponent.id,
+        Opponent.player_id == opponent.opponent_id,
+        Opponent.opponent_id == opponent.player_id,
+        Opponent.tour_name == opponent.tour_name,
+        Opponent.round == opponent.round,
+        Opponent.score == opponent.score,
+        Opponent.date == opponent.date
+    ).first()
+
+    player = Player.query.get(opponent.player_id)
+    other_player = Player.query.get(opponent.opponent_id)
+
+    score = opponent.score or 0
+    round_name = opponent.round
+    tour_name = opponent.tour_name
+
+    # -------------------------
+    # DUAL DELETE
+    # -------------------------
+
+    if round_name == 'Dual':
+
+        dual_pts = dual_points_for_score(score)
+
+        if opponent.victory == True:
+            player.wins = (player.wins or 0) - 1
+            player.d_wins = (player.d_wins or 0) - 1
+            player.dual_points = (player.dual_points or 0) - dual_pts
+            player.tour_points = (player.tour_points or 0) - (dual_pts / 2)
+
+            if other_player:
+                other_player.loss = (other_player.loss or 0) - 1
+                other_player.d_loss = (other_player.d_loss or 0) - 1
+
+        else:
+            player.loss = (player.loss or 0) - 1
+            player.d_loss = (player.d_loss or 0) - 1
+
+            if other_player:
+                other_player.wins = (other_player.wins or 0) - 1
+                other_player.d_wins = (other_player.d_wins or 0) - 1
+                other_player.dual_points = (other_player.dual_points or 0) - dual_pts
+                other_player.tour_points = (other_player.tour_points or 0) - (dual_pts / 2)
+
+        if pair:
+            db.session.delete(pair)
+
+        db.session.delete(opponent)
+        db.session.commit()
+
+        return render_template('redirect.html', player=player)
+
+    # -------------------------
+    # TOURNAMENT DELETE
+    # -------------------------
+
+    teampnts = points_for_round(round_name, score)
+
+    if opponent.victory == True:
+        winner = player
+        loser = other_player
+    else:
+        winner = other_player
+        loser = player
+
+    tour = Tour.query.filter_by(name=tour_name).first()
+
+    if winner:
+        winner.wins = (winner.wins or 0) - 1
+        winner.tour_points = (winner.tour_points or 0) - teampnts
+
+        if score >= 500:
+            winner.bonus = (winner.bonus or 0) - 1
+
+        if tour:
+            team = Team.query.filter_by(name=winner.team).first()
+
+            if team:
+                team_score = TournamentTeamScore.query.filter_by(
+                    tour_id=tour.id,
+                    team_id=team.id
+                ).first()
+
+                if team_score:
+                    team_score.score = (team_score.score or 0) - teampnts
+
+            winner_tour_score = TourTeam.query.filter_by(
+                tourId=tour.id,
+                playerId=winner.id
+            ).first()
+
+            if winner_tour_score:
+                winner_tour_score.score = (winner_tour_score.score or 0) - teampnts
+                winner_tour_score.wins = (winner_tour_score.wins or 0) - 1
+
+    if loser:
+        loser.loss = (loser.loss or 0) - 1
+
+        if tour:
+            loser_tour_score = TourTeam.query.filter_by(
+                tourId=tour.id,
+                playerId=loser.id
+            ).first()
+
+            if loser_tour_score:
+                loser_tour_score.loss = (loser_tour_score.loss or 0) - 1
+
+    if pair:
+        db.session.delete(pair)
+
+    db.session.delete(opponent)
+    db.session.commit()
+
+    return render_template('redirect.html', player=player)
