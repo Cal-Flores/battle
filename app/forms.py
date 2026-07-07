@@ -444,6 +444,7 @@ rounds = [
     'Cons-32',
     'Cons-48',
     'Cons-64',
+    'Cons-96',
     'Placement Round',
     'Dual',
     ]

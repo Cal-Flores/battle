@@ -17,7 +17,7 @@
     top: 0;
     left: 0;
     background-color: rgb(36, 36, 36);
-    z-index: 2;
+    z-index: 200;
 }
 
 
@@ -3432,4 +3432,84 @@ select option {
     align-items: center;
 
     height: 100%;
+}
+
+.number.gold {
+    background: gold;
+}
+
+.number.silver {
+    background: silver;
+}
+
+.number.bronze {
+    background: #b87333;
+}
+
+/* advanced statistic tour history */
+
+.tournament-history {
+    width: 55%;
+    min-width: 700px;
+    margin: 30px auto;
+    background: #111;
+    border: 1px solid #343434;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 18px rgba(0, 0, 0, .45);
+}
+
+.tournament-history h2 {
+    margin: 0 0 15px;
+    color: #ff9800;
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+.tour-history {
+    width: 100%;
+    border-collapse: collapse;
+    color: #eee;
+}
+
+.tour-history thead {
+    background: #1b1b1b;
+}
+
+.tour-history th {
+    color: #ff9800;
+    padding: 12px;
+    border-bottom: 2px solid #ff9800;
+    font-size: 14px;
+}
+
+.tour-history td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #2a2a2a;
+    text-align: center;
+}
+
+.tour-history tbody tr:nth-child(even) {
+    background: #181818;
+}
+
+.tour-history tbody tr:hover {
+    background: #252525;
+}
+
+.history-record {
+    color: #ffd180;
+    font-weight: bold;
+}
+
+.history-points {
+    color: #7CFC98;
+    font-weight: bold;
+}
+
+.history-badge {
+    width: 18px;
+    vertical-align: middle;
+    margin-right: 4px;
 }

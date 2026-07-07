@@ -6,9 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{ team.name }} - Battle Royale</title>
 
-        <!-- optional: leave off old css if it fights this page -->
-        <!-- <link href="../static/main_page.css" rel="stylesheet"> -->
-
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
 
@@ -17,6 +14,15 @@
         {% include 'nav.html' %}
 
         <div class="teamx-page">
+            <form method="GET" action="/teams/{{ team.id }}" class="teamx-season-filter">
+                <select name="season" onchange="this.form.submit()">
+                    {% for season in seasons %}
+                    <option value="{{ season.id }}" {% if selected_season==season.id|string %}selected{% endif %}>
+                        {{ season.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
 
             <section class="teamx-hero">
                 <div class="teamx-hero-text">
@@ -25,9 +31,11 @@
                     </div>
                     <div class="teamx-record">{{ stats.wins }} - {{ stats.loss }}</div>
                 </div>
-
-                <img src="{{ team.logo }}" class="teamx-logo">
+                <a href="/team_rec/{{team.id}}">
+                    <img src="{{ team.logo }}" class="teamx-logo">
+                </a>
             </section>
+
 
             <div class="teamx-tabs">
                 <button class="teamx-tab teamx-active" data-tab="roster">ROSTER</button>
@@ -60,6 +68,7 @@
             </section>
 
             <section id="stats" class="teamx-panel">
+
                 <div class="teamx-stat-grid">
                     <div class="teamx-stat-card">
                         <span>Record</span>
@@ -95,9 +104,11 @@
                         <div id="playersData" data-values='{{ players | tojson | safe }}'></div>
                     </div>
                 </div>
+
             </section>
 
             <section id="record" class="teamx-panel">
+
                 <div class="teamx-record-table">
 
                     <div class="teamx-record-head">
@@ -114,6 +125,7 @@
                     {% set is_home = dual.home == team.name %}
                     {% set team_score = dual.hscore if is_home else dual.ascore %}
                     {% set opponent_score = dual.ascore if is_home else dual.hscore %}
+
                     {% if team_score != opponent_score %}
                     {% if team_score > opponent_score %}
                     {% set total.wins = total.wins + 1 %}
@@ -153,6 +165,7 @@
                     {% endfor %}
 
                 </div>
+
             </section>
 
         </div>
@@ -184,11 +197,11 @@
             }
 
             .teamx-hero {
-                min-height: 225px;
-                padding: 26px 7%;
+                min-height: 215px;
+                padding: 24px 7%;
 
                 display: grid;
-                grid-template-columns: 1fr 260px;
+                grid-template-columns: 1fr 240px;
                 align-items: center;
 
                 background:
@@ -200,7 +213,7 @@
             }
 
             .teamx-name {
-                font-size: 46px;
+                font-size: 42px;
                 line-height: 1;
                 font-weight: 900;
                 color: #222;
@@ -208,29 +221,47 @@
             }
 
             .teamx-sub {
-                font-size: 20px;
+                font-size: 19px;
                 color: #444;
                 margin-bottom: 5px;
             }
 
             .teamx-record {
-                font-size: 22px;
+                font-size: 21px;
                 color: #333;
                 font-weight: 700;
             }
 
             .teamx-logo {
-                width: 185px;
-                height: 185px;
+                width: 160px;
+                height: 160px;
                 object-fit: contain;
                 justify-self: center;
                 filter: drop-shadow(0 7px 8px rgba(0, 0, 0, .35));
             }
 
+            .teamx-season-filter {
+                display: flex;
+                justify-content: center;
+                margin: 22px auto 0;
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+
+            .teamx-season-filter select {
+                padding: 11px 18px;
+                border-radius: 8px;
+                border: 2px solid var(--team-color);
+                background: #f8f4ed;
+                color: #222;
+                font-weight: 900;
+                cursor: pointer;
+            }
+
             .teamx-tabs {
                 width: 62%;
                 max-width: 900px;
-                margin: 30px auto;
+                margin: 24px auto;
 
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
@@ -267,22 +298,22 @@
 
             .teamx-section-title {
                 text-align: center;
-                font-size: 38px;
+                font-size: 36px;
                 color: #ff9f00;
                 font-weight: 900;
-                margin: 15px 0 24px;
+                margin: 12px 0 22px;
                 letter-spacing: 1px;
             }
 
             .teamx-formation {
                 max-width: 1080px;
-                height: 520px;
+                height: 560px;
                 margin: auto;
-                padding: 28px 38px;
+                padding: 26px 45px;
 
                 display: grid;
                 grid-template-columns: repeat(7, 1fr);
-                grid-template-rows: repeat(4, 1fr);
+                grid-template-rows: 1fr .9fr 1fr 1fr;
                 align-items: center;
                 justify-items: center;
 
@@ -294,12 +325,12 @@
 
             .teamx-player {
                 text-align: center;
-                max-width: 125px;
+                max-width: 130px;
             }
 
             .teamx-player img {
-                width: 86px;
-                height: 86px;
+                width: 74px;
+                height: 74px;
                 border-radius: 50%;
                 object-fit: cover;
                 border: 3px solid var(--team-color);
@@ -307,20 +338,23 @@
             }
 
             .teamx-player-name {
-                margin-top: 6px;
-                font-size: 14px;
+                margin-top: 5px;
+                font-size: 13px;
                 font-weight: 900;
+                line-height: 1.05;
             }
 
             .teamx-player-pos {
-                font-size: 13px;
-                font-weight: 700;
+                font-size: 12px;
+                font-weight: 800;
                 color: var(--team-color);
+                line-height: 1.05;
             }
 
             .teamx-player-rank {
-                font-size: 11px;
+                font-size: 10px;
                 color: #555;
+                line-height: 1.05;
             }
 
             .teamx-slot-1 {
@@ -503,6 +537,181 @@
             const teamTabs = document.querySelectorAll('.teamx-tab');
             const teamPanels = document.querySelectorAll('.teamx-panel');
 
+            let rankChartMade = false;
+            let radarChartMade = false;
+
+            const dynamicColor = getComputedStyle(document.body).getPropertyValue('--team-color').trim();
+
+            function makeRankChart() {
+                if (rankChartMade) return;
+
+                const rankCanvas = document.getElementById('rankChart');
+                const rankDiv = document.getElementById('rankData');
+
+                if (!rankCanvas || !rankDiv) return;
+
+                const rankRaw = JSON.parse(rankDiv.dataset.values || "[]");
+                const weeks = Array.from({ length: 10 }, (_, i) => i + 1);
+
+                const rankMap = {};
+                rankRaw.forEach(r => {
+                    rankMap[r.week] = r.rank;
+                });
+
+                const rankValues = weeks.map(w => rankMap[w] || null);
+
+                new Chart(rankCanvas.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: weeks,
+                        datasets: [{
+                            label: 'Weekly Rank',
+                            data: rankValues,
+                            borderColor: dynamicColor,
+                            backgroundColor: 'transparent',
+                            pointBackgroundColor: dynamicColor,
+                            pointBorderColor: '#fff',
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            tension: .3,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
+
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: true,
+                                callbacks: {
+                                    label: function (context) {
+                                        return `Rank #${context.raw}`;
+                                    }
+                                }
+                            }
+                        },
+
+                        scales: {
+                            y: {
+                                reverse: true,
+                                min: 1,
+                                max: 32,
+
+                                afterBuildTicks: axis => {
+                                    axis.ticks = [
+                                        { value: 1 },
+                                        { value: 4 },
+                                        { value: 8 },
+                                        { value: 12 },
+                                        { value: 16 },
+                                        { value: 20 },
+                                        { value: 24 },
+                                        { value: 28 },
+                                        { value: 32 }
+                                    ];
+                                },
+
+                                ticks: {
+                                    color: '#f5f5f5',
+                                    font: {
+                                        size: 13,
+                                        weight: 'bold'
+                                    }
+                                },
+
+                                grid: {
+                                    color: 'rgba(255,255,255,.35)'
+                                }
+                            },
+
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Week',
+                                    color: '#f5f5f5'
+                                },
+
+                                ticks: {
+                                    color: '#f5f5f5',
+                                    font: {
+                                        size: 13,
+                                        weight: 'bold'
+                                    }
+                                },
+
+                                grid: {
+                                    color: 'rgba(255,255,255,.25)'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                rankChartMade = true;
+            }
+
+            function makeRadarChart() {
+                if (radarChartMade) return;
+
+                const radarCanvas = document.getElementById('playerRadarChart');
+                const playersDiv = document.getElementById('playersData');
+
+                if (!radarCanvas || !playersDiv) return;
+
+                const playersData = JSON.parse(playersDiv.dataset.values || "[]");
+
+                new Chart(radarCanvas.getContext('2d'), {
+                    type: 'radar',
+                    data: {
+                        labels: playersData.map(p => p.name),
+                        datasets: [{
+                            label: 'Dual Points',
+                            data: playersData.map(p => p.dual_points || 0),
+                            backgroundColor: 'transparent',
+                            borderColor: dynamicColor,
+                            pointBackgroundColor: dynamicColor,
+                            pointBorderColor: '#fff',
+                            borderWidth: 3,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                pointLabels: {
+                                    color: '#f5f5f5',
+                                    font: { size: 12, weight: 'bold' }
+                                },
+                                ticks: {
+                                    color: '#f5f5f5',
+                                    backdropColor: 'transparent',
+                                    font: { size: 11 }
+                                },
+                                grid: { color: 'rgba(255,255,255,.35)' },
+                                angleLines: { color: 'rgba(255,255,255,.3)' }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { color: '#f5f5f5' }
+                            }
+                        }
+                    }
+                });
+
+                radarChartMade = true;
+            }
+
             teamTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     teamTabs.forEach(t => t.classList.remove('teamx-active'));
@@ -510,108 +719,18 @@
 
                     tab.classList.add('teamx-active');
                     document.getElementById(tab.dataset.tab).classList.add('teamx-show');
+
+                    if (tab.dataset.tab === 'stats') {
+                        makeRankChart();
+                        makeRadarChart();
+                    }
                 });
             });
 
-            const dynamicColor = getComputedStyle(document.body).getPropertyValue('--team-color').trim();
-
-            const rankRaw = JSON.parse(document.getElementById('rankData').dataset.values || "[]");
-            const weeks = Array.from({ length: 10 }, (_, i) => i + 1);
-
-            const rankMap = {};
-            rankRaw.forEach(r => {
-                rankMap[r.week] = r.rank;
-            });
-
-            const rankValues = weeks.map(w => rankMap[w] || null);
-
-            new Chart(document.getElementById('rankChart').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: weeks,
-                    datasets: [{
-                        label: 'Weekly Rank',
-                        data: rankValues,
-                        borderColor: dynamicColor,
-                        backgroundColor: 'transparent',
-                        pointBackgroundColor: dynamicColor,
-                        pointBorderColor: '#fff',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        tension: .3,
-                        fill: false
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            reverse: true,
-                            min: 1,
-                            max: 32,
-                            ticks: {
-                                color: '#f5f5f5',
-                                precision: 0,
-                                font: { size: 13, weight: 'bold' }
-                            },
-                            grid: { color: 'rgba(255,255,255,.35)' }
-                        },
-                        x: {
-                            ticks: {
-                                color: '#f5f5f5',
-                                font: { size: 13, weight: 'bold' }
-                            },
-                            grid: { color: 'rgba(255,255,255,.25)' }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
-
-            const playersData = JSON.parse(document.getElementById('playersData').dataset.values || "[]");
-
-            new Chart(document.getElementById('playerRadarChart').getContext('2d'), {
-                type: 'radar',
-                data: {
-                    labels: playersData.map(p => p.name),
-                    datasets: [{
-                        label: 'Dual Points',
-                        data: playersData.map(p => p.dual_points),
-                        backgroundColor: 'transparent',
-                        borderColor: dynamicColor,
-                        pointBackgroundColor: dynamicColor,
-                        pointBorderColor: '#fff',
-                        borderWidth: 3,
-                        fill: false
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            pointLabels: {
-                                color: '#f5f5f5',
-                                font: { size: 12, weight: 'bold' }
-                            },
-                            ticks: {
-                                color: '#f5f5f5',
-                                backdropColor: 'transparent',
-                                font: { size: 11 }
-                            },
-                            grid: { color: 'rgba(255,255,255,.35)' },
-                            angleLines: { color: 'rgba(255,255,255,.3)' }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            labels: { color: '#f5f5f5' }
-                        }
-                    }
-                }
-            });
+            if (document.getElementById('stats').classList.contains('teamx-show')) {
+                makeRankChart();
+                makeRadarChart();
+            }
         </script>
 
     </body>

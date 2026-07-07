@@ -17,6 +17,9 @@
                 background-image: url('https://wallpapers-clan.com/wp-content/uploads/2025/02/demon-slayer-tanjiro-kamado-pixel-desktop-wallpaper-preview.jpg');
                 color: #f8efe4;
                 font-family: Arial, sans-serif;
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
             }
 
             .container {
@@ -337,42 +340,6 @@
                 {% endif %}
 
             </div>
-
-            <details class="section collapse-box">
-                <summary>Overtime Fights</summary>
-
-                {% if overtime_fights %}
-
-                {% for fight in overtime_fights %}
-                <div class="fight-card">
-
-                    <img src="{{ fight.winner.img }}">
-
-                    <strong>{{ fight.winner.name }}</strong>
-
-                    <span>defeated</span>
-
-                    <img src="{{ fight.loser.img }}">
-
-                    <strong>{{ fight.loser.name }}</strong>
-
-                    <span>{{ fight.round }}</span>
-
-                    <span class="fight-score">
-                        Score: {{ fight.score }}
-                    </span>
-
-                </div>
-                {% endfor %}
-
-                {% else %}
-
-                <p>No overtime matches.</p>
-
-                {% endif %}
-
-            </details>
-
             <details class="section collapse-box">
                 <summary>Tournament Standings</summary>
 
@@ -397,7 +364,9 @@
                             <td>{{ loop.index }}</td>
 
                             <td>
-                                <img src="{{ row.player.img }}" class="standings-img">
+                                <a href="../player/{{row.player.id}}">
+                                    <img src="{{ row.player.img }}" class="standings-img">
+                                </a>
 
                                 {{ row.player.name }}
                             </td>
@@ -421,7 +390,120 @@
                 </table>
 
             </details>
+            <details class="section collapse-box">
+                <summary>Overtime Fights ({{ overtime_fights|length }})</summary>
 
+                {% if overtime_fights %}
+
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Winner</th>
+                            <th>Loser</th>
+                            <th>Round</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for fight in overtime_fights %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+                                <img src="{{ fight.winner.img }}" class="standings-img">
+
+                                {{ fight.winner.name }}
+                            </td>
+
+                            <td>
+                                <img src="{{ fight.loser.img }}" class="standings-img">
+
+                                {{ fight.loser.name }}
+                            </td>
+
+                            <td>{{ fight.round }}</td>
+
+                            <td>{{ fight.score }}</td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                {% else %}
+
+                <p>No overtime matches.</p>
+
+                {% endif %}
+
+            </details>
+
+            <details class="section collapse-box">
+                <summary>All Upsets ({{ all_upsets|length }})</summary>
+
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Winner</th>
+                            <th>Loser</th>
+                            <th>Winner Rank</th>
+                            <th>Loser Rank</th>
+                            <th>Gap</th>
+                            <th>Score</th>
+                            <th>Round</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for upset in all_upsets %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+                                <img src="{{ upset.winner.img }}" class="standings-img">
+
+                                {{ upset.winner.name }}
+                            </td>
+
+                            <td>
+                                <img src="{{ upset.loser.img }}" class="standings-img">
+
+                                {{ upset.loser.name }}
+                            </td>
+
+                            <td>#{{ upset.winner_rank }}</td>
+
+                            <td>#{{ upset.loser_rank }}</td>
+
+                            <td>{{ upset.rank_gap }}</td>
+
+                            <td>{{ upset.score }}</td>
+
+                            <td>{{ upset.round }}</td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </details>
         </div>
 
     </body>

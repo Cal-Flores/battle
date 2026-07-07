@@ -55,8 +55,9 @@ orgeon = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Oregon_Ducks
 @app.route('/')
 def index():
     players = Player.query.filter_by(active=True).order_by(Player.name.asc()).all()
+    # dual = Dual.query.get(43)
+    # dual.week = 5
     db.session.commit()
-
     new_team = Team(
     name='',
     logo='',
@@ -71,14 +72,6 @@ def index():
 
     season_id=2
     )
-
-    db.session.add(new_team)
-
-
-
-
-
-
     return render_template('main_page.html', players = players)
 
 
@@ -86,8 +79,8 @@ def index():
 
 @app.route('/index')
 def pictures():
-    player = Player.query.get(4)
-    player.img = 'https://i.pinimg.com/1200x/13/a9/2c/13a92c4d018b3e6d9c28c88c222c992f.jpg'
+    player = Player.query.get(56)
+    player.blood = 1
     db.session.commit()
     month_order = {
         "January": 1,
@@ -631,7 +624,36 @@ def tournamentpage(id):
                 "score": fight["score"],
                 "round": fight["round"]
             }
+        all_upsets = []
 
+    for fight in winning_fights:
+        winner_rank = fight["winner"].rank
+        loser_rank = fight["loser"].rank
+
+        if not winner_rank or not loser_rank:
+            continue
+
+        gap = winner_rank - loser_rank
+
+        # upset = worse ranked fighter beats better ranked fighter
+        if gap > 0:
+            all_upsets.append({
+                "winner": fight["winner"],
+                "loser": fight["loser"],
+                "winner_rank": winner_rank,
+                "loser_rank": loser_rank,
+                "rank_gap": gap,
+                "score": fight["score"],
+                "round": fight["round"]
+            })
+
+    all_upsets = sorted(
+        all_upsets,
+        key=lambda x: x["rank_gap"],
+        reverse=True
+    )
+
+    biggest_upset = all_upsets[0] if all_upsets else None
     return render_template(
         "tourpage.html",
         tour=tour,
@@ -641,7 +663,8 @@ def tournamentpage(id):
         closest_win=closest_win,
         biggest_upset=biggest_upset,
         overtime_fights=overtime_fights,
-        winning_fights=winning_fights
+        winning_fights=winning_fights,
+        all_upsets=all_upsets,
     )
 
 
@@ -681,10 +704,10 @@ cons2 = [ #1
     'Consolation Round 2',
     'Consolation Round 3',
     'Blood Round',
-    'Cons-24',
+    'Cons-32',
     'Cons-48',
     'Cons-64',
-    'Cons-32',
+    'Cons-96'
     ]
 medal_round2 = [ # 4
     'Bronze Medal Match',
@@ -1024,6 +1047,84 @@ def player_stats(id):
         'wins': season_wins,
         'losses': season_losses
         })
+        tour_query = TourTeam.query.filter_by(playerId=player.id)
+
+        if selected_season != "all":
+            tour_query = tour_query.filter(
+            TourTeam.season_id == int(selected_season)
+            )
+
+        tour_rows = (
+            tour_query
+            .order_by(TourTeam.tourId.desc())
+            .all()
+            )
+        tour_map = {
+        t.id: t
+        for t in Tour.query.all()
+        }
+        placement_map = {
+        p.result_id: p.place
+        for p in TournamentPlacement.query.filter_by(player_id=player.id)
+        }
+    tournament_history = []
+
+    for row in tour_rows:
+
+    # Skip tournaments where they never fought
+        if (row.wins or 0) == 0 and (row.loss or 0) == 0:
+            continue
+
+        tour = tour_map.get(row.tourId)
+
+        if not tour:
+            continue
+
+        place = placement_map.get(row.tourId + 6)
+
+        emoji = ""
+
+        if place is not None:
+            if place == 1:
+                emoji = "🏆"
+            elif place == 2:
+                emoji = "🥈"
+            elif place == 3:
+                emoji = "🥉"
+            elif place == 4:
+                emoji = "🪵"
+            elif place <= 8:
+                emoji = "🎖️"
+            elif place <= 12:
+                emoji = "🏅"
+            elif place <= 16:
+                emoji = "🎗️"
+            elif place <= 24:
+                emoji = "🩸"
+
+    # Find this player's final match in the tournament
+        last_fight = (
+        Opponent.query
+        .filter_by(
+            player_id=player.id,
+            tour_name=tour.name
+        )
+        .order_by(Opponent.id.desc())
+        .first()
+        )
+
+        finish = last_fight.round if last_fight else None
+
+        tournament_history.append({
+        "tour": tour,
+        "wins": row.wins,
+        "losses": row.loss,
+        "points": row.score,
+        "status": row.status,
+        "place": place,
+        "emoji": emoji,
+        "finish": finish
+        })
 
     # ---------------- TEAM COLOR CURRENT ----------------
     color = {
@@ -1070,6 +1171,7 @@ def player_stats(id):
         position_weeks=position_weeks,
         position_ranks=position_ranks,
         position_points=position_points,
+        tournament_history = tournament_history
     )
 
 
@@ -1116,13 +1218,56 @@ def player_card(id):
         person = Player.query.get(opp.opponent_id)
         all_opponents.append(person)
 
+    awards = [
+    {
+        "count": max(0, (player.gold or 0) - 6),   # keep your duplicate fix
+        "icon": "🥇",
+        "class": "gold"
+    },
+    {
+        "count": player.silver or 0,
+        "icon": "🥈",
+        "class": "silver"
+    },
+    {
+        "count": player.bronze or 0,
+        "icon": "🥉",
+        "class": "bronze"
+    },
+    {
+        "count": player.wood or 0,
+        "icon": "🪵",
+        "class": "wood"
+    },
+    {
+        "count": player.medal or 0,
+        "icon": "🎖️",
+        "class": "medal"
+    },
+    {
+        "count": player.badge or 0,
+        "image": "../static/images/reward.png",
+        "class": "badge"
+    },
+    {
+        "count": player.ribbon or 0,
+        "icon": "🎗️",
+        "class": "ribbon"
+    },
+    {
+        "count": player.blood or 0,
+        "icon": "🩸",
+        "class": "blood"
+    }
+]
+
     return render_template(
         'player_card.html',
         player=player,
         opponents=opponents,
         all_opponents=all_opponents,
-            player_placements=player_placements,
-
+        player_placements=player_placements,
+        awards = awards,
         player_img=player_img,
         selected_season=selected_season,
         selected_type=selected_type
@@ -1197,7 +1342,7 @@ def success():
     return render_template('redirect.html')
 
 
-from flask import request
+
 
 @app.route('/leaderboards')
 def leader():
@@ -1248,6 +1393,59 @@ def leader():
         selected_season=selected_season
     )
 
+@app.route('/leadergallery')
+def leadergallery():
+    player = Player.query.filter(Player.name == 'Yihwa').one()
+    player.bgimg = "yihwa.png"
+    db.session.commit()
+    selected_season = request.args.get('season', 'all')
+
+    if selected_season == 'all':
+        players = Player.query.order_by(
+            Player.tour_points.desc(),
+            Player.points.desc(),
+            Player.wins.desc(),
+            Player.loss.asc()
+        ).all()
+
+        for index, player in enumerate(players, start=1):
+            player.rank = index
+
+        db.session.commit()
+
+        return render_template(
+            'leadergallery.html',
+            players=players,
+            selected_season=selected_season
+        )
+
+    season_id = int(selected_season)
+
+    players = db.session.query(Player, PlayerSeasonStats).join(
+        PlayerSeasonStats,
+        Player.id == PlayerSeasonStats.player_id
+    ).filter(
+        PlayerSeasonStats.season_id == season_id
+    ).order_by(
+        PlayerSeasonStats.tour_points.desc(),
+        PlayerSeasonStats.points.desc(),
+        PlayerSeasonStats.wins.desc(),
+        PlayerSeasonStats.loss.asc()
+    ).all()
+
+    for index, item in enumerate(players, start=1):
+        player, stats = item
+        stats.rank = index
+
+
+    db.session.commit()
+
+    return render_template(
+        'leadergallery.html',
+        players=players,
+        selected_season=selected_season
+    )
+
 
 
 @app.route('/new_player')
@@ -1257,26 +1455,6 @@ def form():
 
 
 
-@app.route('/new_player', methods=['POST'])
-def new_create():
-    form = NewPlayer()
-    if validate_on_submit():
-        params = {
-            'name': form.data['name'],
-            'wins': form.data['wins'],
-            'loss': form.data['loss'],
-            'points': form.data['points'],
-            'img': form.data['img'],
-            'gold': form.data['gold'],
-            'silver': form.data['silver'],
-            'bronze': form.data['bronze'],
-            'medal': form.data['medal'],
-        }
-        new_player = Player(**params)
-        db.session.add(new_player)
-        db.session.commit()
-        return redirect('/')
-    return 'Bad Data'
 
 
 
@@ -1887,31 +2065,62 @@ def teams():
 from flask import request
 from sqlalchemy import or_
 
-@app.route('/teams/<id>')
-def one_team(id):
-    selected_season = request.args.get('season', 'all')
+@app.route('/teams/<int:id>')
+def team_page(id):
     team = Team.query.get_or_404(id)
 
-    team_players = Player.query.filter_by(team=team.name, active=True).all()
+    active_season = Season.query.filter_by(active=True).first()
+    default_season_id = active_season.id if active_season else 1
 
-    random.shuffle(team_players)
+    selected_season = int(request.args.get("season", default_season_id))
 
-    players_data = [
-    {
-        "name": p.name,
-        "img": p.img,
-        "position": p.position,
-        "pos_rank": p.pos_rank,
-        "dual_points": p.dual_points or 0
-    }
-    for p in team_players
+    seasons = Season.query.order_by(Season.id.asc()).all()
+
+    stats = TeamSeasonStats.query.filter_by(
+        team_id=team.id,
+        season_id=selected_season
+    ).first()
+
+    # TEMP fallback until Season 1 is snapshotted
+    if not stats:
+        stats = team
+
+    rank_rows = TeamRankHistory.query.filter_by(
+        teamId=team.id,
+        season_id=selected_season
+    ).order_by(TeamRankHistory.week.asc()).all()
+
+    ranks = [
+        {
+            "week": row.week,
+            "rank": row.rank
+        }
+        for row in rank_rows
     ]
 
+    roster_rows = TeamRosterSeason.query.filter_by(
+    team_id=team.id,
+    season_id=selected_season
+).all()
+
+    if roster_rows:
+        player_ids = [row.player_id for row in roster_rows]
+
+        team_players = Player.query.filter(
+            Player.id.in_(player_ids)
+        ).all()
+    else:
+        # TEMP fallback until TeamRosterSeason is filled
+        team_players = Player.query.filter_by(
+            team=team.name,
+            active=True
+        ).all()
+
     formation_slots = [
-    "Defender", "Defender",
-    "Captain",
-    "Vanguard", "Vanguard",
-    "Guard", "Center", "Guard"
+        "Defender", "Defender",
+        "Captain",
+        "Vanguard", "Vanguard",
+        "Guard", "Center", "Guard"
     ]
 
     formation_players = []
@@ -1920,58 +2129,26 @@ def one_team(id):
         player = team_players[i] if i < len(team_players) else None
 
         formation_players.append({
-        "slot": slot,
-        "player": player
+            "slot": slot,
+            "player": player
         })
-    # ---------------- TEAM STATS ----------------
-    if selected_season == 'all':
-        stats = team
-    else:
-        stats = TeamSeasonStats.query.filter_by(
-            team_id=team.id,
-            season_id=int(selected_season)
-        ).first()
 
-        if not stats:
-            stats = {
-                "wins": 0,
-                "loss": 0,
-                "points": 0,
-                "tour_points": 0,
-                "rank": 0
-            }
+    players_data = [
+        {
+            "name": p.name,
+            "img": p.img,
+            "position": p.position,
+            "pos_rank": p.pos_rank,
+            "dual_points": p.dual_points or 0
+        }
+        for p in team_players
+    ]
 
-    # ---------------- DUAL HISTORY ----------------
-    opponents_query = Dual.query.filter(
-        or_(
-            Dual.home == team.name,
-            Dual.away == team.name
-        )
-    )
+    opponents = Dual.query.filter(
+        Dual.season_id == selected_season,
+        ((Dual.home == team.name) | (Dual.away == team.name))
+    ).order_by(Dual.week.desc()).all()
 
-    if selected_season != 'all':
-        opponents_query = opponents_query.filter(
-            Dual.season_id == int(selected_season)
-        )
-
-    opponents = opponents_query.all()
-
-    # ---------------- TEAM RANK HISTORY ----------------
-    rank_query = TeamRankHistory.query.filter_by(teamId=id)
-
-    if selected_season != 'all':
-        rank_query = rank_query.filter(
-            TeamRankHistory.season_id == int(selected_season)
-        )
-
-    rank_objs = rank_query.order_by(
-        TeamRankHistory.week.asc(),
-        TeamRankHistory.id.asc()
-    ).all()
-
-    ranks = [{'week': r.week, 'rank': r.rank} for r in rank_objs]
-
-    # ---------------- TEAM COLOR ----------------
     color = {
         'Cornell': '#B31B1B',
         'Iowa': '#FFCD00',
@@ -1987,54 +2164,20 @@ def one_team(id):
         'Penn State': '#0E2B58',
         'Stanford': '#4D4F53',
         'Virginia Tech': '#630031'
-    }.get(team.name, 'Black')
-
-    # ---------------- ROSTER / RADAR PLAYERS ----------------
-    if selected_season == 'all':
-        players_raw = Player.query.filter(Player.team == team.name).all()
-
-        players = [{
-            'name': p.name,
-            'points': p.dual_points or 0
-        } for p in players_raw]
-
-    else:
-        roster_rows = TeamRosterSeason.query.filter_by(
-            team_id=team.id,
-            season_id=int(selected_season)
-        ).all()
-
-        players = []
-
-        for row in roster_rows:
-            player = Player.query.get(row.player_id)
-
-            if player:
-                season_stats = PlayerSeasonStats.query.filter_by(
-                    player_id=player.id,
-                    season_id=int(selected_season)
-                ).first()
-
-                players.append({
-                    'name': player.name,
-                    'points': season_stats.dual_points if season_stats else 0
-                })
-
-    seasons = Season.query.order_by(Season.id.asc()).all()
+    }.get(team.name, 'black')
 
     return render_template(
         'team_rec.html',
         team=team,
         stats=stats,
+        seasons=seasons,
+        selected_season=str(selected_season),
+        ranks=ranks,
         players=players_data,
         formation_players=formation_players,
         opponents=opponents,
-        ranks=ranks,
-        color=color,
-        seasons=seasons,
-        selected_season=selected_season
+        color=color
     )
-
 
 
 @app.route('/team_rec/<id>')
@@ -2279,7 +2422,7 @@ def new_battle():
         'Cons-Quarter',
         'Blood Round',
         'Round of 12',
-        'Cons-24',
+        'Cons-96',
         'Cons-48',
         'Cons-64',
         'Cons-32',
@@ -2386,8 +2529,6 @@ def new_battle():
         if round_name in champ:
             teampnts += 3
 
-        if round_name == 'Round of 256':
-            teampnts += 3
 
         if round_name in cons:
             teampnts += 1
@@ -2765,7 +2906,7 @@ def points_for_round(round_name, score):
         'Cons-Quarter',
         'Blood Round',
         'Round of 12',
-        'Cons-24',
+        'Cons-96',
         'Cons-48',
         'Cons-64',
         'Cons-32',
@@ -2793,8 +2934,6 @@ def points_for_round(round_name, score):
     if round_name in champ:
         pts += 3
 
-    if round_name == 'Round of 256':
-        pts += 3
 
     if round_name in cons:
         pts += 1

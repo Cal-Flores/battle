@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Record</title>
+        <title>{{player.name}} | Record</title>
         <link href="../static/main_page.css" rel="stylesheet">
         <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
     </head>
@@ -24,191 +24,140 @@
 
         <div class="eformcont">
 
-            {% if player.gold >= 1%}
-            <div class="showmedal">
-                <div class="editgoldcard">
-                    <img class="eimg" src="{{player.img}}">
-                    <div class="editwl">
-                        <p class="win">Record: <span class="number">{{player.wins}} - {{player.loss}}</span></p>
 
-                        <p class="points">Points: <span class="number">{{player.tour_points}}</span></p>
-                        <p class="points" style="color: gray;">Rank: <span class="number">{{ player.rank }}</span>
+            <div class="showmedal">
+
+                <div class="{% if player.gold - 6 > 0 %}editgoldcard{% else %}editcard{% endif %}">
+
+                    <img class="eimg" src="{{ player.img }}">
+
+                    <div class="editwl">
+
+                        <p class="win">
+                            Record:
+                            <span class="number">{{ player.wins }} - {{ player.loss }}</span>
                         </p>
-                        <p class="points" style="color: rgb(126, 3, 3);">Bonus: <span class="number">
+
+                        <p class="points">
+                            Points:
+                            <span class="number">{{ player.tour_points }}</span>
+                        </p>
+
+                        <p class="points" style="color: gray;">
+                            Rank:
+                            <span class="number">{{ player.rank }}</span>
+                        </p>
+
+                        <p class="points" style="color: rgb(126,3,3);">
+                            Bonus:
+                            <span class="number">
                                 {{ ("%.2f" % ((player.bonus / player.wins) if player.wins > 0 else 0)).lstrip('0') }}%
                             </span>
                         </p>
+
                     </div>
+
                     <div class="editmedal">
+
                         <div class="medalcont">
-                            {% if player.gold >= 1 %}
-                            <p class="number">{{player.gold}} <span class="medal">🥇</span></p>
-                            {% endif %}
-                            {% if player.silver >= 1 %}
-                            <p class="number">{{player.silver}} <span class="medal">🥈</span></p>
-                            {% endif %}
-                            {% if player.bronze >= 1 %}
-                            <p class="number">{{player.bronze}} <span class="medal">🥉</span></p>
-                            {% endif %}
-                            {% if player.medal >= 1 %}
-                            <p class="number">{{player.medal}} <span class="medal">🎖</span></p>
-                            {% endif %}
-                            {% if player.badge >= 1 %}
+
+                            {% for award in awards %}
+
+                            {% if award.count > 0 %}
+
+                            {% if award.image %}
                             <div class="badge">
-                                <p class="number">{{player.badge}} </p>
-                                <img src="../static/images/reward.png" class="ribbon">
+                                <p class="number">{{ award.count }}</p>
+                                <img src="{{ award.image }}" class="ribbon">
                             </div>
+                            {% else %}
+                            <p class="number">
+                                {{ award.count }}
+                                <span class="medal">{{ award.icon }}</span>
+                            </p>
                             {% endif %}
+
+                            {% endif %}
+
+                            {% endfor %}
+
                         </div>
+
                     </div>
+
                 </div>
 
                 <div id="square">
+
                     <div class="squaremedal">
-                        {% for res in result%}
+
+                        {% if player_placements %}
+
+                        {% for placement in player_placements %}
+
                         <div class="squarelist">
-                            {% if res.first == player_img %}
-                            <p class="oppnum"><span class="sqmoj">🏆</span> Champion @ Battle Royale {{res.id}} </p>
-                            {% endif %}
 
-                            {% if res.second == player_img %}
-                            <p class="oppnum"><span class="sqmoj">🥈</span> Runner-Up @ Battle Royale {{res.id}} </p>
-                            {% endif %}
+                            {% if placement.place == 1 %}
+                            <p class="oppnum">
+                                <span class="sqmoj">🏆</span>
+                                Champion @ Battle Royale {{ placement.result_id - 6 }}
+                            </p>
 
-                            {% if res.third == player_img %}
-                            <p class="oppnum"><span class="sqmoj">🥉</span> 3rd Place @ Battle Royale {{res.id}} </p>
-                            {% endif %}
+                            {% elif placement.place == 2 %}
+                            <p class="oppnum">
+                                <span class="sqmoj">🥈</span>
+                                Runner-Up @ Battle Royale {{ placement.result_id - 6 }}
+                            </p>
 
-                            {% if res.fourth == player_img %}
-                            <p class="oppnum"><span class="sqmoj">🎖</span> 4th Place @ Battle Royale {{res.id}} </p>
-                            {% endif %}
+                            {% elif placement.place == 3 %}
+                            <p class="oppnum">
+                                <span class="sqmoj">🥉</span>
+                                3rd Place @ Battle Royale {{ placement.result_id - 6 }}
+                            </p>
 
-                            {% if res.fifth == player_img %}
-                            <p class="oppnum"><span class="sqmoj">🎖</span> 5th Place @ Battle Royale {{res.id}} </p>
-                            {% endif %}
+                            {% elif placement.place == 4 %}
+                            <p class="oppnum">
+                                <span class="sqmoj">🪵</span>
+                                4th Place @ Battle Royale {{ placement.result_id - 6 }}
+                            </p>
 
-                            {% if res.sixth == player_img %}
-                            <p class="oppnum"><span class="sqmoj">🎖</span> 6th Place @ Battle Royale {{res.id}} </p>
-                            {% endif %}
+                            {% elif placement.place <= 8 %} <p class="oppnum">
+                                <span class="sqmoj">🎖️</span>
+                                {{ placement.place }}th Place @ Battle Royale {{ placement.result_id - 6 }}
+                                </p>
 
-                            {% if res.seventh == player_img %}
-                            <p class="oppnum"><span class="sqmoj">🎖</span> 7th Place @ Battle
-                                Royale {{res.id}} </p>
-                            {% endif %}
+                                {% elif placement.place <= 12 %} <p class="oppnum">
+                                    <img src="../static/images/reward.png" class="ribbon2">
+                                    {{ placement.place }}th Place @ Battle Royale {{ placement.result_id - 6 }}
+                                    </p>
 
-                            {% if res.eigth == player_img %}
-                            <p class="oppnum"><span class="sqmoj">🎖</span> 8th Place @ Battle
-                                Royale {{res.id}} </p>
-                            {% endif %}
+                                    {% elif placement.place <= 16 %} <p class="oppnum">
+                                        <span class="sqmoj">🎗️</span>
+                                        {{ placement.place }}th Place @ Battle Royale {{ placement.result_id - 6 }}
+                                        </p>
 
-                            {% if res.ninth == player_img %}
-                            <p class="oppnum"><img src="../static/images/reward.png" class="ribbon2"> 9th Place @ Battle
-                                Royale {{res.id}} </p>
-                            {% endif %}
+                                        {% elif placement.place <= 24 %} <p class="oppnum">
+                                            <span class="sqmoj">🩸</span>
+                                            {{ placement.place }}th Place @ Battle Royale {{ placement.result_id - 6 }}
+                                            </p>
 
-                            {% if res.tenth == player_img %}
-                            <p class="oppnum"><img src="../static/images/reward.png" class="ribbon2"> 10th Place @
-                                Battle
-                                Royale {{res.id}} </p>
-                            {% endif %}
+                                            {% endif %}
 
-                            {% if res.eleventh == player_img %}
-                            <p class="oppnum"><img src="../static/images/reward.png" class="ribbon2"> 11th Place @
-                                Battle
-                                Royale {{res.id}} </p>
-                            {% endif %}
-
-                            {% if res.twelfth == player_img %}
-                            <p class="oppnum"><img src="../static/images/reward.png" class="ribbon2"> 12th Place @
-                                Battle
-                                Royale {{res.id}} </p>
-                            {% endif %}
-
-                            {% if res.thirtenth == player_img %}
-                            <p class="oppnum"><img src="../static/images/reward.png" class="ribbon2"> 13th Place @
-                                Battle
-                                Royale {{res.id}} </p>
-                            {% endif %}
-
-                            {% if res.fourtenth == player_img %}
-                            <p class="oppnum"><img src="../static/images/reward.png" class="ribbon2"> 14th Place @
-                                Battle
-                                Royale {{res.id}} </p>
-                            {% endif %}
-
-                            {% if res.fifthtenth == player_img %}
-                            <p class="oppnum"><img src="../static/images/reward.png" class="ribbon2"> 15th Place @
-                                Battle
-                                Royale {{res.id}} </p>
-                            {% endif %}
-
-                            {% if res.sixtenth == player_img %}
-                            <p class="oppnum"><img src="../static/images/reward.png" class="ribbon2"> 16th Place @
-                                Battle
-                                Royale {{res.id}} </p>
-                            {% endif %}
                         </div>
+
                         {% endfor %}
+
+                        {% else %}
+
+                        <p class="oppnum">No tournament placements yet.</p>
+
+                        {% endif %}
+
                     </div>
+
                 </div>
 
             </div>
-            {% else %}
-            <div class="showmedal">
-                <div class="editcard">
-                    <img class="eimg" src="{{player.img}}">
-                    <div class="editwl">
-                        <p class="win">Record: <span class="number">{{player.wins}} - {{player.loss}}</span></p>
-                        <p class="points">Points: <span class="number">{{player.tour_points}}</span></p>
-                        <p class="points" style="color: gray;">Rank: <span class="number">{{ player.rank }}</span>
-                        </p>
-                        <p class="points" style="color: rgb(126, 3, 3);">Bonus: <span class="number">
-                                {{ ("%.2f" % ((player.bonus / player.wins) if player.wins > 0 else 0)).lstrip('0') }}%
-                            </span>
-                        </p>
-                    </div>
-                    <div class="editmedal">
-                        <div class="medalcont">
-
-                            {% if player.gold and player.gold >= 1 %}
-                            <p class="number">{{ player.gold }} <span class="medal">🥇</span></p>
-                            {% endif %}
-
-                            {% if player.silver and player.silver >= 1 %}
-                            <p class="number">{{ player.silver }} <span class="medal">🥈</span></p>
-                            {% endif %}
-
-                            {% if player.bronze and player.bronze >= 1 %}
-                            <p class="number">{{ player.bronze }} <span class="medal">🥉</span></p>
-                            {% endif %}
-
-                            {% if player.wood and player.wood >= 1 %}
-                            <p class="number">{{ player.wood }} <span class="medal">🪵</span></p>
-                            {% endif %}
-
-                            {% if player.medal and player.medal >= 1 %}
-                            <p class="number">{{ player.medal }} <span class="medal">🏅</span></p>
-                            {% endif %}
-
-                            {% if player.badge and player.badge >= 1 %}
-                            <p class="number">{{ player.badge }} <span class="medal">🎖️</span></p>
-                            {% endif %}
-
-                            {% if player.ribbon and player.ribbon >= 1 %}
-                            <p class="number">{{ player.ribbon }} <span class="medal">🎗️</span></p>
-                            {% endif %}
-
-                            {% if player.blood and player.blood >= 1 %}
-                            <p class="number">{{ player.blood }} <span class="medal">🩸</span></p>
-                            {% endif %}
-
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-            {% endif %}
             <div class="pcbtndiv">
                 <form class="oppbtn" action="/new_opponent/{{player.id}}">
                     <input type="submit" value="Add Opponent" />

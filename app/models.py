@@ -15,6 +15,7 @@ class Player(db.Model):
     d_loss = db.Column(db.Integer)
     points = db.Column(db.Integer)
     img = db.Column(db.String(255))
+    bgimg = db.Column(db.String(255))
     gold = db.Column(db.Integer)
     silver = db.Column(db.Integer)
     bronze = db.Column(db.Integer)
@@ -193,6 +194,13 @@ class TeamRankHistory(db.Model):
     rank = db.Column(db.Integer, default=0)
     season_id = db.Column(db.Integer, default=1)
 
+class EloHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    player_id = db.Column(db.Integer)
+    season_id = db.Column(db.Integer)
+    week = db.Column(db.Integer)
+    elo = db.Column(db.Float, default=1500)
+
 class PlayerOfDay(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
@@ -227,7 +235,8 @@ class PlayerSeasonStats(db.Model):
     rank = db.Column(db.Integer, default=0)
     pos_rank = db.Column(db.Integer, default=0)
     bonus = db.Column(db.Integer, default=0)
-
+    elo = db.Column(db.Float, default=1500)
+    peak_elo = db.Column(db.Float, default=1500)
     gold = db.Column(db.Integer, default=0)
     silver = db.Column(db.Integer, default=0)
     bronze = db.Column(db.Integer, default=0)

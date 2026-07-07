@@ -297,12 +297,12 @@
 
                 <div class="newbattle-detail-field">
                     <div class="newbattle-label">Tournament Name</div>
-                    {{ form.tournamnet|default('Battle Royal 1') }}
+                    {{ form.tournamnet|default('Final War') }}
                 </div>
 
                 <div class="newbattle-detail-field">
                     <div class="newbattle-label">Round</div>
-                    {{ form.round }}
+                    {{ form.round |default('Round of 256') }}
                 </div>
 
             </div>
