@@ -29,7 +29,8 @@
                     <div class="teamx-name">{{ team.name }}</div>
                     <div class="teamx-sub">{{ team.conf or 'Conference TBD' }} {{ team.divison or 'Division TBD' }}
                     </div>
-                    <div class="teamx-record">{{ stats.wins }} - {{ stats.loss }}</div>
+                    <div class="teamx-sub">Rank #{{ team.rank }}</div>
+                    <div class="teamx-record">{{ team.wins }} - {{ team.loss }}</div>
                 </div>
                 <a href="/team_rec/{{team.id}}">
                     <img src="{{ team.logo }}" class="teamx-logo">
@@ -71,23 +72,21 @@
 
                 <div class="teamx-stat-grid">
                     <div class="teamx-stat-card">
-                        <span>Record</span>
-                        <strong>{{ stats.wins }} - {{ stats.loss }}</strong>
-                    </div>
-
-                    <div class="teamx-stat-card">
                         <span>Dual Points</span>
-                        <strong>{{ stats.points }}</strong>
+                        <strong>{{ team.points }}</strong>
                     </div>
 
                     <div class="teamx-stat-card">
                         <span>Tournament Points</span>
                         <strong>{{ stats.tour_points }}</strong>
                     </div>
-
                     <div class="teamx-stat-card">
-                        <span>Current Rank</span>
-                        <strong>#{{ stats.rank }}</strong>
+                        <span>Differential</span>
+                        <strong>{{ team.diff }}</strong>
+                    </div>
+                    <div class="teamx-stat-card">
+                        <span>Top Scorer</span>
+                        <strong>{{ top_dual_scorer.name }} - {{top_dual_scorer.dual_points}} pts</strong>
                     </div>
                 </div>
 
@@ -122,48 +121,68 @@
                     {% set total = namespace(wins=0, losses=0) %}
 
                     {% for dual in opponents %}
-                    {% set is_home = dual.home == team.name %}
-                    {% set team_score = dual.hscore if is_home else dual.ascore %}
-                    {% set opponent_score = dual.ascore if is_home else dual.hscore %}
 
-                    {% if team_score != opponent_score %}
-                    {% if team_score > opponent_score %}
+                    {% if dual.week != "0" %}
+
+                    {% if dual.winnerId == team.id %}
                     {% set total.wins = total.wins + 1 %}
-                    {% else %}
+                    {% elif dual.winnerId %}
                     {% set total.losses = total.losses + 1 %}
                     {% endif %}
+
                     {% endif %}
+
                     {% endfor %}
 
                     {% set running = namespace(wins=total.wins, losses=total.losses) %}
 
                     {% for dual in opponents | sort(attribute='week', reverse=true) %}
+
+                    {% if dual.week != "0" and not (dual.hscore == 0 and dual.ascore == 0) %}
+
                     {% set is_home = dual.home == team.name %}
                     {% set opponent = dual.away if is_home else dual.home %}
+
                     {% set team_score = dual.hscore if is_home else dual.ascore %}
                     {% set opponent_score = dual.ascore if is_home else dual.hscore %}
-                    {% set won = team_score > opponent_score %}
+
+                    {% set won = dual.winnerId == team.id %}
 
                     <a href="../duals/{{ dual.id }}" class="teamx-record-row">
+
                         <div class="{{ 'teamx-win' if won else 'teamx-loss' }}">
                             {{ 'W' if won else 'L' }}
                         </div>
 
-                        <div>{{ 'vs' if is_home else '@' }} {{ opponent }}</div>
-                        <div>{{ team_score }} - {{ opponent_score }}</div>
-                        <div>Week {{ dual.week }}</div>
-                        <div>{{ running.wins }} - {{ running.losses }}</div>
+                        <div>
+                            {{ 'vs' if is_home else '@' }} {{ opponent }}
+                        </div>
+
+                        <div>
+                            {{ team_score }} - {{ opponent_score }}
+                        </div>
+
+                        <div>
+                            Week {{ dual.week }}
+                        </div>
+
+                        <div>
+                            {{ running.wins }} - {{ running.losses }}
+                        </div>
+
                     </a>
 
-                    {% if team_score != opponent_score %}
+                    {% if dual.winnerId %}
                     {% if won %}
                     {% set running.wins = running.wins - 1 %}
                     {% else %}
                     {% set running.losses = running.losses - 1 %}
                     {% endif %}
                     {% endif %}
-                    {% endfor %}
 
+                    {% endif %}
+
+                    {% endfor %}
                 </div>
 
             </section>
@@ -551,7 +570,7 @@
                 if (!rankCanvas || !rankDiv) return;
 
                 const rankRaw = JSON.parse(rankDiv.dataset.values || "[]");
-                const weeks = Array.from({ length: 10 }, (_, i) => i + 1);
+                const weeks = Array.from({ length: 8 }, (_, i) => i + 1);
 
                 const rankMap = {};
                 rankRaw.forEach(r => {
@@ -603,7 +622,7 @@
                             y: {
                                 reverse: true,
                                 min: 1,
-                                max: 32,
+                                max: 16,
 
                                 afterBuildTicks: axis => {
                                     axis.ticks = [

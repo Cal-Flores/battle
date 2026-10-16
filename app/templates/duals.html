@@ -85,11 +85,21 @@
             {# Week separator #}
             {% if loop.first or dual.week != loop.previtem.dual.week %}
             <div class="week-separator">
-                <div class="week-label">Week {{ dual.week }}</div>
+                <div class="week-label">
+                    {% if dual.season_id == 1 and dual.week|string == "9" %}
+                    Wild Card Round
+                    {% elif dual.season_id == 1 and dual.week|string == "10" %}
+                    Divisional Round
+                    {% elif dual.season_id == 1 and dual.week|string == "11" %}
+                    CHAMPIONSHIP 🏆
+                    {% else %}
+                    Week {{ dual.week }}
+                    {% endif %}
+                </div>
             </div>
             {% endif %}
 
-            <div class="match {% if row.is_conf_game %}conf-game{% endif %}">
+            <div class="match">
                 {# 1: spacer #}
                 <div></div>
 

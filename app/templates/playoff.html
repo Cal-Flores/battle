@@ -12,6 +12,36 @@
             @import url('https://fonts.cdnfonts.com/css/ninja-naruto');
         </style>
         <link type="image/x-icon" rel="icon" href="../static/images/favicon.ico">
+        <style>
+            .conference-toggle {
+                display: flex;
+                justify-content: center;
+                gap: 12px;
+                margin: 25px auto;
+            }
+
+            .conference-toggle a {
+                padding: 10px 32px;
+                background: #171717;
+                color: #aaa;
+                border: 1px solid #444;
+                border-radius: 5px;
+                text-decoration: none;
+                font-weight: bold;
+                transition: 0.2s;
+            }
+
+            .conference-toggle a:hover {
+                border-color: #ff8500;
+                color: white;
+            }
+
+            .conference-toggle a.active {
+                background: #ff8500;
+                border-color: #ff8500;
+                color: black;
+            }
+        </style>
     </head>
 
     <body id="playoffbg">
@@ -23,10 +53,20 @@
 
 
 
-
         <div class="playoffs-page">
             <h1 class="playoffs-title">Playoff Picture</h1>
 
+            <div class="conference-toggle">
+                <a href="{{ url_for('playoffs', conf='afc', season=selected_season) }}"
+                    class="{% if selected_conf == 'afc' %}active{% endif %}">
+                    AFC
+                </a>
+
+                <a href="{{ url_for('playoffs', conf='nfc', season=selected_season) }}"
+                    class="{% if selected_conf == 'nfc' %}active{% endif %}">
+                    NFC
+                </a>
+            </div>
 
             <!-- 4 x 4 ranking grid: rows = place, cols = conference -->
             <div class="playoff-grid">

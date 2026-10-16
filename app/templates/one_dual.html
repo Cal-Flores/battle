@@ -22,7 +22,79 @@
     <body id="oneDual">
         {%include 'nav.html'%}
         <h2 class="dual-title">{{ away.name }} @ {{ home.name }} DUAL</h2>
-        <a class="edrecord" href="/finalize/{{dual.id}}">Finalize</a>
+        {% if not dual.finalized %}
+
+        <form action="/finalize/{{dual.id}}" method="POST">
+
+            <div class="bonus-panel">
+
+                <div class="bonus-row">
+
+                    <div class="bonus-side">
+                        <span class="bonus-title">{{away.name}}</span>
+
+                        <label class="bonus-check">
+                            +1
+                            <input type="checkbox" name="away_bonus1">
+                        </label>
+
+                        <label class="bonus-check">
+                            +1
+                            <input type="checkbox" name="away_bonus2">
+                        </label>
+                    </div>
+
+                    <div class="bonus-side">
+                        <span class="bonus-title">{{home.name}}</span>
+
+                        <label class="bonus-check">
+                            +1
+                            <input type="checkbox" name="home_bonus1">
+                        </label>
+
+                        <label class="bonus-check">
+                            +1
+                            <input type="checkbox" name="home_bonus2">
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="finalize-row">
+                    {% if dual.hscore == dual.ascore and dual.hscore != 0 %}
+                    <div class="tiebreak-panel">
+                        <h4>Tiebreak Winner</h4>
+
+                        <label>
+                            <input type="radio" name="winner" value="home" required>
+                            {{ home.name }}
+                        </label>
+
+                        <label>
+                            <input type="radio" name="winner" value="away">
+                            {{ away.name }}
+                        </label>
+                    </div>
+                    {% endif %}
+                    <button class="finalize-btn">
+                        Finalize Dual
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+
+        {% else %}
+        <div class="dual-date">
+            {% if dual.date %}
+            Finalized {{ dual.date.strftime('%b %d, %Y') }}
+            {% else %}
+            Not Finalized
+            {% endif %}
+        </div>
+
+        {% endif %}
 
         <div class="dual-header-v2">
             <a href="../teams/{{away.id}}">
@@ -47,7 +119,6 @@
                 </div>
             </a>
         </div>
-
 
         <div>
             <div class="dual-results">
@@ -106,6 +177,116 @@
             </div>
 
         </div>
+        <style>
+            .bonus-panel {
+                width: 700px;
+                margin: 18px auto;
+
+                background: rgba(15, 15, 15, .94);
+                border: 2px solid #d68a00;
+                border-radius: 12px;
+                box-shadow: 0 0 14px rgba(255, 150, 0, .18);
+
+                padding: 16px 22px;
+            }
+
+            .bonus-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 14px;
+            }
+
+            .bonus-side {
+                width: 48%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 14px;
+            }
+
+            .bonus-title {
+                color: #ffad2f;
+                font-size: 20px;
+                font-weight: bold;
+                min-width: 110px;
+                text-align: center;
+            }
+
+            .bonus-check {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                color: white;
+                font-size: 17px;
+            }
+
+            .bonus-check input {
+                width: 18px;
+                height: 18px;
+                accent-color: #ff9800;
+                cursor: pointer;
+            }
+
+            .finalize-row {
+                display: flex;
+                justify-content: center;
+            }
+
+            .finalize-btn {
+                padding: 8px 26px;
+                font-size: 15px;
+                font-weight: bold;
+
+                color: #ffb347;
+
+                background: linear-gradient(#2d2d2d, #171717);
+                border: 2px solid #d68a00;
+                border-radius: 8px;
+
+                cursor: pointer;
+                transition: .2s;
+            }
+
+            .finalize-btn:hover {
+                background: linear-gradient(#3a3a3a, #222);
+                box-shadow: 0 0 10px rgba(255, 165, 0, .35);
+                transform: translateY(-1px);
+            }
+
+            .finalized-banner {
+                width: fit-content;
+                margin: 18px auto;
+                padding: 10px 26px;
+
+                background: #16391d;
+                color: #62ff87;
+
+                border: 2px solid #2ec85d;
+                border-radius: 10px;
+
+                font-weight: bold;
+                font-size: 17px;
+            }
+
+            .dual-date {
+                display: flex;
+                width: fit-content;
+                margin: 8px auto;
+                align-items: center;
+
+                padding: 6px 12px;
+                background: rgba(255, 255, 255, .05);
+                border: 1px solid rgba(255, 255, 255, .12);
+                border-radius: 999px;
+
+                color: #d7d7d7;
+                font-size: .78rem;
+                font-weight: 600;
+                letter-spacing: .04em;
+                text-transform: uppercase;
+            }
+        </style>
     </body>
 
 </html>

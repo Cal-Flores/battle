@@ -12,98 +12,1154 @@
     </head>
 
     <body id="dash">
+
         {% include 'nav.html' %}
+
+        <!-- =========================
+            LIVE RESULTS TICKER
+    ========================== -->
+
+        <div class="news-ticker" style="margin-top:75px;">
+
+            <div class="ticker-label">
+                LIVE • WEEK {{ latest_week }}
+            </div>
+
+            <div class="ticker-window">
+
+                <div class="ticker-track">
+
+                    {% for i in range(2) %}
+                    {% for dual in ticker_duals %}
+
+                    <a href="/duals/{{ dual.id }}" class="ticker-item">
+
+                        {% if dual.hscore > dual.ascore %}
+
+                        <span class="winner">
+                            #{{ dual.home.rank }} {{ dual.home.name }}
+                        </span>
+
+                        <span class="ticker-text">
+                            def.
+                        </span>
+
+                        <span>
+                            #{{ dual.away.rank }} {{ dual.away.name }}
+                        </span>
+
+                        {% elif dual.ascore > dual.hscore %}
+
+                        <span class="winner">
+                            #{{ dual.away.rank }} {{ dual.away.name }}
+                        </span>
+
+                        <span class="ticker-text">
+                            def.
+                        </span>
+
+                        <span>
+                            #{{ dual.home.rank }} {{ dual.home.name }}
+                        </span>
+
+                        {% endif %}
+
+                        <span class="ticker-score">
+                            {{ dual.hscore }}–{{ dual.ascore }}
+                        </span>
+
+                        <span class="ticker-divider">
+                            •
+                        </span>
+
+                    </a>
+
+                    {% endfor %}
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+            DASHBOARD
+    ========================== -->
 
         <div id="dashcont">
 
             <div class="dash-header">
-                <p class="eyebrow">Battle Royale HQ</p>
-                <h1>Dashboard</h1>
-                <h2>{{ today_label }}</h2>
+
+                <p class="eyebrow">
+                    BATTLE ROYALE HQ
+                </p>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <h2>
+                    {{ today_label }}
+                </h2>
+
             </div>
+
+
+            <!-- ============================ FETURED FIGHT CARSOEL ===========================================-->
 
             <div id="dash1">
 
-                <section class="dash-section player-day-card">
-                    <h2>🗡️ Player of the Day</h2>
+                <!-- ========================================= -->
+                <!-- PLAYER OF THE DAY -->
+                <!-- ========================================= -->
+
+                <section class="player-day-card">
+
+                    <div class="player-day-heading">
+
+                        🗡 PLAYER OF THE DAY
+
+                    </div>
 
                     {% if random_player %}
-                    <div class="feature-card">
-                        <img class="dash-img main-img" src="{{ random_player.img }}">
-                        <h1>{{ random_player.name }}</h1>
-                        <p>{{ random_player.team }}</p>
-                        <p>Rank: #{{ random_player.rank }}</p>
-                        <p>Birthday: {{ random_player.birthday }}</p>
-                        <p>Height: {{ random_player.height }}</p>
-                    </div>
+
+                    <a href="/player/{{ random_player.id }}" class="player-day-link">
+
+                        <div class="player-day-image">
+
+                            <img class="player-day-img" src="{{ random_player.img }}" alt="{{ random_player.name }}">
+
+                            <div class="player-day-overlay">
+
+                                <h2>{{ random_player.name }}</h2>
+
+                                <p>{{ random_player.team }}</p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="player-day-details">
+
+                            <div class="detail">
+                                #{{ random_player.rank }}
+                            </div>
+
+                            <div class="detail">
+                                {{ random_player.height }}
+                            </div>
+
+                            <div class="detail">
+                                {{ random_player.birthday }}
+                            </div>
+
+                        </div>
+
+                    </a>
+
                     {% endif %}
+
                 </section>
 
-                {% if spotlight_match %}
-                <section class="dash-section match-card">
-                    <h2>⚔️ Featured Fight</h2>
 
-                    <div class="match-row">
-                        <div class="fighter-card winner">
-                            <img class="fight-img" src="{{ spotlight_match.winner.img }}">
-                            <h3>{{ spotlight_match.winner.name }}</h3>
-                            <span>Winner</span>
+
+                <!-- ========================================= -->
+                <!-- FEATURED FIGHT -->
+                <!-- ========================================= -->
+
+                <section class="featured-card">
+
+                    <div class="featured-heading">
+
+                        <div>
+
+                            <span class="featured-title">
+
+                                ⚔ FEATURED FIGHT
+
+                            </span>
+
+                            <span class="featured-subtitle">
+
+                                THE LATEST
+
+                            </span>
+
                         </div>
 
-                        <div class="versus">
-                            <span>DEF</span>
+                        <div class="featured-counter">
+
+                            <span id="featured-current">1</span>
+
+                            /
+
+                            {{ featured_fights|length }}
+
                         </div>
 
-                        <div class="fighter-card">
-                            <img class="fight-img" src="{{ spotlight_match.loser.img }}">
-                            <h3>{{ spotlight_match.loser.name }}</h3>
-                            <span>Defeated</span>
-                        </div>
                     </div>
 
-                    <div class="match-meta">
-                        <p>Score: <strong>{{ spotlight_match.score }}</strong></p>
-                        <p>{{ spotlight_match.round }}</p>
-                        <p>{{ spotlight_match.date }}</p>
-                        <p>{{ spotlight_match.tour_name }}</p>
+
+                    <div class="featured-carousel">
+
+                        {% for fight in featured_fights %}
+
+                        <article class="featured-slide {% if loop.first %}active{% endif %}">
+
+                            <!-- ========================= -->
+                            <!-- WINNER -->
+                            <!-- ========================= -->
+
+                            <a href="/player/{{ fight.winner.id }}" class="fighter-card winner-card">
+
+                                <img class="fighter-render"
+                                    src="{{ url_for('static', filename='images/players/' ~ fight.winner.bgimg) }}"
+                                    alt="{{ fight.winner.name }}">
+
+                                <div class="fighter-overlay">
+
+                                    <span class="winner-tag">
+
+                                        WINNER
+
+                                    </span>
+
+                                    <h2>
+
+                                        {{ fight.winner.name }}
+
+                                    </h2>
+
+                                    <p>
+
+                                        #{{ fight.winner.rank }}
+
+                                    </p>
+
+                                </div>
+
+                            </a>
+
+
+
+                            <!-- ========================= -->
+                            <!-- CENTER -->
+                            <!-- ========================= -->
+
+                            <div class="fight-center">
+
+                                <div class="fight-label">
+
+                                    {{ fight.label }}
+
+                                </div>
+
+                                <div class="fight-versus">
+
+                                    <span>
+
+                                        {{ fight.winner.name }}
+
+                                    </span>
+
+                                    <div class="vs-circle">
+
+                                        VS
+
+                                    </div>
+
+                                    <span>
+
+                                        {{ fight.loser.name }}
+
+                                    </span>
+
+                                </div>
+
+                                <div class="fight-method">
+
+                                    {{ fight.method }}
+
+                                </div>
+
+                                <div class="fight-event">
+
+                                    {{ fight.event }}
+
+                                </div>
+
+                                {% if fight.date %}
+
+                                <div class="fight-date">
+
+                                    {{ fight.date.strftime('%B %d, %Y') }}
+
+                                </div>
+
+                                {% endif %}
+
+                                <div class="carousel-controls">
+
+                                    <button class="carousel-arrow" id="featured-prev">
+
+                                        ‹
+
+                                    </button>
+
+                                    <div class="carousel-dots">
+
+                                        {% for item in featured_fights %}
+
+                                        <button class="carousel-dot {% if loop.first %}active{% endif %}"
+                                            data-slide="{{ loop.index0 }}">
+                                        </button>
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                    <button class="carousel-arrow" id="featured-next">
+
+                                        ›
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- ========================= -->
+                            <!-- LOSER -->
+                            <!-- ========================= -->
+
+                            <a href="/player/{{ fight.loser.id }}" class="fighter-card loser-card">
+
+                                <img class="fighter-render"
+                                    src="{{ url_for('static', filename='images/players/' ~ fight.loser.bgimg) }}"
+                                    alt="{{ fight.loser.name }}">
+
+                                <div class="fighter-overlay loser-overlay">
+
+                                    <span class="loser-tag">
+
+                                        DEFEATED
+
+                                    </span>
+
+                                    <h2>
+
+                                        {{ fight.loser.name }}
+
+                                    </h2>
+
+                                    <p>
+
+                                        #{{ fight.loser.rank }}
+
+                                    </p>
+
+                                </div>
+
+                            </a>
+
+                        </article>
+
+                        {% endfor %}
+
                     </div>
+
                 </section>
-                {% endif %}
 
             </div>
+            <!-- ==========================================================
+BIGGEST MOVERS
+========================================================== -->
 
-            <section class="dash-section">
-                <h2>🎂 Birthdays Today</h2>
+            <section id="movers">
 
-                <div class="birthday-row">
-                    {% for player in birthdays %}
-                    <div class="birthday-card">
-                        <img class="dash-img" src="{{ player.img }}">
-                        <h4>{{ player.name }}</h4>
+                <!-- HEADER -->
+
+                <div class="movers-header">
+
+                    <div class="movers-title">
+
+                        BIGGEST MOVERS
+
+                        <span>• PLAYERS</span>
+
                     </div>
-                    {% else %}
-                    <p class="empty-text">No birthdays today.</p>
-                    {% endfor %}
-                </div>
-            </section>
 
-            <section class="dash-section">
-                <h2>🏆 Hall of Fame</h2>
+                    <div class="movers-week">
 
-                <div class="history-row">
-                    {% for pick in player_of_day_history %}
-                    <div class="history-card">
-                        <img class="dash-img" src="{{ pick.player.img }}">
-                        <h4>{{ pick.player.name }}</h4>
-                        <p>{{ pick.date }}</p>
+                        WEEK {{ latest_week }}
+
                     </div>
-                    {% else %}
-                    <p class="empty-text">No player history yet.</p>
-                    {% endfor %}
-                </div>
-            </section>
 
+                </div>
+
+
+
+                <!-- ==========================================================
+    PLAYER MOVERS
+    ========================================================== -->
+
+                <div class="player-movers-grid">
+
+                    <!-- =========================
+        RISERS
+        ========================== -->
+
+                    <div class="mover-panel">
+
+                        <div class="panel-heading rise">
+
+                            ▲ BIGGEST RISERS
+
+                        </div>
+
+                        <div class="mover-list">
+
+                            {% for mover in player_risers %}
+
+                            <a href="/player/{{ mover.player.id }}" class="mover-row">
+
+                                <div class="place">
+
+                                    {{ loop.index }}
+
+                                </div>
+
+                                <div class="player-render">
+
+                                    <img src="{{ url_for('static', filename='images/players/' ~ mover.player.bgimg) }}"
+                                        alt="{{ mover.player.name }}">
+
+                                </div>
+
+                                <div class="player-name">
+
+                                    {{ mover.player.name }}
+
+                                </div>
+
+                                <div class="movement rise">
+
+                                    ▲ +{{ mover.movement }}
+
+                                </div>
+
+                                <div class="current-rank">
+
+                                    #{{ mover.current_rank }}
+
+                                </div>
+
+                            </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+        FALLERS
+        ========================== -->
+
+                    <div class="mover-panel">
+
+                        <div class="panel-heading fall">
+
+                            ▼ BIGGEST FALLERS
+
+                        </div>
+
+                        <div class="mover-list">
+
+                            {% for mover in player_fallers %}
+
+                            <a href="/player/{{ mover.player.id }}" class="mover-row">
+
+                                <div class="place">
+
+                                    {{ loop.index }}
+
+                                </div>
+
+                                <div class="player-render">
+
+                                    <img src="{{ url_for('static', filename='images/players/' ~ mover.player.bgimg) }}"
+                                        alt="{{ mover.player.name }}">
+
+                                </div>
+
+                                <div class="player-name">
+
+                                    {{ mover.player.name }}
+
+                                </div>
+
+                                <div class="movement fall">
+
+                                    ▼ {{ mover.movement }}
+
+                                </div>
+
+                                <div class="current-rank">
+
+                                    #{{ mover.current_rank }}
+
+                                </div>
+
+                            </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==========================================================
+    TEAM MOVERS
+    ========================================================== -->
+
+                <div class="team-movers-grid">
+
+                    <!-- =========================
+        TEAM RISERS
+        ========================== -->
+
+                    <div class="team-panel">
+
+                        <div class="panel-heading rise">
+
+                            ▲ TOP TEAM RISERS
+
+                        </div>
+
+                        <div class="team-list">
+
+                            {% for mover in team_risers %}
+
+                            <div class="team-row">
+
+                                <div class="place">
+
+                                    {{ loop.index }}
+
+                                </div>
+
+                                <img class="team-logo" src="{{ mover.team.logo }}" alt="{{ mover.team.name }}">
+
+                                <div class="team-name">
+
+                                    {{ mover.team.name }}
+
+                                </div>
+
+                                <div class="movement rise">
+
+                                    ▲ +{{ mover.movement }}
+
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- CENTER LOGO -->
+
+                    <div class="team-center">
+
+                        <h1>
+
+
+
+                        </h1>
+
+                    </div>
+
+
+
+                    <!-- =========================
+        TEAM FALLERS
+        ========================== -->
+
+                    <div class="team-panel">
+
+                        <div class="panel-heading fall">
+
+                            ▼ TOP TEAM FALLERS
+
+                        </div>
+
+                        <div class="team-list">
+
+                            {% for mover in team_fallers %}
+
+                            <div class="team-row">
+
+                                <div class="place">
+
+                                    {{ loop.index }}
+
+                                </div>
+
+                                <img class="team-logo" src="{{ mover.team.logo }}" alt="{{ mover.team.name }}">
+
+                                <div class="team-name">
+
+                                    {{ mover.team.name }}
+
+                                </div>
+
+                                <div class="movement fall">
+
+                                    ▼ {{ mover.movement }}
+
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+            <!-- ==========================================================
+LEAGUE WINNERS
+========================================================== -->
+
+            <section id="league-leaders">
+
+                <div class="leaders-header">
+
+                    <div class="leaders-title">
+                        🏆 LEAGUE WINNERS
+                    </div>
+
+                    <div class="leaders-season">
+                        LEAGUE LEADERS
+                    </div>
+
+                </div>
+
+                <div class="leaders-grid">
+
+                    <!-- ======================================================
+        MOST WINS
+        ======================================================= -->
+
+                    <section class="leader-card">
+
+                        <div class="leader-heading">
+                            👑 MOST WINS
+                        </div>
+
+                        {% if most_wins %}
+
+                        <div class="leader-champion">
+
+                            <img class="leader-render"
+                                src="{{ url_for('static', filename='images/players/' ~ most_wins[0].bgimg) }}"
+                                alt="{{ most_wins[0].name }}">
+
+                            <div class="leader-main">
+
+
+                                <h2>{{ most_wins[0].name }}</h2>
+
+                                <div class="leader-value">
+                                    {{ most_wins[0].wins or 0 }}
+                                </div>
+
+                                <span>WINS</span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="leader-list">
+
+                            {% for player in most_wins[1:5] %}
+
+                            <a href="/player/{{ player.id }}" class="leader-row">
+
+                                <span>{{ loop.index + 1 }}</span>
+
+                                <span>{{ player.name }}</span>
+
+                                <span>{{ player.wins or 0 }}</span>
+
+                            </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                        {% endif %}
+
+                    </section>
+
+
+                    <!-- ======================================================
+        MOST PINS
+        ======================================================= -->
+
+                    <section class="leader-card">
+
+                        <div class="leader-heading">
+                            🤼 MOST PINS
+                        </div>
+
+                        {% if most_pins %}
+
+                        <div class="leader-champion">
+
+                            <img class="leader-render"
+                                src="{{ url_for('static', filename='images/players/' ~ most_pins[0].player.bgimg) }}"
+                                alt="{{ most_pins[0].player.name }}">
+
+                            <div class="leader-main">
+
+
+                                <h2>{{ most_pins[0].player.name }}</h2>
+
+                                <div class="leader-value">
+                                    {{ most_pins[0].total }}
+                                </div>
+
+                                <span>PINS</span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="leader-list">
+
+                            {% for leader in most_pins[1:5] %}
+
+                            <a href="/player/{{ leader.player.id }}" class="leader-row">
+
+                                <span>{{ loop.index + 1 }}</span>
+
+                                <span>{{ leader.player.name }}</span>
+
+                                <span>{{ leader.total }}</span>
+
+                            </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                        {% endif %}
+
+                    </section>
+
+
+                    <!-- ======================================================
+        HIGHEST WIN %
+        ======================================================= -->
+
+                    <section class="leader-card">
+
+                        <div class="leader-heading">
+                            % HIGHEST WIN %
+                        </div>
+
+                        {% if highest_win_pct %}
+
+                        <div class="leader-champion">
+
+                            <img class="leader-render"
+                                src="{{ url_for('static', filename='images/players/' ~ highest_win_pct[0].player.bgimg) }}"
+                                alt="{{ highest_win_pct[0].player.name }}">
+
+                            <div class="leader-main">
+
+
+                                <h2>{{ highest_win_pct[0].player.name }}</h2>
+
+                                <div class="leader-value">
+                                    {{ "%.1f"|format(highest_win_pct[0].total * 100) }}%
+                                </div>
+
+                                <span>WIN %</span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="leader-list">
+
+                            {% for leader in highest_win_pct[1:5] %}
+
+                            <a href="/player/{{ leader.player.id }}" class="leader-row">
+
+                                <span>{{ loop.index + 1 }}</span>
+
+                                <span>{{ leader.player.name }}</span>
+
+                                <span>
+                                    {{ "%.1f"|format(leader.total * 100) }}%
+                                </span>
+
+                            </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                        {% endif %}
+
+                    </section>
+
+
+                    <!-- ======================================================
+        HIGHEST BONUS %
+        ======================================================= -->
+
+                    <section class="leader-card">
+
+                        <div class="leader-heading">
+                            ★ HIGHEST BONUS %
+                        </div>
+
+                        {% if highest_bonus_pct %}
+
+                        <div class="leader-champion">
+
+                            <img class="leader-render"
+                                src="{{ url_for('static', filename='images/players/' ~ highest_bonus_pct[0].player.bgimg) }}"
+                                alt="{{ highest_bonus_pct[0].player.name }}">
+
+                            <div class="leader-main">
+
+
+                                <h2>{{ highest_bonus_pct[0].player.name }}</h2>
+
+                                <div class="leader-value">
+                                    {{ "%.1f"|format(highest_bonus_pct[0].total * 100) }}%
+                                </div>
+
+                                <span>BONUS %</span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="leader-list">
+
+                            {% for leader in highest_bonus_pct[1:5] %}
+
+                            <a href="/player/{{ leader.player.id }}" class="leader-row">
+
+                                <span>{{ loop.index + 1 }}</span>
+
+                                <span>{{ leader.player.name }}</span>
+
+                                <span>
+                                    {{ "%.1f"|format(leader.total * 100) }}%
+                                </span>
+
+                            </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                        {% endif %}
+
+                    </section>
+
+
+                    <!-- ======================================================
+        MOST CLASSICS
+        ======================================================= -->
+
+                    <section class="leader-card">
+
+                        <div class="leader-heading">
+                            ⚔ MOST CLASSICS
+                        </div>
+
+                        {% if most_classics %}
+
+                        <div class="leader-champion">
+
+                            <img class="leader-render"
+                                src="{{ url_for('static', filename='images/players/' ~ most_classics[0].player.bgimg) }}"
+                                alt="{{ most_classics[0].player.name }}">
+
+                            <div class="leader-main">
+
+
+                                <h2>{{ most_classics[0].player.name }}</h2>
+
+                                <div class="leader-value">
+                                    {{ most_classics[0].total }}
+                                </div>
+
+                                <span>CLASSICS</span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="leader-list">
+
+                            {% for leader in most_classics[1:5] %}
+
+                            <a href="/player/{{ leader.player.id }}" class="leader-row">
+
+                                <span>{{ loop.index + 1 }}</span>
+
+                                <span>{{ leader.player.name }}</span>
+
+                                <span>{{ leader.total }}</span>
+
+                            </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                        {% endif %}
+
+                    </section>
+
+                </div>
+                <!-- ==========================================================
+                        BOTTOM GRID
+                        ========================================================== -->
+
+                <div class="leaders-bottom-grid">
+
+                    <!-- ======================================================
+                            BIGGEST RIVALRIES
+                            ======================================================= -->
+
+                    <section class="leader-large-card">
+
+                        <div class="leader-heading">
+
+                            ⚔ BIGGEST RIVALRIES
+
+                        </div>
+
+                        <div class="rivalry-list">
+
+                            {% for rival in biggest_rivalries %}
+
+                            <div class="rivalry-row">
+
+                                <div class="rivalry-rank">
+
+                                    {{ loop.index }}
+
+                                </div>
+
+                                <div class="rival-player">
+
+                                    <img class="leader-render-small"
+                                        src="{{ url_for('static', filename='images/players/' ~ rival.player1.bgimg) }}"
+                                        alt="{{ rival.player1.name }}">
+
+                                    <span>
+
+                                        {{ rival.player1.name }}
+
+                                    </span>
+
+                                </div>
+
+                                <div class="vs-column">
+
+                                    <div class="vs-circle-small">
+
+                                        VS
+
+                                    </div>
+
+                                    <span class="meeting-count">
+
+                                        {{ rival.p1_wins }} - {{ rival.p2_wins }}
+
+                                    </span>
+
+                                </div>
+
+                                <div class="rival-player">
+
+                                    <img class="leader-render-small"
+                                        src="{{ url_for('static', filename='images/players/' ~ rival.player2.bgimg) }}"
+                                        alt="{{ rival.player2.name }}">
+
+                                    <span>
+
+                                        {{ rival.player2.name }}
+
+                                    </span>
+
+
+
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </section>
+
+
+
+                    <!-- ======================================================
+                            MOST OT FIGHTS
+                            ======================================================= -->
+
+                    <section class="leader-large-card">
+
+                        <div class="leader-heading">
+
+                            ⏱ MOST OVERTIME FIGHTS
+
+                        </div>
+
+                        <div class="ot-list">
+
+                            {% for leader in most_ot_fights[:5] %}
+
+                            <a href="/player/{{ leader.player.id }}" class="ot-row">
+
+                                <div class="ot-rank">
+
+                                    {{ loop.index }}
+
+                                </div>
+
+                                <img class="leader-render-small"
+                                    src="{{ url_for('static', filename='images/players/' ~ leader.player.bgimg) }}"
+                                    alt="{{ leader.player.name }}">
+
+                                <div class="ot-player">
+
+                                    {{ leader.player.name }}
+
+                                </div>
+
+                                <div class="ot-total">
+
+                                    {{ leader.total }}
+
+                                </div>
+
+                            </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </section>
+            <!-- ==========================================================
+            PLAYER OF THE DAY HALL OF FAME
+            ========================================================== -->
+
+            <section id="hall-of-fame">
+
+                <div class="hof-header">
+
+                    <div class="hof-title">
+
+                        🏛 PLAYER OF THE DAY HALL OF FAME
+
+                    </div>
+
+                    <div class="hof-subtitle">
+
+                        Every Player of the Day in League History
+
+                    </div>
+
+                </div>
+
+
+                <div class="hof-scroll">
+
+                    {% for entry in player_of_day_history %}
+
+                    <a href="/player/{{ entry.player.id }}" class="hof-card {% if loop.first %}current-hof{% endif %}">
+
+                        <div class="hof-date">
+
+                            {{ entry.date }}
+
+                        </div>
+
+                        <div class="hof-image">
+
+                            <img src="{{ entry.player.img }}" alt="{{ entry.player.name }}">
+
+                        </div>
+
+                        <div class="hof-name">
+
+                            {{ entry.player.name }}
+
+                        </div>
+
+                        <div class="hof-team">
+
+                            {{ entry.player.team }}
+
+                        </div>
+
+                        {% if loop.first %}
+
+                        <div class="hof-current">
+
+                            TODAY
+
+                        </div>
+
+                        {% endif %}
+
+                    </a>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
         </div>
+
+
 
         <style>
             #dash {
@@ -121,7 +1177,7 @@
             #dashcont {
                 width: 90%;
                 max-width: 1300px;
-                margin: 110px auto 40px;
+                margin: 10px auto 40px;
                 padding: 28px;
                 background: rgba(10, 10, 10, .86);
                 border: 1px solid rgba(255, 136, 0, .45);
@@ -165,207 +1221,2654 @@
                 font-weight: 600;
             }
 
+            /* ====================================================== BIGGEST RISERS AND FALLERS ================================ */
+
+            #movers {
+
+                margin-top: 36px;
+
+                background: #111;
+
+                border: 1px solid rgba(255, 140, 0, .28);
+
+                border-radius: 22px;
+
+                overflow: hidden;
+
+                box-shadow:
+                    0 10px 35px rgba(0, 0, 0, .35);
+
+            }
+
+            .movers-header {
+
+                display: flex;
+
+                justify-content: space-between;
+
+                align-items: center;
+
+                padding: 20px 28px;
+
+                border-bottom: 1px solid rgba(255, 255, 255, .05);
+
+                background: #181818;
+
+            }
+
+            .movers-title {
+
+                color: #ff9800;
+
+                font-size: 1.05rem;
+
+                font-weight: 900;
+
+                letter-spacing: .08em;
+
+                text-transform: uppercase;
+
+            }
+
+            .movers-title span {
+
+                margin-left: 10px;
+
+                color: #777;
+
+                font-weight: 700;
+
+            }
+
+            .movers-week {
+
+                color: #ff9800;
+
+                font-size: 1rem;
+
+                font-weight: 900;
+
+                letter-spacing: .08em;
+
+            }
+
+
+
+            .player-movers-grid {
+
+                display: grid;
+
+                grid-template-columns: 1fr 1fr;
+
+                gap: 16px;
+
+                padding: 18px;
+
+            }
+
+
+
+            .mover-panel {
+
+                background: #141414;
+
+                border: 1px solid rgba(255, 140, 0, .22);
+
+                border-radius: 16px;
+
+                overflow: hidden;
+
+            }
+
+            .panel-heading {
+
+                display: flex;
+
+                justify-content: center;
+
+                align-items: center;
+
+                height: 58px;
+
+                font-size: 1.25rem;
+
+                font-weight: 900;
+
+                letter-spacing: .08em;
+
+                text-transform: uppercase;
+
+                border-bottom: 1px solid rgba(255, 255, 255, .05);
+
+            }
+
+            .panel-heading.rise {
+
+                color: #7CFF3B;
+
+            }
+
+            .panel-heading.fall {
+
+                color: #ff3535;
+
+            }
+
+
+            .mover-list {
+
+                display: flex;
+
+                flex-direction: column;
+
+            }
+
+            .mover-row {
+
+                display: grid;
+
+                grid-template-columns:
+                    55px 92px 1fr 120px 80px;
+
+                align-items: center;
+
+                height: 52px;
+
+                text-decoration: none;
+
+                color: white;
+
+                border-bottom: 1px solid rgba(255, 255, 255, .06);
+
+                transition: .22s;
+
+            }
+
+            .mover-row:last-child {
+
+                border-bottom: none;
+
+            }
+
+            .mover-row:hover {
+
+                background: rgba(255, 140, 0, .06);
+
+            }
+
+
+            .place {
+
+                text-align: center;
+
+                font-size: 1.2rem;
+
+                font-weight: 900;
+
+                color: white;
+
+            }
+
+            .player-render {
+
+                position: relative;
+
+                height: 52px;
+
+                overflow: hidden;
+
+            }
+
+            .player-render img {
+
+                position: absolute;
+
+                bottom: -6px;
+
+                left: 50%;
+
+                transform: translateX(-50%);
+
+                height: 72px;
+
+                width: auto;
+
+                object-fit: contain;
+
+                pointer-events: none;
+
+            }
+
+            .player-name {
+
+                font-size: .92rem;
+
+                font-weight: 700;
+
+                white-space: nowrap;
+
+                overflow: hidden;
+
+                text-overflow: ellipsis;
+
+                padding-left: 14px;
+
+            }
+
+            .current-rank {
+
+                text-align: center;
+
+                font-size: 1rem;
+
+                font-weight: 900;
+
+                color: white;
+
+            }
+
+
+
+            .movement {
+
+                display: flex;
+
+                justify-content: center;
+
+                align-items: center;
+
+                gap: 8px;
+
+                font-size: 1.4rem;
+
+                font-weight: 900;
+
+            }
+
+            .movement.rise {
+
+                color: #7CFF3B;
+
+            }
+
+            .movement.fall {
+
+                color: #ff3535;
+
+            }
+
+            /* ==========================================================
+   TEAM MOVERS
+========================================================== */
+
+            .team-movers-grid {
+
+                display: grid;
+
+                grid-template-columns:
+                    1fr 170px 1fr;
+
+                gap: 18px;
+
+                padding:
+
+                    0 18px 18px;
+
+            }
+
+            /* ==========================================================
+   TEAM PANELS
+========================================================== */
+
+            .team-panel {
+
+                background: #141414;
+
+                border: 1px solid rgba(255, 140, 0, .22);
+
+                border-radius: 16px;
+
+                overflow: hidden;
+
+            }
+
+            .team-list {
+
+                display: flex;
+
+                flex-direction: column;
+
+            }
+
+            .team-row {
+
+                display: grid;
+
+                grid-template-columns:
+
+                    55px 58px 1fr 110px;
+
+                align-items: center;
+
+                height: 72px;
+
+                border-bottom: 1px solid rgba(255, 255, 255, .06);
+
+            }
+
+            .team-row:last-child {
+
+                border-bottom: none;
+
+            }
+
+            /* ==========================================================
+   TEAM LOGOS
+========================================================== */
+
+            .team-logo {
+
+                width: 38px;
+
+                height: 38px;
+
+                object-fit: contain;
+
+                margin: auto;
+
+            }
+
+            .team-name {
+
+                font-size: 1.05rem;
+
+                font-weight: 700;
+
+                color: white;
+
+            }
+
+            .team-row .movement {
+
+                font-size: 1.9rem;
+
+            }
+
+            /* ==========================================================
+   CENTER LOGO
+========================================================== */
+
+            .team-center {
+
+                display: flex;
+
+                justify-content: center;
+
+                align-items: center;
+
+                background: #141414;
+
+                border: 1px solid rgba(255, 140, 0, .22);
+
+                border-radius: 16px;
+
+            }
+
+            .team-center h1 {
+
+                margin: 0;
+
+                font-family: 'Ninja Naruto', Arial, sans-serif;
+
+                font-size: 5rem;
+
+                color: #ff9800;
+
+                letter-spacing: 4px;
+
+                text-shadow:
+
+                    0 0 18px rgba(255, 140, 0, .35);
+
+            }
+
+            /* ==========================================================
+   TEAM MOVERS
+========================================================== */
+
+            .team-movers-grid {
+
+                display: grid;
+
+                grid-template-columns:
+                    1fr 170px 1fr;
+
+                gap: 18px;
+
+                padding:
+
+                    0 18px 18px;
+
+            }
+
+            /* ==========================================================
+   TEAM PANELS
+========================================================== */
+
+            .team-panel {
+
+                background: #141414;
+
+                border: 1px solid rgba(255, 140, 0, .22);
+
+                border-radius: 16px;
+
+                overflow: hidden;
+
+            }
+
+            .team-list {
+
+                display: flex;
+
+                flex-direction: column;
+
+            }
+
+            .team-row {
+
+                display: grid;
+
+                grid-template-columns:
+
+                    55px 58px 1fr 110px;
+
+                align-items: center;
+
+                height: 72px;
+
+                border-bottom: 1px solid rgba(255, 255, 255, .06);
+
+            }
+
+            .team-row:last-child {
+
+                border-bottom: none;
+
+            }
+
+            /* ==========================================================
+   TEAM LOGOS
+========================================================== */
+
+            .team-logo {
+
+                width: 38px;
+
+                height: 38px;
+
+                object-fit: contain;
+
+                margin: auto;
+
+            }
+
+            .team-name {
+
+                font-size: 1.05rem;
+
+                font-weight: 700;
+
+                color: white;
+
+            }
+
+            .team-row .movement {
+
+                font-size: 1.9rem;
+
+            }
+
+            /* ==========================================================
+   CENTER LOGO
+========================================================== */
+
+            .team-center {
+
+                display: flex;
+
+                justify-content: center;
+
+                align-items: center;
+
+                background: #141414;
+
+                border: 1px solid rgba(255, 140, 0, .22);
+
+                border-radius: 16px;
+
+            }
+
+            .team-center h1 {
+
+                margin: 0;
+
+                font-family: 'Ninja Naruto', Arial, sans-serif;
+
+                font-size: 5rem;
+
+                color: #ff9800;
+
+                letter-spacing: 4px;
+
+                text-shadow:
+
+                    0 0 18px rgba(255, 140, 0, .35);
+
+            }
+
+
+            /* =======================================================LIVE NEWS TICKER=========================== */
+
+
+            .news-ticker {
+
+                position: sticky;
+
+                top: 70px;
+                /* height of your navbar */
+
+                z-index: 998;
+
+                display: flex;
+                align-items: center;
+
+                width: 100%;
+                height: 52px;
+
+                background: linear-gradient(90deg, #0a0a0a, #151515);
+
+                border-top: 1px solid rgba(255, 136, 0, .35);
+                border-bottom: 1px solid rgba(255, 136, 0, .35);
+
+                overflow: hidden;
+
+                box-shadow:
+                    0 6px 18px rgba(0, 0, 0, .35),
+                    inset 0 0 12px rgba(255, 136, 0, .06);
+
+            }
+
+            .ticker-label {
+                flex: 0 0 auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0 22px;
+                height: 100%;
+                background: linear-gradient(180deg, #ff8a00, #d96700);
+                color: #111;
+                font-size: .78rem;
+                font-weight: 900;
+                letter-spacing: .15em;
+                text-transform: uppercase;
+                z-index: 2;
+            }
+
+            .ticker-window {
+                position: relative;
+                flex: 1;
+                height: 100%;
+                overflow: hidden;
+            }
+
+            .ticker-window::before,
+            .ticker-window::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                width: 60px;
+                height: 100%;
+                z-index: 2;
+                pointer-events: none;
+            }
+
+            .ticker-window::before {
+                left: 0;
+                background: linear-gradient(90deg, #111 0%, transparent 100%);
+            }
+
+            .ticker-window::after {
+                right: 0;
+                background: linear-gradient(270deg, #111 0%, transparent 100%);
+            }
+
+            .ticker-track {
+                display: flex;
+                align-items: center;
+                width: max-content;
+                height: 100%;
+                animation: ticker-scroll 42s linear infinite;
+            }
+
+            .news-ticker:hover .ticker-track {
+                animation-play-state: paused;
+            }
+
+            .ticker-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 0 28px;
+                color: #d5d5d5;
+                text-decoration: none;
+                white-space: nowrap;
+                font-size: .92rem;
+                font-weight: 600;
+                transition: .25s;
+            }
+
+            .ticker-item:hover {
+                color: white;
+            }
+
+            .winner {
+                color: #ff9800;
+                font-weight: 800;
+            }
+
+            .ticker-text {
+                color: #777;
+                font-size: .78rem;
+                text-transform: uppercase;
+                letter-spacing: .08em;
+            }
+
+            .ticker-score {
+                color: white;
+                font-weight: 900;
+            }
+
+            .ticker-divider {
+                color: rgba(255, 136, 0, .6);
+                font-size: 1.15rem;
+            }
+
+            @keyframes ticker-scroll {
+
+                from {
+                    transform: translateX(0);
+                }
+
+                to {
+                    transform: translateX(-50%);
+                }
+
+            }
+
+            .dashboard-card {
+                background:
+                    linear-gradient(180deg,
+                        rgba(22, 22, 22, .95),
+                        rgba(10, 10, 10, .95));
+
+                border: 1px solid rgba(255, 140, 0, .18);
+
+                border-radius: 18px;
+
+                overflow: hidden;
+
+                box-shadow:
+                    0 10px 28px rgba(0, 0, 0, .35);
+
+                transition: .25s;
+            }
+
+            .dashboard-card:hover {
+
+                border-color: rgba(255, 140, 0, .45);
+
+                transform: translateY(-2px);
+
+            }
+
+            /* ==========================================================
+   FINAL POLISH
+========================================================== */
+
+            /* subtle glow on panels */
+
+            .mover-panel,
+            .team-panel {
+
+                transition:
+                    transform .18s ease,
+                    border-color .18s ease,
+                    box-shadow .18s ease;
+
+            }
+
+            .mover-panel:hover,
+            .team-panel:hover {
+
+                border-color: rgba(255, 140, 0, .45);
+
+                box-shadow:
+                    0 10px 24px rgba(255, 140, 0, .08);
+
+            }
+
+            /* ==========================================================
+   ROW HOVER
+========================================================== */
+
+            .mover-row,
+            .team-row {
+
+                transition:
+                    background .18s ease,
+                    padding-left .18s ease;
+
+            }
+
+            .mover-row:hover,
+            .team-row:hover {
+
+                background: rgba(255, 255, 255, .035);
+
+                padding-left: 8px;
+
+            }
+
+            /* ==========================================================
+   PLAYER RENDERS
+========================================================== */
+
+            .player-render img {
+
+                transition:
+                    transform .18s ease;
+
+            }
+
+            .mover-row:hover .player-render img {
+
+                transform:
+                    translateX(-50%) scale(1.08);
+
+            }
+
+            /* ==========================================================
+   TEAM LOGOS
+========================================================== */
+
+            .team-logo {
+
+                transition:
+                    transform .18s ease;
+
+            }
+
+            .team-row:hover .team-logo {
+
+                transform: scale(1.08);
+
+            }
+
+            /* ==========================================================
+   NAME COLORS
+========================================================== */
+
+            .player-name,
+            .team-name {
+
+                color: #f4f4f4;
+
+            }
+
+            .mover-row:hover .player-name,
+            .team-row:hover .team-name {
+
+                color: white;
+
+            }
+
+            /* ==========================================================
+   MOVEMENT
+========================================================== */
+
+            .movement {
+
+                letter-spacing: .04em;
+
+            }
+
+            .movement.rise {
+
+                text-shadow:
+                    0 0 8px rgba(124, 255, 59, .25);
+
+            }
+
+            .movement.fall {
+
+                text-shadow:
+                    0 0 8px rgba(255, 53, 53, .25);
+
+            }
+
+            /* ==========================================================
+   HEADER POLISH
+========================================================== */
+
+            .panel-heading {
+
+                position: relative;
+
+            }
+
+            .panel-heading::after {
+
+                content: "";
+
+                position: absolute;
+
+                left: 20px;
+
+                right: 20px;
+
+                bottom: 0;
+
+                height: 1px;
+
+                background: rgba(255, 255, 255, .05);
+
+            }
+
+            /* ==========================================================
+   WEEK LABEL
+========================================================== */
+
+            .movers-week {
+
+                opacity: .9;
+
+            }
+
+            /* ==========================================================
+   SECTION BREATHING ROOM
+========================================================== */
+
+            #movers {
+
+                margin-bottom: 32px;
+
+            }
+
+            /* ==========================================================
+   TEAM CENTER
+========================================================== */
+
+            .team-center {
+
+                background:
+                    radial-gradient(circle,
+                        rgba(255, 140, 0, .08),
+                        transparent 70%);
+
+            }
+
+            .team-center h1 {
+
+                opacity: .18;
+
+            }
+
+            /* ==========================================================
+   SCROLLBAR
+========================================================== */
+
+            .mover-list::-webkit-scrollbar {
+
+                width: 6px;
+
+            }
+
+            .mover-list::-webkit-scrollbar-thumb {
+
+                background: #444;
+
+                border-radius: 20px;
+
+            }
+
+            .mover-list::-webkit-scrollbar-thumb:hover {
+
+                background: #666;
+
+            }
+
+            /*=========================================== FEATURED FIGHT CAROSEL ================================  */
+            /* ==========================================================
+   HERO LAYOUT
+========================================================== */
+
             #dash1 {
                 display: grid;
-                grid-template-columns: .85fr 1.15fr;
-                gap: 24px;
-                margin-bottom: 24px;
+                grid-template-columns: 310px 1fr;
+                gap: 140px;
+                align-items: start;
+                margin-bottom: 30px;
             }
 
-            .dash-section {
-                background:
-                    linear-gradient(145deg, rgba(22, 22, 22, .95), rgba(5, 5, 5, .95));
-                border: 1px solid rgba(255, 136, 0, .35);
-                border-radius: 20px;
-                padding: 22px;
-                box-shadow:
-                    0 0 18px rgba(255, 115, 0, .16),
-                    inset 0 0 18px rgba(255, 115, 0, .04);
-                margin-bottom: 24px;
-            }
+            /* ==========================================================
+   SHARED CARD STYLE
+========================================================== */
 
-            .dash-section h2 {
-                margin-top: 0;
-                text-align: center;
-                color: #ff9f1c;
-                font-family: 'Ninja Naruto', Arial, sans-serif;
-                letter-spacing: 2px;
-                text-shadow: 0 0 10px rgba(255, 122, 0, .55);
-            }
+            .player-day-card,
+            .featured-card {
 
-            .feature-card {
-                text-align: center;
-            }
+                background: #111;
 
-            .feature-card h1 {
-                color: #ffffff;
-                margin: 14px 0 0;
-                font-size: 30px;
-                text-shadow: 0 0 12px rgba(255, 122, 0, .8);
-            }
+                border: 1px solid rgba(255, 140, 0, .15);
 
-            .dash-img {
-                width: 170px;
-                height: 170px;
-                object-fit: cover;
                 border-radius: 18px;
-                border: 3px solid #ff7a00;
+
+                overflow: hidden;
+
+
                 box-shadow:
-                    0 0 18px rgba(255, 122, 0, .45);
+                    0 12px 30px rgba(0, 0, 0, .30);
+
             }
 
-            .main-img {
-                width: 230px;
-                height: 230px;
-                border-radius: 24px;
-            }
+            /* ==========================================================
+   PLAYER HEADER
+========================================================== */
 
-            .match-row {
-                display: grid;
-                grid-template-columns: 1fr 90px 1fr;
+            .player-day-heading {
+
+                display: flex;
                 align-items: center;
-                gap: 18px;
+
+                height: 58px;
+
+                padding: 0 20px;
+
+                background: #181818;
+
+                border-bottom: 1px solid rgba(255, 255, 255, .05);
+
+                color: #ff9800;
+
+                font-size: .78rem;
+
+                font-weight: 800;
+
+                letter-spacing: .18em;
+
+                text-transform: uppercase;
+
+            }
+
+            /* ==========================================================
+   PLAYER LINK
+========================================================== */
+
+            .player-day-link {
+
+                display: block;
+
+                color: inherit;
+
+                text-decoration: none;
+
+            }
+
+            /* ==========================================================
+   PLAYER IMAGE
+========================================================== */
+
+            .player-day-image {
+
+                position: relative;
+
+                height: 310px;
+
+                overflow: hidden;
+
+                background: #090909;
+
+            }
+
+            /* image */
+
+            .player-day-img {
+
+                width: 100%;
+
+                height: 100%;
+
+                object-fit: cover;
+
+                object-position: center top;
+
+                transition:
+                    transform .4s ease;
+
+            }
+
+            .player-day-link:hover .player-day-img {
+
+                transform: scale(1.04);
+
+            }
+
+            /* ==========================================================
+   IMAGE OVERLAY
+========================================================== */
+
+            .player-day-overlay {
+
+                position: absolute;
+
+                left: 0;
+
+                right: 0;
+
+                bottom: 0;
+
+                padding:
+
+                    65px 18px 18px;
+
+                background:
+
+                    linear-gradient(to bottom,
+
+                        transparent,
+
+                        rgba(0, 0, 0, .94));
+
+            }
+
+            .player-day-overlay h2 {
+
+                margin: 0;
+
+                color: #fff;
+
+                font-size: 1.9rem;
+
+                line-height: 1;
+
+                font-weight: 800;
+
+            }
+
+            .player-day-overlay p {
+
+                margin-top: 7px;
+
+                color: #ff9800;
+
+                font-size: .82rem;
+
+                font-weight: 700;
+
+                letter-spacing: .14em;
+
+                text-transform: uppercase;
+
+            }
+
+            /* ==========================================================
+   PLAYER DETAILS
+========================================================== */
+
+            .player-day-details {
+
+                display: flex;
+
+                justify-content: space-around;
+
+                align-items: center;
+
+                padding: 18px;
+
+                background: #141414;
+
+            }
+
+            .detail {
+
+                flex: 1;
+
+                text-align: center;
+
+            }
+
+            .detail:not(:last-child) {
+
+                border-right: 1px solid rgba(255, 255, 255, .06);
+
+            }
+
+            .detail span {
+
+                color: #d8d8d8;
+
+                font-size: .82rem;
+
+                font-weight: 700;
+
+                letter-spacing: .05em;
+
+            }
+
+            /* ==========================================================
+   PLAYER HOVER
+========================================================== */
+
+            .player-day-card {
+
+                transition:
+                    transform .25s ease,
+                    box-shadow .25s ease,
+                    border-color .25s ease;
+
+            }
+
+            .player-day-card:hover {
+
+                transform: translateY(-2px);
+
+                border-color: rgba(255, 140, 0, .35);
+
+                box-shadow:
+                    0 18px 36px rgba(0, 0, 0, .40);
+
+            }
+
+            /* ==========================================================
+   FEATURED CARD
+========================================================== */
+
+            .featured-card {
+
+                display: flex;
+
+                flex-direction: column;
+
+            }
+
+            /* ==========================================================
+   FEATURED HEADER
+========================================================== */
+
+            .featured-heading {
+
+                display: flex;
+
+                justify-content: space-between;
+
+                align-items: center;
+
+                height: 58px;
+
+                padding: 0 22px;
+
+                background: #181818;
+
+                border-bottom: 1px solid rgba(255, 255, 255, .05);
+
+            }
+
+            .featured-heading>div:first-child {
+
+                display: flex;
+
+                align-items: center;
+
+            }
+
+            .featured-title {
+
+                color: #ff9800;
+
+                font-size: .78rem;
+
+                font-weight: 800;
+
+                letter-spacing: .18em;
+
+                text-transform: uppercase;
+
+            }
+
+            .featured-subtitle {
+
+                margin-left: 16px;
+
+                color: #777;
+
+                font-size: .72rem;
+
+                letter-spacing: .12em;
+
+                text-transform: uppercase;
+
+            }
+
+            .featured-counter {
+
+                color: #777;
+
+                font-size: .75rem;
+
+                font-weight: 700;
+
+            }
+
+            #featured-current {
+
+                color: #ff9800;
+
+            }
+
+            /* ==========================================================CAROUSEL========================================================== */
+            /* ==========================================================
+   FEATURED FIGHT LAYOUT
+========================================================== */
+
+            .featured-card {
+
+                display: flex;
+
+                flex-direction: column;
+
+            }
+
+            .featured-carousel {
+
+                position: relative;
+
+                min-height: 350px;
+
+                overflow: hidden;
+
+            }
+
+            .featured-slide {
+
+                position: absolute;
+
+                inset: 0;
+
+                display: grid;
+
+                grid-template-columns:
+
+                    1fr 320px 1fr;
+
+                align-items: end;
+
+                visibility: hidden;
+
+                opacity: 0;
+
+                transition:
+
+                    opacity .4s ease,
+
+                    transform .4s ease;
+
+            }
+
+            .featured-slide.active {
+
+                visibility: visible;
+
+                opacity: 1;
+
             }
 
             .fighter-card {
-                text-align: center;
-                background: rgba(255, 255, 255, .045);
-                border: 1px solid rgba(255, 136, 0, .22);
-                border-radius: 18px;
-                padding: 18px;
-            }
 
-            .fighter-card.winner {
-                border-color: rgba(255, 160, 28, .85);
-                box-shadow: 0 0 18px rgba(255, 136, 0, .25);
-            }
+                position: relative;
 
-            .fight-img {
-                width: 145px;
-                height: 145px;
-                object-fit: cover;
-                border-radius: 50%;
-                border: 3px solid #ff7a00;
-                box-shadow: 0 0 18px rgba(255, 122, 0, .45);
-            }
+                display: flex;
 
-            .fighter-card h3 {
-                margin: 12px 0 6px;
+                justify-content: center;
+
+                align-items: flex-end;
+
+                height: 100%;
+
+                text-decoration: none;
+
                 color: white;
+
+                overflow: hidden;
+
             }
 
-            .fighter-card span {
-                color: #f7c873;
-                font-size: 13px;
+            .fighter-render {
+
+                height: 310px;
+
+                width: auto;
+
+                object-fit: contain;
+
+            }
+
+            .fighter-card:hover .fighter-render {
+
+                transform:
+
+                    translateY(-4px) scale(1.03);
+
+            }
+
+            /* ==========================================================
+   FIGHTER OVERLAYS
+========================================================== */
+
+            .fighter-overlay {
+
+                position: absolute;
+
+                left: 0;
+
+                right: 0;
+
+                bottom: 22px;
+
+                padding: 0 22px;
+
+                z-index: 5;
+
+            }
+
+            .winner-card .fighter-overlay {
+
+                text-align: left;
+
+            }
+
+            .loser-card .fighter-overlay {
+
+                text-align: right;
+
+            }
+
+            .winner-tag,
+            .loser-tag {
+
+                display: inline-block;
+
+                margin-bottom: 10px;
+
+                padding: 6px 12px;
+
+                border-radius: 4px;
+
+                font-size: .62rem;
+
+                font-weight: 800;
+
+                letter-spacing: .14em;
+
                 text-transform: uppercase;
-                letter-spacing: 1px;
+
             }
 
-            .versus {
-                display: flex;
-                justify-content: center;
-                align-items: center;
+            .winner-tag {
+
+                background: #ff9800;
+
+                color: #111;
+
             }
 
-            .versus span {
-                width: 68px;
-                height: 68px;
-                border-radius: 50%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background: #ff7a00;
-                color: #090909;
-                font-weight: 900;
-                box-shadow: 0 0 20px rgba(255, 122, 0, .75);
+            .loser-tag {
+
+                background: rgba(255, 255, 255, .12);
+
+                color: #ccc;
+
             }
 
-            .match-meta {
-                display: flex;
-                justify-content: center;
-                gap: 22px;
-                margin-top: 18px;
-                color: #ddd;
-            }
+            .fighter-overlay h2 {
 
-            .match-meta strong {
-                color: #ff9f1c;
-            }
-
-            .birthday-row,
-            .history-row {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 18px;
-            }
-
-            .birthday-card,
-            .history-card {
-                width: 190px;
-                text-align: center;
-                background: rgba(255, 255, 255, .045);
-                border: 1px solid rgba(255, 136, 0, .25);
-                border-radius: 18px;
-                padding: 15px;
-                transition: .2s ease;
-            }
-
-            .birthday-card:hover,
-            .history-card:hover,
-            .fighter-card:hover {
-                transform: translateY(-4px);
-                border-color: #ff9f1c;
-                box-shadow: 0 0 22px rgba(255, 136, 0, .28);
-            }
-
-            .birthday-card .dash-img,
-            .history-card .dash-img {
-                width: 130px;
-                height: 130px;
-                border-radius: 50%;
-            }
-
-            .birthday-card h4,
-            .history-card h4 {
-                color: white;
-                margin: 12px 0 5px;
-            }
-
-            .history-card p {
-                color: #f7c873;
                 margin: 0;
-                font-size: 13px;
+
+                color: #fff;
+
+                font-size: 2rem;
+
+                line-height: 1;
+
+                text-shadow:
+
+                    0 2px 12px rgba(0, 0, 0, .8);
+
             }
 
-            .empty-text {
-                color: #aaa;
+            .fighter-overlay p {
+
+                margin-top: 8px;
+
+                color: #ff9800;
+
+                font-size: .82rem;
+
+                font-weight: 700;
+
+                letter-spacing: .12em;
+
+            }
+
+            /* ==========================================================
+   CENTER PANEL
+========================================================== */
+
+            .fight-center {
+
+                display: flex;
+
+                flex-direction: column;
+
+                justify-content: center;
+
+                align-items: center;
+
                 text-align: center;
+
+                padding: 15px 28px;
+
+                z-index: 10;
+
+            }
+
+            .fight-label {
+
+                margin-bottom: 18px;
+
+                color: #ff9800;
+
+                font-size: .7rem;
+
+                font-weight: 900;
+
+                letter-spacing: .18em;
+
+                text-transform: uppercase;
+
+            }
+
+            .fight-versus {
+
+                display: flex;
+
+                flex-direction: column;
+
+                align-items: center;
+
+                gap: 18px;
+
+            }
+
+            .fight-versus span {
+
+                color: #fff;
+
+                font-size: 1.2rem;
+
+                font-weight: 700;
+
+            }
+
+            .vs-circle {
+
+                width: 78px;
+
+                height: 78px;
+
+                border-radius: 50%;
+
+                display: flex;
+
+                justify-content: center;
+
+                align-items: center;
+
+                background: #181818;
+
+                border: 2px solid #ff9800;
+
+                color: #ff9800;
+
+                font-size: 1.45rem;
+
+                font-weight: 900;
+
+                box-shadow:
+
+                    0 0 20px rgba(255, 152, 0, .18);
+
+            }
+
+            .fight-method {
+
+                margin-top: 24px;
+
+                color: #fff;
+
+                font-size: 1.05rem;
+
+                font-weight: 800;
+
+                text-transform: uppercase;
+
+            }
+
+            .fight-event {
+
+                margin-top: 10px;
+
+                color: #aaa;
+
+                font-size: .82rem;
+
+                font-weight: 600;
+
+            }
+
+            .fight-date {
+
+                margin-top: 4px;
+
+                color: #666;
+
+                font-size: .72rem;
+
+            }
+
+            .carousel-controls {
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                gap: 14px;
+
+                margin-top: 28px;
+
+            }
+
+            .carousel-arrow {
+
+                width: 42px;
+
+                height: 42px;
+
+                border: none;
+
+                border-radius: 50%;
+
+                background: #1b1b1b;
+
+                color: #f5f5f5;
+
+                font-size: 1.4rem;
+
+                font-weight: 700;
+
+                cursor: pointer;
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                transition: .25s;
+
+                box-shadow:
+                    inset 0 0 0 1px rgba(255, 255, 255, .08);
+
+            }
+
+            .carousel-arrow:hover {
+
+                background: #ff9800;
+
+                color: #111;
+
+                transform: scale(1.08);
+
+            }
+
+            .carousel-arrow:active {
+
+                transform: scale(.96);
+
+            }
+
+            .carousel-dots {
+
+                display: flex;
+
+                gap: 8px;
+
+                align-items: center;
+
+            }
+
+            .carousel-dot {
+
+                width: 8px;
+
+                height: 8px;
+
+                border: none;
+
+                border-radius: 999px;
+
+                background: #555;
+
+                cursor: pointer;
+
+                transition: .25s;
+
+            }
+
+            .carousel-dot.active {
+
+                width: 26px;
+
+                background: #ff9800;
+
+            }
+
+            /*=========================================== FEATURED FIGHT CAROSEL END================================  */
+            /* ====================================================== LEAGUE LEADERS ================================ */
+
+            /* ==========================================================
+   LEAGUE LEADERS
+========================================================== */
+
+            #league-leaders {
+
+                margin-top: 36px;
+
+                background: #111;
+
+                border: 1px solid rgba(255, 140, 0, .28);
+
+                border-radius: 22px;
+
+                overflow: hidden;
+
+                box-shadow:
+                    0 12px 35px rgba(0, 0, 0, .35);
+
+            }
+
+            /* ==========================================================
+   HEADER
+========================================================== */
+
+            .leaders-header {
+
+                display: flex;
+
+                justify-content: space-between;
+
+                align-items: center;
+
+                padding: 22px 28px;
+
+                background: #181818;
+
+                border-bottom: 1px solid rgba(255, 255, 255, .05);
+
+            }
+
+            .leaders-title {
+
+                color: #ff9800;
+
+                font-size: 1.05rem;
+
+                font-weight: 900;
+
+                letter-spacing: .10em;
+
+                text-transform: uppercase;
+
+            }
+
+            .leaders-season {
+
+                color: #999;
+
+                font-size: .9rem;
+
+                font-weight: 700;
+
+                letter-spacing: .08em;
+
+            }
+
+            /* ==========================================================
+   TOP GRID
+========================================================== */
+
+            .leaders-grid {
+
+                display: grid;
+
+                grid-template-columns: repeat(5, 1fr);
+
+                gap: 18px;
+
+                padding: 20px;
+
+            }
+
+            /* ==========================================================
+   CARD
+========================================================== */
+
+            .leader-card {
+
+                background: #141414;
+
+                border: 1px solid rgba(255, 140, 0, .22);
+
+                border-radius: 18px;
+
+                overflow: hidden;
+
+                transition:
+                    transform .18s ease,
+                    border-color .18s ease,
+                    box-shadow .18s ease;
+
+            }
+
+            .leader-card:hover {
+
+                transform: translateY(-2px);
+
+                border-color: rgba(255, 140, 0, .45);
+
+                box-shadow:
+                    0 12px 24px rgba(255, 140, 0, .10);
+
+            }
+
+            /* ==========================================================
+   CARD HEADER
+========================================================== */
+
+            .leader-heading {
+
+                height: 52px;
+
+                display: flex;
+
+                justify-content: center;
+
+                align-items: center;
+
+                background: #1b1b1b;
+
+                color: #ff9800;
+
+                font-size: .95rem;
+
+                font-weight: 900;
+
+                letter-spacing: .08em;
+
+                text-transform: uppercase;
+
+                border-bottom: 1px solid rgba(255, 255, 255, .05);
+
+            }
+
+            /* ==========================================================
+   CHAMPION
+========================================================== */
+
+            .leader-champion {
+
+                position: relative;
+
+                height: 230px;
+
+                overflow: hidden;
+
+                display: flex;
+
+                justify-content: center;
+
+                align-items: flex-end;
+
+                background:
+                    radial-gradient(circle at top,
+                        rgba(255, 140, 0, .08),
+                        transparent 70%);
+
+            }
+
+            .leader-render {
+
+                position: absolute;
+
+                bottom: 0;
+
+                height: 180px;
+
+                width: auto;
+
+                object-fit: contain;
+
+                pointer-events: none;
+
+            }
+
+            .leader-main {
+
+                position: relative;
+
+                z-index: 5;
+
                 width: 100%;
+
+                padding-bottom: 14px;
+
+                text-align: center;
+
+                background:
+                    linear-gradient(to top,
+                        rgba(0, 0, 0, .85),
+                        rgba(0, 0, 0, 0));
+
             }
 
-            @media (max-width: 900px) {
-                #dash1 {
-                    grid-template-columns: 1fr;
-                }
+            .leader-rank {
 
-                .match-row {
-                    grid-template-columns: 1fr;
-                }
+                color: #ff9800;
 
-                .versus span {
-                    width: 55px;
-                    height: 55px;
-                }
+                font-size: .75rem;
 
-                .match-meta {
-                    flex-direction: column;
-                    gap: 5px;
-                    text-align: center;
-                }
+                font-weight: 900;
+
+                letter-spacing: .18em;
+
             }
+
+            .leader-main h2 {
+
+                margin: 6px 0 4px;
+
+                color: white;
+
+                font-size: 1.15rem;
+
+                font-weight: 800;
+
+            }
+
+            .leader-value {
+
+                color: #ff9800;
+
+                font-size: 2rem;
+
+                font-weight: 900;
+
+                line-height: 1;
+
+            }
+
+            .leader-main span {
+
+                display: block;
+
+                margin-top: 4px;
+
+                color: #888;
+
+                font-size: .72rem;
+
+                letter-spacing: .15em;
+
+                text-transform: uppercase;
+
+            }
+
+            /* ==========================================================
+   TOP FIVE LIST
+========================================================== */
+
+            .leader-list {
+
+                padding: 8px 0;
+
+            }
+
+            .leader-row {
+
+                display: grid;
+
+                grid-template-columns:
+
+                    34px 1fr 44px;
+
+                align-items: center;
+
+                height: 36px;
+
+                padding: 0 12px;
+
+                color: #ddd;
+
+                text-decoration: none;
+
+                border-top: 1px solid rgba(255, 255, 255, .04);
+
+                transition: .18s;
+
+            }
+
+            .leader-row:hover {
+
+                background: rgba(255, 140, 0, .06);
+
+            }
+
+            .leader-row span:first-child {
+
+                color: #888;
+
+                font-weight: 700;
+
+            }
+
+            .leader-row span:last-child {
+
+                text-align: right;
+
+                color: #ff9800;
+
+                font-weight: 800;
+
+            }
+
+            /* ==========================================================
+   BOTTOM GRID
+========================================================== */
+
+            .leaders-bottom-grid {
+
+                display: grid;
+
+                grid-template-columns: 2fr 1fr;
+
+                gap: 20px;
+
+                padding:
+
+                    0 20px 20px;
+
+            }
+
+            /* ==========================================================
+   LARGE CARDS
+========================================================== */
+
+            .leader-large-card {
+
+                background: #141414;
+
+                border: 1px solid rgba(255, 140, 0, .22);
+
+                border-radius: 18px;
+
+                overflow: hidden;
+
+                transition:
+                    transform .18s ease,
+                    border-color .18s ease,
+                    box-shadow .18s ease;
+
+            }
+
+            .leader-large-card:hover {
+
+                border-color: rgba(255, 140, 0, .45);
+
+                box-shadow:
+                    0 10px 22px rgba(255, 140, 0, .08);
+
+            }
+
+            /* ==========================================================
+   RIVALRIES
+========================================================== */
+
+            .rivalry-list {
+                padding: 10px 0;
+
+                /* Shows about five rivalries before scrolling */
+                max-height: 455px;
+                overflow-y: auto;
+                overflow-x: hidden;
+
+                scrollbar-width: thin;
+                scrollbar-color: #ff9800 #111;
+            }
+
+            .rivalry-row {
+
+                display: grid;
+
+                grid-template-columns:
+
+                    40px 1fr 120px 1fr;
+
+                align-items: center;
+
+                min-height: 86px;
+
+                padding: 6px 16px;
+
+                border-top: 1px solid rgba(255, 255, 255, .05);
+
+                transition: .18s;
+
+            }
+
+            .rivalry-row:hover {
+
+                background: rgba(255, 140, 0, .05);
+
+            }
+
+            .rivalry-rank {
+
+                color: #999;
+
+                font-size: 1.3rem;
+
+                font-weight: 900;
+
+                text-align: center;
+
+            }
+
+            .rival-player {
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 12px;
+
+            }
+
+            .leader-render-small {
+
+                width: 62px;
+
+                height: 62px;
+
+                object-fit: contain;
+
+            }
+
+            .rival-player span {
+
+                color: white;
+
+                font-weight: 700;
+
+            }
+
+            .vs-column {
+
+                display: flex;
+
+                flex-direction: column;
+
+                align-items: center;
+
+                justify-content: center;
+
+                gap: 8px;
+
+            }
+
+            .vs-circle-small {
+
+                width: 42px;
+
+                height: 42px;
+
+                border-radius: 50%;
+
+                display: flex;
+
+                justify-content: center;
+
+                align-items: center;
+
+                background: #1b1b1b;
+
+                border: 2px solid #ff9800;
+
+                color: #ff9800;
+
+                font-size: .8rem;
+
+                font-weight: 900;
+
+            }
+
+            .meeting-count {
+
+                color: #ff9800;
+
+                font-size: .78rem;
+
+                font-weight: 800;
+
+                letter-spacing: .06em;
+
+            }
+
+            /* ==========================================================
+   OT LEADERS
+========================================================== */
+
+            .ot-list {
+
+                padding: 10px 0;
+
+            }
+
+            .ot-row {
+
+                display: grid;
+
+                grid-template-columns:
+
+                    38px 60px 1fr 55px;
+
+                align-items: center;
+
+                min-height: 72px;
+
+                padding: 6px 14px;
+
+                text-decoration: none;
+
+                color: white;
+
+                border-top: 1px solid rgba(255, 255, 255, .05);
+
+                transition: .18s;
+
+            }
+
+            .ot-row:hover {
+
+                background: rgba(255, 140, 0, .05);
+
+            }
+
+            .ot-rank {
+
+                text-align: center;
+
+                color: #999;
+
+                font-weight: 900;
+
+                font-size: 1.15rem;
+
+            }
+
+            .ot-player {
+
+                font-weight: 700;
+
+                padding-left: 8px;
+
+            }
+
+            .ot-total {
+
+                text-align: right;
+
+                color: #ff9800;
+
+                font-size: 1.4rem;
+
+                font-weight: 900;
+
+            }
+
+            /* ==========================================================
+   IMAGE HOVERS
+========================================================== */
+
+            .leader-render,
+            .leader-render-small {
+
+                transition:
+                    transform .2s ease;
+
+            }
+
+            .leader-card:hover .leader-render {
+
+                transform: scale(1.05);
+
+            }
+
+            .rivalry-row:hover .leader-render-small,
+            .ot-row:hover .leader-render-small {
+
+                transform: scale(1.08);
+
+            }
+
+            /* ==========================================================
+   POLISH
+========================================================== */
+
+            .leader-card,
+            .leader-large-card {
+
+                backdrop-filter: blur(4px);
+
+            }
+
+            .leader-row,
+            .rivalry-row,
+            .ot-row {
+
+                cursor: pointer;
+
+            }
+
+            .leader-row:last-child,
+            .rivalry-row:last-child,
+            .ot-row:last-child {
+
+                border-bottom: none;
+
+            }
+
+            /* ==========================================================
+   PLAYER OF THE DAY HALL OF FAME
+========================================================== */
+
+            #hall-of-fame {
+
+                margin-top: 36px;
+
+                background: #111;
+
+                border: 1px solid rgba(255, 140, 0, .28);
+
+                border-radius: 22px;
+
+                overflow: hidden;
+
+                box-shadow:
+                    0 12px 35px rgba(0, 0, 0, .35);
+
+            }
+
+            /* ==========================================================
+   HEADER
+========================================================== */
+
+            .hof-header {
+
+                display: flex;
+
+                justify-content: space-between;
+
+                align-items: center;
+
+                padding: 22px 28px;
+
+                background: #181818;
+
+                border-bottom: 1px solid rgba(255, 255, 255, .05);
+
+            }
+
+            .hof-title {
+
+                color: #ff9800;
+
+                font-size: 1.05rem;
+
+                font-weight: 900;
+
+                letter-spacing: .08em;
+
+                text-transform: uppercase;
+
+            }
+
+            .hof-subtitle {
+
+                color: #888;
+
+                font-size: .85rem;
+
+                font-weight: 700;
+
+            }
+
+            /* ==========================================================
+   SCROLL AREA
+========================================================== */
+
+            .hof-scroll {
+
+                display: flex;
+
+                gap: 22px;
+
+                overflow-x: auto;
+
+                padding: 24px;
+
+                scroll-behavior: smooth;
+
+            }
+
+            .hof-scroll::-webkit-scrollbar {
+
+                height: 8px;
+
+            }
+
+            .hof-scroll::-webkit-scrollbar-thumb {
+
+                background: #444;
+
+                border-radius: 30px;
+
+            }
+
+            .hof-scroll::-webkit-scrollbar-thumb:hover {
+
+                background: #666;
+
+            }
+
+            /* ==========================================================
+   CARD
+========================================================== */
+
+            .hof-card {
+
+                flex: 0 0 220px;
+
+                text-decoration: none;
+
+                color: white;
+
+                background: #161616;
+
+                border: 1px solid rgba(255, 140, 0, .20);
+
+                border-radius: 18px;
+
+                overflow: hidden;
+
+                transition:
+                    transform .18s ease,
+                    border-color .18s ease,
+                    box-shadow .18s ease;
+
+            }
+
+            .hof-card:hover {
+
+                transform: translateY(-4px);
+
+                border-color: rgba(255, 140, 0, .45);
+
+                box-shadow:
+                    0 12px 28px rgba(255, 140, 0, .10);
+
+            }
+
+            /* ==========================================================
+   TODAY CARD
+========================================================== */
+
+            .current-hof {
+
+                border: 2px solid gold;
+
+                box-shadow:
+                    0 0 18px rgba(255, 215, 0, .30);
+
+            }
+
+            .hof-current {
+
+                background: gold;
+
+                color: #111;
+
+                text-align: center;
+
+                padding: 8px;
+
+                font-size: .72rem;
+
+                font-weight: 900;
+
+                letter-spacing: .15em;
+
+            }
+
+            /* ==========================================================
+   DATE
+========================================================== */
+
+            .hof-date {
+
+                padding: 14px;
+
+                text-align: center;
+
+                color: #ff9800;
+
+                font-size: .8rem;
+
+                font-weight: 800;
+
+                letter-spacing: .10em;
+
+                background: #1b1b1b;
+
+            }
+
+            /* ==========================================================
+   IMAGE
+========================================================== */
+
+            .hof-image {
+
+                height: 250px;
+
+                overflow: hidden;
+
+            }
+
+            .hof-image img {
+
+                width: 100%;
+
+                height: 100%;
+
+                object-fit: cover;
+
+                transition: transform .25s ease;
+
+            }
+
+            .hof-card:hover .hof-image img {
+
+                transform: scale(1.05);
+
+            }
+
+            /* ==========================================================
+   PLAYER INFO
+========================================================== */
+
+            .hof-name {
+
+                margin-top: 16px;
+
+                text-align: center;
+
+                font-size: 1.15rem;
+
+                font-weight: 800;
+
+            }
+
+            .hof-team {
+
+                margin: 8px 0 18px;
+
+                text-align: center;
+
+                color: #999;
+
+                font-size: .82rem;
+
+                letter-spacing: .08em;
+
+            }
+
+            /* ====================================================== LEAGUE LEADERS END ================================ */
         </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const carousel = document.querySelector(".featured-carousel");
+                const slides = Array.from(
+                    document.querySelectorAll(".featured-slide")
+                );
 
+                const counter = document.getElementById("featured-current");
+
+                if (!carousel || slides.length === 0) {
+                    return;
+                }
+
+                let currentIndex = 0;
+                let rotationTimer = null;
+
+                function showSlide(index) {
+                    currentIndex = (index + slides.length) % slides.length;
+
+                    slides.forEach(function (slide, slideIndex) {
+                        slide.classList.toggle(
+                            "active",
+                            slideIndex === currentIndex
+                        );
+                    });
+
+                    document
+                        .querySelectorAll(".carousel-dot")
+                        .forEach(function (dot) {
+                            const dotIndex = Number(dot.dataset.slide);
+
+                            dot.classList.toggle(
+                                "active",
+                                dotIndex === currentIndex
+                            );
+                        });
+
+                    if (counter) {
+                        counter.textContent = currentIndex + 1;
+                    }
+                }
+
+                function stopRotation() {
+                    if (rotationTimer !== null) {
+                        window.clearInterval(rotationTimer);
+                        rotationTimer = null;
+                    }
+                }
+
+                function startRotation() {
+                    stopRotation();
+
+                    rotationTimer = window.setInterval(function () {
+                        showSlide(currentIndex + 1);
+                    }, 6500);
+                }
+
+                document
+                    .querySelectorAll("#featured-prev")
+                    .forEach(function (button) {
+                        button.addEventListener("click", function (event) {
+                            event.preventDefault();
+                            showSlide(currentIndex - 1);
+                            startRotation();
+                        });
+                    });
+
+                document
+                    .querySelectorAll("#featured-next")
+                    .forEach(function (button) {
+                        button.addEventListener("click", function (event) {
+                            event.preventDefault();
+                            showSlide(currentIndex + 1);
+                            startRotation();
+                        });
+                    });
+
+                document
+                    .querySelectorAll(".carousel-dot")
+                    .forEach(function (dot) {
+                        dot.addEventListener("click", function (event) {
+                            event.preventDefault();
+                            showSlide(Number(dot.dataset.slide));
+                            startRotation();
+                        });
+                    });
+
+                carousel.addEventListener("mouseenter", stopRotation);
+                carousel.addEventListener("mouseleave", startRotation);
+
+                showSlide(0);
+                startRotation();
+            });
+        </script>
     </body>
 
 </html>

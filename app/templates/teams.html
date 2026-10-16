@@ -34,7 +34,7 @@
                 </select>
 
                 <select name="sort" onchange="this.form.submit()">
-                    <option value="points" {% if selected_sort=='points' %}selected{% endif %}>Sort by Total Points
+                    <option value="points" {% if selected_sort=='points' %}selected{% endif %}>Sort by Top Seeds
                     </option>
                     <option value="wins" {% if selected_sort=='wins' %}selected{% endif %}>Sort by Wins</option>
                     <option value="dual" {% if selected_sort=='dual' %}selected{% endif %}>Sort by Dual Points</option>
@@ -68,10 +68,6 @@
                             {{ stats.wins or 0 }} - {{ stats.loss or 0 }}
                         </div>
 
-                        <div class="team-stat-row">
-                            <span>Total Pts</span>
-                            <strong>{{ stats.points or 0 }}</strong>
-                        </div>
 
                         <div class="team-stat-row">
                             <span>Dual Pts</span>
@@ -81,6 +77,11 @@
                         <div class="team-stat-row">
                             <span>Tour Pts</span>
                             <strong>{{ stats.tour_points or 0 }}</strong>
+                        </div>
+
+                        <div class="team-stat-row">
+                            <span>Differential</span>
+                            <strong>{{ stats.diff or 0 }}</strong>
                         </div>
                     </div>
 
